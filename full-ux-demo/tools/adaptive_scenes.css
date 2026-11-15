@@ -1,0 +1,41 @@
+/* ===== adaptive scenes: READY / DRIVING / ACCIDENT_PENDING / ACCIDENT_RESPONSE =====
+   READY and ACCIDENT_RESPONSE are the Aurora scenes and are not styled here: they stay exactly as in aurora17.
+
+   1) Stand-alone prototype, scene B and "accident pending": a labelled place-holder for the Pleos native Driving View and navigation.
+      No Aurora picture, no home cards, no moving parts. It is NOT a copy of a Pleos screen and shows no map. */
+#drive{position:absolute;left:0;right:0;top:.82rem;bottom:0;z-index:9;display:none;background:#0a1214;color:#fff;font-family:var(--font-ui)}
+body.drv #drive{display:block}
+#drive .dv,#drive .nv{position:absolute;top:.6rem;bottom:.68rem;border-radius:.32rem;border:.03rem dashed rgba(190,225,230,.38);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 .6rem}
+#drive .dv{left:.42rem;width:9.72rem;background:#0f1c1f}
+#drive .nv{left:10.56rem;right:.2rem;background:#10282b}
+#drive.pend .dv,#drive.pend .nv{top:2.2rem}
+#drive h2{margin:0;font-size:.6rem;font-weight:800;letter-spacing:.005rem}
+#drive p{margin:.24rem 0 0;font-size:.36rem;font-weight:700;line-height:1.5;color:#cfe3e6}
+#drive .dtag{position:absolute;left:.4rem;top:.36rem;font-size:.27rem;font-weight:800;color:#0a1214;background:#bfe6ea;border-radius:.3rem;padding:.06rem .22rem}
+#drive .nv svg{width:1.2rem;height:1.2rem;color:#8fd0d6;margin-bottom:.2rem}
+#drive .dspd{margin-top:.5rem;display:flex;align-items:baseline;gap:.14rem}
+#drive .dspd b{font-size:1.5rem;font-weight:800;line-height:1}
+#drive .dspd small{font-size:.4rem;font-weight:700;color:#cfe3e6}
+#drive .dspd i{font-style:normal;font-size:.5rem;font-weight:800;margin-left:.3rem;border:.03rem solid #fff;border-radius:.1rem;padding:0 .14rem}
+#drive em{font-style:normal;margin-top:.14rem;font-size:.27rem;font-weight:700;color:#9fb9bd}
+#drive .drow{display:flex;gap:.3rem;margin-top:.6rem}
+#drive .dbtn{height:1.06rem;padding:0 .46rem;border-radius:.22rem;font-size:.36rem;font-weight:800;color:#fff;background:rgba(255,255,255,.1);border:.03rem solid rgba(255,255,255,.45);white-space:nowrap}
+#drive .dbtn.warn{background:#8e1b2c;border-color:#ff8a98}
+#drive .dbtn.go{background:#0b6b55;border-color:#7fe0c4}
+#drive .dalert{position:absolute;left:.42rem;right:.2rem;top:.5rem;height:1.46rem;border-radius:.26rem;background:#3a0f17;border:.04rem solid #ff8a98;display:flex;flex-direction:column;justify-content:center;padding:0 .5rem}
+#drive .dalert b{font-size:.44rem;font-weight:800;color:#fff}
+#drive .dalert span{font-size:.33rem;font-weight:700;color:#ffd7dc;margin-top:.04rem}
+
+/* 2) Pleos Connect runtime (html.pleos): the app has the application window only. The Driving View and the status bar are the system's,
+      so the app draws neither its own vehicle scene nor its own status strip: the RE:SAFETY panel alone, in its original proportions,
+      on the Aurora background, with the mode chips above it. Scene B is shown by the Pleos system itself (#drive is never shown). */
+html.pleos{font-size:min(calc(100vw / 15.3),calc(100vh / 14.4))}
+html.pleos body{background:#000a14 url("assets/hmi/HMI_STAGE_READY.webp") 50% 50%/cover no-repeat}
+html.pleos body.acc{background:#07060b url("assets/hmi/HMI_STAGE_ACCIDENT.webp") 50% 50%/cover no-repeat}
+html.pleos #stage{left:calc((100vw - 15.3rem) / 2 - 10.3rem);transform:translateY(-50%);background:none !important;overflow:visible}
+html.pleos body.acc #stage::before{display:none}
+html.pleos #left{display:none}
+html.pleos #top{background:none !important;border-bottom:0 !important}
+html.pleos #top>span:not(#chips){display:none}
+html.pleos #toast{left:17.95rem}
+html.pleos #drive{display:none !important}

@@ -1,0 +1,160 @@
+{
+ "automotive_feature": false,
+ "apk": "RE-SAFETY_AdaptiveHMI_0.6.4-adaptive10.apk",
+ "sha256": "8BC11E8A052FFBB4E69C90D54D703643CAB157E82DB93FC95D7D4DB74B4BB24D",
+ "steps": [
+  {
+   "step": "s01_A_ready",
+   "expected_scene": "READY",
+   "scene": "READY",
+   "ok": true,
+   "hmi": "NORMAL",
+   "layout": "full",
+   "placeholder_shown": false,
+   "aurora_home_keys": [
+    "cpre",
+    "crec",
+    "cseat",
+    "cseatctl"
+   ]
+  },
+  {
+   "step": "s02_B_driving_placeholder",
+   "expected_scene": "DRIVING",
+   "scene": "DRIVING",
+   "ok": true,
+   "hmi": "NORMAL",
+   "layout": "full",
+   "placeholder_shown": true,
+   "aurora_home_keys": [
+    "cpre",
+    "crec",
+    "cseat",
+    "cseatctl"
+   ]
+  },
+  {
+   "step": "s03_A_ready_after_parking",
+   "expected_scene": "READY",
+   "scene": "READY",
+   "ok": true,
+   "hmi": "NORMAL",
+   "layout": "full",
+   "placeholder_shown": false,
+   "aurora_home_keys": [
+    "cpre",
+    "crec",
+    "cseat",
+    "cseatctl"
+   ]
+  },
+  {
+   "step": "s04_accident_pending_while_driving",
+   "expected_scene": "ACCIDENT_PENDING",
+   "scene": "ACCIDENT_PENDING",
+   "ok": true,
+   "hmi": "ACC",
+   "layout": "full",
+   "placeholder_shown": true,
+   "aurora_home_keys": [
+    "b119",
+    "bsos",
+    "cguide",
+    "cpre",
+    "cprot",
+    "crec",
+    "cseat"
+   ]
+  },
+  {
+   "step": "s05_C_accident_response_after_stop",
+   "expected_scene": "ACCIDENT_RESPONSE",
+   "scene": "ACCIDENT_RESPONSE",
+   "ok": true,
+   "hmi": "ACC",
+   "layout": "full",
+   "placeholder_shown": false,
+   "aurora_home_keys": [
+    "b119",
+    "bsos",
+    "cguide",
+    "cpre",
+    "cprot",
+    "crec",
+    "cseat"
+   ]
+  },
+  {
+   "step": "s06_A_ready_after_response_end",
+   "expected_scene": "READY",
+   "scene": "READY",
+   "ok": true,
+   "hmi": "NORMAL",
+   "layout": "full",
+   "placeholder_shown": false,
+   "aurora_home_keys": [
+    "cpre",
+    "crec",
+    "cseat",
+    "cseatctl"
+   ]
+  },
+  {
+   "step": "s07_C_accident_response_when_parked",
+   "expected_scene": "ACCIDENT_RESPONSE",
+   "scene": "ACCIDENT_RESPONSE",
+   "ok": true,
+   "hmi": "ACC",
+   "layout": "full",
+   "placeholder_shown": false,
+   "aurora_home_keys": [
+    "b119",
+    "bsos",
+    "cguide",
+    "cpre",
+    "cprot",
+    "crec",
+    "cseat"
+   ]
+  },
+  {
+   "step": "s08_A_ready_end",
+   "expected_scene": "READY",
+   "scene": "READY",
+   "ok": true,
+   "hmi": "NORMAL",
+   "layout": "full",
+   "placeholder_shown": false,
+   "aurora_home_keys": [
+    "cpre",
+    "crec",
+    "cseat",
+    "cseatctl"
+   ]
+  }
+ ],
+ "all_ok": true,
+ "transitions": [
+  "READY -> DRIVING",
+  "DRIVING -> READY",
+  "READY -> DRIVING",
+  "DRIVING -> ACCIDENT_PENDING",
+  "ACCIDENT_PENDING -> ACCIDENT_RESPONSE",
+  "ACCIDENT_RESPONSE -> READY",
+  "READY -> ACCIDENT_RESPONSE",
+  "ACCIDENT_RESPONSE -> READY"
+ ],
+ "page_errors": 0,
+ "notes": [
+  "apk RE-SAFETY_AdaptiveHMI_0.6.4-adaptive10.apk 8BC11E8A052FFBB4E69C90D54D703643CAB157E82DB93FC95D7D4DB74B4BB24D",
+  "install: Success",
+  "s01_A_ready: scene=READY (expected READY) placeholder=False",
+  "s02_B_driving_placeholder: scene=DRIVING (expected DRIVING) placeholder=True",
+  "s03_A_ready_after_parking: scene=READY (expected READY) placeholder=False",
+  "s04_accident_pending_while_driving: scene=ACCIDENT_PENDING (expected ACCIDENT_PENDING) placeholder=True",
+  "s05_C_accident_response_after_stop: scene=ACCIDENT_RESPONSE (expected ACCIDENT_RESPONSE) placeholder=False",
+  "s06_A_ready_after_response_end: scene=READY (expected READY) placeholder=False",
+  "s07_C_accident_response_when_parked: scene=ACCIDENT_RESPONSE (expected ACCIDENT_RESPONSE) placeholder=False",
+  "s08_A_ready_end: scene=READY (expected READY) placeholder=False"
+ ]
+}

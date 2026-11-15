@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="true" />
+
+    <!-- PHASE 4 release permission set: only what the product screens read.
+         Pleos permissions are protectionLevel=normal (official docs). android.car.permission.CAR_SPEED is a
+         runtime (dangerous) permission requested once; CAR_POWERTRAIN is normal.
+         Diagnostic-only permissions (PRIVATE_CAR_SAFETY etc.) live in src/debug/AndroidManifest.xml. -->
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />
+    <uses-permission android:name="pleos.car.permission.CAR_WINDOWS" />
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />
+    <!-- RC4: traction-battery state of charge / fuel percent (Pleos EvBattery, Fuel). protectionLevel=normal on device. -->
+    <uses-permission android:name="pleos.car.permission.CAR_ENERGY" />
+    <!-- D plan F1 protect mode: user tap only, P + 0 km/h only. Lights: tail, rear fog, cabin. Doors: unlock 4 doors.
+         No windows, trunk, hood, or automatic action. protectionLevel=normal on the Pleos emulator. -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_LIGHTS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_DOORS" />
+    <!-- D plan F2: vehicle position for the 119/tow location line and QR. Runtime (dangerous); denial falls back to typed location. -->
+    <uses-permission android:name="pleos.car.permission.FUSED_LOCATION" />
+    <!-- D plan F3: NaviHelper.getCurrentLocationInfo (address text for the spoken location). Read only; the app never requests routes. normal. -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <!-- D plan F6: pre-departure record on user tap only. CAR_INFO = VIN (last 6 shown), CAR_DRIVE = odometer and remaining range. normal. -->
+    <uses-permission android:name="pleos.car.permission.CAR_INFO" />
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+
+    <!-- D plan F4: see the head unit's text-to-speech engine (package visibility, Android 11+). No permission. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ProductActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,6 @@
+18:22:39 installed sha256: 8bc11e8a052ffbb4e69c90d54d703643cab157e82db93fc95d7d4db74b4bb24d
+18:22:43 saved G1_ready_fullhmi.png 2560x1440
+18:22:43 tap accOn
+18:22:59 saved G2_warning_fullhmi.png (red share 0.345 of the best of 10)
+18:23:03 saved G3_accident_fullhmi.png 2560x1440
+18:23:03 tap accOff

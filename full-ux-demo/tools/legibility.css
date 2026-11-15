@@ -1,0 +1,86 @@
+/* ================= LEGIBILITY (owner, 2026-11-14: "the type must be larger overall; in an emergency it has to be readable") =================
+   Only type sizes and weights. Positions and the order of the elements stay as they are. Sizes in rem (1rem = 100 px on the 2560 x 1440 screen).
+   Old value -> new value is written beside every rule. Appended to aurora_theme.css by tools/patch_aurora_step1.py. */
+/* --- inner screens: everything a person has to read or press --- */
+#app .back{font-size:.4rem}                                            /* .32 */
+#app .lab{font-size:.31rem}#app .lab button{font-size:.3rem}            /* .26 / .25 */
+#app .panel h3{font-size:.48rem}                                        /* .38 */
+#app .tag{font-size:.25rem;padding:.04rem .14rem}                       /* .20 */
+#app .steps li{font-size:.36rem;font-weight:700;padding:.1rem 0}        /* .29 */
+#app .steps li i{width:.46rem;height:.46rem;font-size:.27rem}           /* .38 box, .22 */
+#app .steps li em{font-weight:500}
+#app .msg{font-size:.4rem}                                              /* .32 */
+#app .btn{font-size:.4rem}                                              /* .31 */
+#app .kv{font-size:.36rem;font-weight:700}#app .kv>span:first-child{font-weight:500}   /* .29 */
+#app .note{font-size:.3rem;font-weight:500}                             /* .235 */
+#app .body{font-size:.37rem;font-weight:500}                            /* .30 */
+#app .alert{font-size:.33rem}#app .alert .btn{font-size:.32rem;height:.76rem}          /* .27 / .27 */
+#app .loglist{font-size:.33rem}                                         /* .27 */
+#app .opt{font-size:.42rem;font-weight:700;padding:.17rem .06rem}       /* .31 */
+#app .opt i{width:.54rem;height:.54rem;font-size:.34rem}                /* .44 box */
+#app .cnt{font-size:.4rem;font-weight:700}#app .cnt b{font-size:.5rem}  /* .32 / .40 */
+#app .qrbox .qr{font-size:.32rem}#app .qrbox .qrhint{font-size:.25rem}#app .qrbox.big .qrhint{font-size:.3rem}   /* .26 / .20 / .24 */
+#app .qrctl{font-size:.3rem}#app .qrctl b{font-size:.4rem}              /* .24 / .32 */
+#app .qrbox pre{font-size:.29rem;font-weight:500}                       /* .235 */
+#app table.map{font-size:.3rem}                                         /* .24 */
+#app .bigstate{font-size:.54rem}                                        /* .44 */
+#app .badge{font-size:.3rem}                                            /* .24 */
+#app .irow{font-size:.36rem;font-weight:700}#app .irow .val{font-weight:500}           /* .29 */
+#app .sbtn{font-size:.31rem;height:.72rem;padding:0 .2rem}              /* .25, .62 high */
+#app .field{font-size:.35rem;font-weight:500}#app .field input{font-size:.35rem;height:.78rem}   /* .28 / .29 */
+#app .field>span:first-child{width:2.3rem}
+#app .hist{font-size:.3rem}                                             /* .24 */
+#evprompt b{font-size:.48rem}#evprompt p{font-size:.35rem}              /* .40 / .28 */
+#toast{font-size:.34rem}                                                /* .27 */
+/* --- seat / seat-belt screen --- */
+#app .sdesc{font-size:.29rem;font-weight:500}                           /* .24 */
+#app .leg{font-size:.32rem}                                             /* .28 */
+#app .srow .sl b{font-size:.36rem}#app .srow .sl span{font-size:.27rem} /* .30 / .22 */
+#app .sck{font-size:.33rem;font-weight:700}                             /* .28 */
+#app .sfoot{font-size:.3rem}                                            /* .245 */
+#app .beltbar{font-size:.46rem;font-weight:700}#app .beltbar small{font-size:.28rem}   /* .38 / .22 */
+/* --- seat control (simulation) --- */
+#app .sctab{font-size:.31rem}#app .schead .en{font-size:.3rem}#app .scsel{font-size:.26rem}   /* .27 / .26 / .22 ; the seat names inside the car stay .20: 뒷좌석 좌/우 broke into two lines at .24 (browser check) */
+#app .scmode{font-size:.34rem;font-weight:700;height:.78rem;gap:.16rem}#app .scmode svg{width:.46rem;height:.46rem}#app .scmodes{width:2.75rem}
+#app .scmid{font-size:.32rem}#app .scmid>div{text-align:center}
+/* levels: the label sits in the middle of its circle (it stood at the left edge); the numbers are larger than the word */
+#app .sclv{justify-content:center}#app .sclv button{display:flex;align-items:center;justify-content:center;padding:0;text-align:center;width:.86rem;height:.86rem;font-size:.42rem;line-height:1}#app .sclv button:first-child{font-size:.34rem}                             /* .26 / .28 / .30 */
+#app .scrow .lb,#app .scrow .vl{font-size:.31rem;font-weight:700}#app .scrow .lb{width:1.8rem;white-space:nowrap}#app .scquick>span{font-size:.32rem}#app .scq{font-size:.31rem}   /* .27 / .28 / .27 */
+#app .scnote{font-size:.25rem}                                          /* .20 */
+/* --- home cards: the second line --- */
+#app .card .sub{font-size:.33rem}#app .card.cont em{font-size:.33rem}   /* .29 */
+#app .rcard .rtx span{font-size:.35rem}                                 /* .31 */
+/* --- top strip and the left view --- */
+.chip{font-size:.22rem}                                                 /* .19 */
+#headline p{font-size:.3rem;font-weight:500}                            /* .265 */
+.cbtn b{font-size:.34rem}.cbtn .tx span{font-size:.24rem}               /* .30 / .205 */
+#lbtns .cbtn.sys .tx span,#lbtns .cbtn.drive .tx span{font-size:.2rem}  /* .185 ; .22 ran into the edge of the button (browser check) */
+.cpill{font-size:.23rem}                                                /* .20 */
+#syscap{font-size:.2rem}                                                /* .17 */
+/* --- SOS screen: the small buttons carry an inline size, and the rows are drawn closer so that the note under them stays on the screen --- */
+#app .kv .btn{font-size:.3rem !important;height:.68rem !important}      /* .26 inline */
+#app .panel.sos .steps{margin-top:.1rem}#app .panel.sos .steps li{padding:.035rem 0}
+#app .panel.sos+.panel{padding-top:.12rem;padding-bottom:.12rem}#app .panel.sos+.panel .kv{padding:.07rem 0}
+/* weights: 600 was drawn as regular on the emulator (device check, aurora8 first build), so the rows a person has to read are 700 */
+/* QR step: the two-line hint under the code sits outside the flow (top 5.3rem); the text after the box ran into it on the emulator (aurora9 check) */
+/* second try (the first, a margin under the box, pushed the note out of the panel): the hint moves into the text column beside the code */
+#app .qrbox:not(.big) .qrhint{position:static;width:auto;text-align:left;margin:auto 0 0;padding-top:.1rem}   /* third form: the hint is the last line of the text column (see the hand-over card below) */
+/* large view: code 9.4rem stays (module size matters for reading); the hint, the button and the gaps are drawn tighter so that the button stays inside the box */
+#app .qrbox.big{gap:.07rem}#app .qrbox.big .qrhint{font-size:.26rem}#app .qrbox.big .sbtn{height:.6rem;font-size:.28rem}
+/* ================= HAND-OVER CARD beside the QR and the step line (owner, 2026-11-14) =================
+   The summary is the text of the QR drawn as rows: label (grey), value (large, heavy, white), source of the value (small). */
+#app .qrside{flex:1;min-width:0;display:flex;flex-direction:column;align-self:stretch}
+#app .qrbox.big .qrside{display:contents}#app .qrbox.big .brief{display:none}
+#app .qrctl{margin-top:.2rem}
+/* font-size on the card itself: without it the rows took their line height from the 1rem of the page and stood 1.4rem apart (aurora12 first build) */
+.brief{font-size:.3rem;line-height:1.25;border-radius:.18rem;background:rgba(255,255,255,.055);border:.02rem solid rgba(255,255,255,.18);padding:.14rem .24rem .12rem}
+.brief .bh{padding-bottom:.08rem;border-bottom:.025rem solid rgba(255,255,255,.26)}
+.brief .bh b{font-size:.36rem;font-weight:800;color:#fff}
+.brief .br{display:flex;align-items:baseline;gap:.2rem;padding:.085rem 0;border-bottom:.015rem solid rgba(255,255,255,.11)}
+.brief .bk{flex:none;width:1.5rem;font-size:.31rem;font-weight:700;color:#A9B8C8;white-space:nowrap}
+.brief .bv{flex:1;min-width:0;line-height:1.25}
+.brief .bv b{font-size:.4rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.brief .bv small{display:inline-block;margin-left:.14rem;font-size:.25rem;font-weight:500;color:#9FB0C0}
+.brief .bf{margin:.09rem 0 0;font-size:.27rem;font-weight:700;color:#FFD391}
+/* step line of "사고 상황 정리": .31 -> .44, heavy, white, upright */
+#app .glab>span{font-size:.44rem;font-weight:800;font-style:normal;letter-spacing:0;color:#fff}

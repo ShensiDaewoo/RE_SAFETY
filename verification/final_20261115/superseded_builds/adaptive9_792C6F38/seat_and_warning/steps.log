@@ -1,0 +1,11 @@
+17:41:53  car w00_car: {"gear": "Park", "speed_kph": 0, "locks": [true, true, true, true], "cabin": false, "headlamp_mode": "Off", "web_active": null}
+17:41:55  ui w00_now: RE:SAFETY Full HMI Final Concept / 상단 상태 표시 (콘셉트) / RE:SAFETY · Pleos 차량 연결 / 사고 상황 시뮬레이션 / 시뮬레이션 종료 ✕ / RE:SAFETY / RE:SAFETY / 사고 대응 / 긴급 / SOS 받기 설정 열기 / 119 전화 연결 구급·화재 · 통화는 직접 / SOS 주변 요청 · 위치 · 상태 / 사고 후 / 보호 모드 조명·문 잠금을 한 번에 요청 / 사고 상황 정리 행동 확인부터 QR까지 6단계 / 좌석·안전벨트 차량 보고와 직접 확인 / 보험·견인 연락과 현장 공유 / 기록·준비 / 출발 전 확인 / 사고 기록
+17:41:58  tap "시뮬레이션 종료" at (1690,124)
+17:42:03  tap "좌석 · 안전벨트 확인" at (1701,672)
+17:42:09  shot w01_seat_screen
+17:42:09  log w01_seat_log: 0 lines
+17:42:12  tap "← 홈" at (1171,354)
+17:42:16  tap "사고 상황 시뮬레이션 시작" at (1607,124)
+17:42:18  shot w02_warning
+17:42:25  shot w03_after_warning
+17:42:25  log w03_log: 45 lines

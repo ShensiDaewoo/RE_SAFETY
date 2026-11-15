@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- DEBUG-ONLY diagnostics (Signal Probe). None of this is merged into the release variant.
+         PRIVATE_CAR_SAFETY: official docs say signature|privileged; the emulator grants it as normal.
+         Do not treat emulator access as approval for a production app. -->
+    <uses-permission android:name="pleos.car.permission.PRIVATE_CAR_SAFETY" />
+    <uses-permission android:name="pleos.car.permission.CAR_SAFETY" />
+    <uses-permission android:name="pleos.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="pleos.car.permission.CAR_TIRES" />
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_DOORS" />
+    <uses-permission android:name="android.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="android.car.permission.CAR_INFO" />
+    <uses-permission android:name="android.car.permission.CAR_EXTERIOR_ENVIRONMENT" />
+
+    <application>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="Signal Probe (진단)"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
+        </activity>
+    </application>
+</manifest>

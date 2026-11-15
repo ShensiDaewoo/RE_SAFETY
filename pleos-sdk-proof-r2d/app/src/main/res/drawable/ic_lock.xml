@@ -1,0 +1,5 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp" android:viewportWidth="48" android:viewportHeight="48">
+    <!-- R2D: lock for rail items and cards that are available only after stopping (PATH D+ HTML 'lock' geometry). Tinted in code. -->
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.4" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M13 21h22a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H13a4 4 0 0 1-4-4V25a4 4 0 0 1 4-4z"/>
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.4" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M16 21v-6a8 8 0 0 1 16 0v6"/>
+</vector>

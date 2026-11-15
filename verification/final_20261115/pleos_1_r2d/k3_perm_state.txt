@@ -1,0 +1,264 @@
+Activity Resolver Table:
+
+  Non-Data Actions:
+
+      android.intent.action.MAIN:
+
+        5208504 com.contest.signalprobe.r2d/com.contest.signalprobe.ProductActivity filter c780aed
+
+          Action: "android.intent.action.MAIN"
+
+          Category: "android.intent.category.LAUNCHER"
+
+
+
+Domain verification status:
+
+
+
+Key Set Manager:
+
+  [com.contest.signalprobe.r2d]
+
+      Signing KeySets: 23
+
+
+
+Packages:
+
+  Package [com.contest.signalprobe.r2d] (dfdd18f):
+
+    appId=10175
+
+    pkg=Package{a7025bf com.contest.signalprobe.r2d}
+
+    codePath=/data/app/~~7LcoxR4O3-3JqiHm2Q3aEA==/com.contest.signalprobe.r2d-sXjSvA2McRzn0M--vnZUBg==
+
+    resourcePath=/data/app/~~7LcoxR4O3-3JqiHm2Q3aEA==/com.contest.signalprobe.r2d-sXjSvA2McRzn0M--vnZUBg==
+
+    legacyNativeLibraryDir=/data/app/~~7LcoxR4O3-3JqiHm2Q3aEA==/com.contest.signalprobe.r2d-sXjSvA2McRzn0M--vnZUBg==/lib
+
+    extractNativeLibs=false
+
+    primaryCpuAbi=null
+
+    secondaryCpuAbi=null
+
+    cpuAbiOverride=null
+
+    versionCode=24 minSdk=28 targetSdk=34
+
+    minExtensionVersions=[]
+
+    versionName=0.8.0-r2d-dev
+
+    usesNonSdkApi=false
+
+    splits=[base]
+
+    apkSigningVersion=2
+
+    flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+
+    forceQueryable=false
+
+    queriesPackages=[ai.pleos.playground.service.location.fused]
+
+    queriesIntents=[Intent { act=android.intent.action.TTS_SERVICE }, Intent { act=ai.pleos.playground.vehicle.VEHICLE_START }, Intent { act=ai.pleos.playground.intent.action.NAVI_START }]
+
+    dataDir=/data/user/0/com.contest.signalprobe.r2d
+
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+
+    timeStamp=2026-11-15 16:28:17
+
+    lastUpdateTime=2026-11-15 13:06:06
+
+    installerPackageName=null
+
+    installerPackageUid=-1
+
+    initiatingPackageName=com.android.shell
+
+    originatingPackageName=null
+
+    packageSource=1
+
+    appMetadataFilePath=null
+
+    signatures=PackageSignatures{dfa748c version:2, signatures:[535a7b5], past signatures:[]}
+
+    installPermissionsFixed=true
+
+    pkgFlags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+
+    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+
+    apexModuleName=null
+
+    requested permissions:
+
+      android.car.permission.CAR_SPEED
+
+      android.car.permission.CAR_POWERTRAIN
+
+      pleos.car.permission.CAR_SEATS
+
+      pleos.car.permission.CAR_DOORS
+
+      pleos.car.permission.CAR_WINDOWS
+
+      pleos.car.permission.CAR_LIGHTS
+
+      pleos.car.permission.CAR_ENERGY
+
+      pleos.car.permission.CONTROL_CAR_LIGHTS
+
+      pleos.car.permission.CONTROL_CAR_DOORS
+
+      pleos.car.permission.FUSED_LOCATION
+
+      pleos.car.permission.NAVI_ROUTE
+
+      pleos.car.permission.CAR_INFO
+
+      pleos.car.permission.CAR_DRIVE
+
+      ai.pleos.playground.service.vehicle.VEHICLE_BINDING
+
+      ai.pleos.playground.service.location.fused.FUSED_LOCATION_BINDING
+
+    install permissions:
+
+      ai.pleos.playground.service.vehicle.VEHICLE_BINDING: granted=true
+
+      pleos.car.permission.CONTROL_CAR_DOORS: granted=true
+
+      pleos.car.permission.NAVI_ROUTE: granted=true
+
+      android.car.permission.CAR_POWERTRAIN: granted=true
+
+      pleos.car.permission.CAR_ENERGY: granted=true
+
+      pleos.car.permission.CAR_INFO: granted=true
+
+      pleos.car.permission.CAR_LIGHTS: granted=true
+
+      pleos.car.permission.CAR_WINDOWS: granted=true
+
+      pleos.car.permission.CONTROL_CAR_LIGHTS: granted=true
+
+      pleos.car.permission.CAR_DOORS: granted=true
+
+      pleos.car.permission.CAR_DRIVE: granted=true
+
+      pleos.car.permission.CAR_SEATS: granted=true
+
+      ai.pleos.playground.service.location.fused.FUSED_LOCATION_BINDING: granted=true
+
+    User 0: ceDataInode=131325 installed=true hidden=false suspended=false distractionFlags=0 stopped=true notLaunched=true enabled=0 instant=false virtual=false
+
+      installReason=0
+
+      firstInstallTime=2026-11-14 03:22:01
+
+      uninstallReason=0
+
+      runtime permissions:
+
+        android.car.permission.CAR_SPEED: granted=false
+
+        pleos.car.permission.FUSED_LOCATION: granted=false
+
+    User 10: ceDataInode=507917 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false
+
+      installReason=0
+
+      firstInstallTime=2026-11-14 02:13:28
+
+      uninstallReason=0
+
+      runtime permissions:
+
+        android.car.permission.CAR_SPEED: granted=false, flags=[ USER_SET]
+
+        pleos.car.permission.FUSED_LOCATION: granted=true
+
+
+
+Queries:
+
+  system apps queryable: false
+
+  queries via forceQueryable:
+
+  queries via package name:
+
+    com.contest.signalprobe.r2d:
+
+      com.contest.signalprobe.r2d.test
+
+    com.contest.signalprobe.r2d.test:
+
+      com.contest.signalprobe.r2d
+
+  queries via component:
+
+    com.android.settings.intelligence:
+
+      com.contest.signalprobe.r2d
+
+  queryable via interaction:
+
+    User 0:
+
+    User 10:
+
+      [com.android.emulator.multidisplay,ai.pleos.connectwebconsole,com.android.location.fused,com.android.car.settings,com.android.providers.settings,ai.pleos.connecttokensampleapp,ai.pleos.service.ui,com.android.server.telecom,com.android.DeviceAsWebcam,ai.umos.globalsearch,ai.umos.applibrary,ai.umos.homescreen,com.android.car.developeroptions,ai.umos.conveniencemodemanager,ai.pleos.service.car,com.android.inputdevices,ai.pleos.system.update.broadcast,com.android.keychain,ai.umos.musicvisualizer,android,com.android.localtransport,com.android.car,ai.umos.systemdialogdispatcher]:
+
+        com.contest.signalprobe.r2d
+
+      ai.umos.inputmethod:
+
+        com.contest.signalprobe.r2d
+
+      ai.pleos.playground.service.location.fused:
+
+        com.contest.signalprobe.r2d
+
+      ai.pleos.playground.service.vehicle:
+
+        com.contest.signalprobe.r2d
+
+      ai.pleos.playground.service.navi:
+
+        com.contest.signalprobe.r2d
+
+      com.android.permissioncontroller:
+
+        com.contest.signalprobe.r2d
+
+  queryable via uses-library:
+
+
+
+Dexopt state:
+
+  [com.contest.signalprobe.r2d]
+
+    path: /data/app/~~7LcoxR4O3-3JqiHm2Q3aEA==/com.contest.signalprobe.r2d-sXjSvA2McRzn0M--vnZUBg==/base.apk
+
+      x86_64: [status=verify] [reason=install] [primary-abi]
+
+        [location is /data/app/~~7LcoxR4O3-3JqiHm2Q3aEA==/com.contest.signalprobe.r2d-sXjSvA2McRzn0M--vnZUBg==/oat/x86_64/base.odex]
+
+
+
+Compiler stats:
+
+  [com.contest.signalprobe.r2d]
+
+     base.apk - 465
+

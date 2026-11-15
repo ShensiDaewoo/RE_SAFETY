@@ -1,0 +1,109 @@
+11-15 12:37:31.796 I/[GAAS][SDK]TtsServiceManager(12351): [main]createTts ON_DEVICE
+11-15 12:37:31.800 D/[GAAS][SDK]OnDeviceStreamTts(12351): [main]connectService with listener
+11-15 12:37:32.436 D/[GAAS][SDK]OnDeviceStreamTts(12351): [main]onServiceConnected
+11-15 12:37:32.436 D/[GAAS][SDK]OnDeviceStreamTts(12351): [main]registerCallback
+11-15 12:37:32.437 D/[GAAS][SDK]OnDeviceStreamTts(12351): [main]addEventListener
+11-15 12:37:32.437 I/[GAAS]OnDeviceTtsStreamBinder( 3102): [binder:3102_4]registerCallback ai.pleos.playground.caas.service.speech.aidl.ITtsCallback$Stub$Proxy@14a42cf com.contest.resafety.fullhmi.aurora
+11-15 12:37:32.438 I/[GAAS]CallbackManagerImpl( 3102): [binder:3102_4]registerTtsCallback applicationId = com.contest.resafety.fullhmi.aurora:ondevice
+11-15 12:37:32.439 D/[GAAS][SDK]OnDeviceStreamTts(12351): [DefaultDispatcher-worker-2]setLocale ko_KR com.contest.resafety.fullhmi.aurora
+11-15 12:37:32.439 I/[GAAS]OnDeviceTtsStreamBinder( 3102): [binder:3102_4]setLocale(com.contest.resafety.fullhmi.aurora) ko-KR
+11-15 12:37:32.440 I/[GAAS]OnDeviceTtsStreamManagerImpl( 3102): [ondevice-tts-input-channel]tts setLocale(com.contest.resafety.fullhmi.aurora) tag=ko-KR, value=ko_KR
+11-15 12:37:32.440 I/[GAAS]DataStoreManagerImpl( 3102): [ondevice-tts-input-channel]saveTtsLocale(com.contest.resafety.fullhmi.aurora) {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:37:58.673 D/[GAAS][SDK]OnDeviceStreamTts(12351): [DefaultDispatcher-worker-2]doSpeak(com.contest.resafety.fullhmi.aurora) text=보호 모드 결과. 미등 켜짐, 실내등 켜짐, 앞뒤 문 4개 잠금 해제., isFinal=true
+11-15 12:37:58.676 I/[GAAS]OnDeviceTtsStreamManagerImpl( 3102): [ondevice-tts-input-channel](jobId=1) speak(com.contest.resafety.fullhmi.aurora) - new request, creating job. jobMode=0, isFinal=true, audioInfo=, version=4.2.10-coral-aosp, speechSdkVersion=1.17.1, systemVrdbVersion=
+11-15 12:37:58.678 I/[GAAS]AppOpsRepository( 3102): [ondevice-tts-input-channel]isOpAllowed(com.contest.resafety.fullhmi.aurora) :android:play_audio 1010181 0 com.contest.resafety.fullhmi.aurora
+11-15 12:37:58.682 I/[GAAS]OnDeviceTtsStreamManagerImpl( 3102): [ondevice-tts-input-channel](jobId=1) speak(com.contest.resafety.fullhmi.aurora) received final. texts=보호 모드 결과. 미등 켜짐, 실내등 켜짐, 앞뒤 문 4개 잠금 해제.
+11-15 12:37:58.682 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-4]updateTts cmd(UpdateTtsReady) id(com.contest.resafety.fullhmi.aurora:ondevice) data()
+11-15 12:37:58.682 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onResponse UpdateTtsReady 
+11-15 12:37:58.682 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onReady
+11-15 12:37:58.682 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onReady
+11-15 12:37:58.686 I/[GAAS]DataStoreManagerImpl( 3102): [DefaultDispatcher-worker-1]getSavedTtsLocaleMap {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:37:58.693 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-4]updateTts cmd(UpdateTtsStart) id(com.contest.resafety.fullhmi.aurora:ondevice) data()
+11-15 12:37:58.694 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_2]onResponse UpdateTtsStart 
+11-15 12:37:58.694 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_2]onStart
+11-15 12:37:58.694 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_2]onStart
+11-15 12:37:58.735 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-1]create audioTrack: sr=22050 min=2132 use=8528B frames=4264
+11-15 12:37:58.738 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-1]getAudioDeviceInfo zoneId=-1 usage=1 contentType=1 deviceInfo=null
+11-15 12:37:58.741 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-2]writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) sr=22050 ch=1 buf=8820B target=4410B underrun=0
+11-15 12:37:58.741 I/[GAAS]DataStoreManagerImpl( 3102): [DefaultDispatcher-worker-1]getSavedTtsLocaleMap {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:37:58.741 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-2]play!
+11-15 12:37:59.694 I/[GAAS]DataStoreManagerImpl( 3102): [DefaultDispatcher-worker-4]getSavedTtsLocaleMap {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:37:59.860 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:00.340 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:00.340 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:00.937 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:00.937 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:01.541 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:01.541 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:02.136 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:02.136 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:02.737 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:02.737 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:03.340 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:03.341 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:03.935 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:03.936 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:04.537 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:04.537 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=10752, isFinal=true
+11-15 12:38:04.781 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=10752, isFinal=true
+11-15 12:38:04.781 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) TotalWrittenBytes=223744, UnderRunCount: before=0, after=0, delta=0
+11-15 12:38:04.782 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-5]markEndOfStream input=111872, result=0
+11-15 12:38:04.782 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-5]write pad: 1754
+11-15 12:38:04.967 I/[GAAS]AudioTrackManagerImpl( 3102): [main]audioTrack onMarkerReached
+11-15 12:38:04.968 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-4](jobId=1) onDeviceTtsPlayer(com.contest.resafety.fullhmi.aurora:ondevice) - released
+11-15 12:38:04.968 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-4]stopAndRelease: stop/flush/release
+11-15 12:38:04.968 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-1]updateTts cmd(UpdateTtsDone) id(com.contest.resafety.fullhmi.aurora:ondevice) data()
+11-15 12:38:04.968 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_2]onResponse UpdateTtsDone 
+11-15 12:38:04.968 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_2]onDone
+11-15 12:38:04.969 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_2]onDone
+11-15 12:38:04.970 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=1) onDeviceTtsPlayer(com.contest.resafety.fullhmi.aurora:ondevice) - complete
+11-15 12:38:09.799 D/[GAAS][SDK]OnDeviceStreamTts(12351): [DefaultDispatcher-worker-2]doSpeak(com.contest.resafety.fullhmi.aurora) text=되돌리기 결과. 미등 원래대로, 실내등 원래대로, 앞뒤 문 4개 잠금 원래대로., isFinal=true
+11-15 12:38:09.803 I/[GAAS]OnDeviceTtsStreamManagerImpl( 3102): [ondevice-tts-input-channel](jobId=2) speak(com.contest.resafety.fullhmi.aurora) - new request, creating job. jobMode=0, isFinal=true, audioInfo=, version=4.2.10-coral-aosp, speechSdkVersion=1.17.1, systemVrdbVersion=
+11-15 12:38:09.807 I/[GAAS]AppOpsRepository( 3102): [ondevice-tts-input-channel]isOpAllowed(com.contest.resafety.fullhmi.aurora) :android:play_audio 1010181 0 com.contest.resafety.fullhmi.aurora
+11-15 12:38:09.808 I/[GAAS]OnDeviceTtsStreamManagerImpl( 3102): [ondevice-tts-input-channel](jobId=2) speak(com.contest.resafety.fullhmi.aurora) received final. texts=되돌리기 결과. 미등 원래대로, 실내등 원래대로, 앞뒤 문 4개 잠금 원래대로.
+11-15 12:38:09.808 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-1]updateTts cmd(UpdateTtsReady) id(com.contest.resafety.fullhmi.aurora:ondevice) data()
+11-15 12:38:09.808 I/[GAAS]DataStoreManagerImpl( 3102): [DefaultDispatcher-worker-2]getSavedTtsLocaleMap {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:38:09.808 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onResponse UpdateTtsReady 
+11-15 12:38:09.808 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onReady
+11-15 12:38:09.808 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onReady
+11-15 12:38:09.810 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-4]updateTts cmd(UpdateTtsStart) id(com.contest.resafety.fullhmi.aurora:ondevice) data()
+11-15 12:38:09.810 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onResponse UpdateTtsStart 
+11-15 12:38:09.810 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onStart
+11-15 12:38:09.810 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_1]onStart
+11-15 12:38:09.822 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-2]create audioTrack: sr=22050 min=2132 use=8528B frames=4264
+11-15 12:38:09.822 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-2]getAudioDeviceInfo zoneId=-1 usage=1 contentType=1 deviceInfo=null
+11-15 12:38:09.823 I/[GAAS]DataStoreManagerImpl( 3102): [DefaultDispatcher-worker-2]getSavedTtsLocaleMap {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:38:09.824 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-4]writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) sr=22050 ch=1 buf=8820B target=4410B underrun=0
+11-15 12:38:09.824 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-4]play!
+11-15 12:38:09.843 I/[GAAS]DataStoreManagerImpl( 3102): [DefaultDispatcher-worker-2]getSavedTtsLocaleMap {com.contest.resafety.fullhmi.aurora=ko_KR, ai.umos.ambientai=ko_KR}
+11-15 12:38:10.020 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:10.498 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:10.498 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:11.103 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:11.103 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:11.700 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:11.700 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:12.297 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:12.297 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:12.901 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:12.901 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-6](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:13.499 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:13.499 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:14.103 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:14.103 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:14.698 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:14.698 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=26624, isFinal=false
+11-15 12:38:15.303 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=26624, isFinal=false
+11-15 12:38:15.303 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - try write=15872, isFinal=true
+11-15 12:38:15.663 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) - written=15872, isFinal=true
+11-15 12:38:15.663 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-1](jobId=2) writeAudioTrack(com.contest.resafety.fullhmi.aurora:ondevice) TotalWrittenBytes=255488, UnderRunCount: before=0, after=0, delta=0
+11-15 12:38:15.663 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-1]markEndOfStream input=127744, result=0
+11-15 12:38:15.663 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-1]write pad: 1762
+11-15 12:38:15.845 I/[GAAS]AudioTrackManagerImpl( 3102): [main]audioTrack onMarkerReached
+11-15 12:38:15.845 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-1](jobId=2) onDeviceTtsPlayer(com.contest.resafety.fullhmi.aurora:ondevice) - released
+11-15 12:38:15.845 I/[GAAS]a ( 3102): [DefaultDispatcher-worker-6]updateTts cmd(UpdateTtsDone) id(com.contest.resafety.fullhmi.aurora:ondevice) data()
+11-15 12:38:15.845 I/[GAAS]AudioTrackManagerImpl( 3102): [DefaultDispatcher-worker-1]stopAndRelease: stop/flush/release
+11-15 12:38:15.845 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_7]onResponse UpdateTtsDone 
+11-15 12:38:15.845 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_7]onDone
+11-15 12:38:15.845 D/[GAAS][SDK]TtsCallback(12351): [binder:12351_7]onDone
+11-15 12:38:15.845 I/[GAAS]OnDeviceStreamPlayerImpl( 3102): [DefaultDispatcher-worker-5](jobId=2) onDeviceTtsPlayer(com.contest.resafety.fullhmi.aurora:ondevice) - complete

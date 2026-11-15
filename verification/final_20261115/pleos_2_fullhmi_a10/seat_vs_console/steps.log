@@ -1,0 +1,14 @@
+18:06:14  put /vehicle/controls?speed=0&accelerator=0&brake=0 -> 200
+18:06:14  put /vehicle/gear?gear=Park -> 200
+18:06:14  put /vehicle/body?cabin_light=false -> 200
+18:06:14  put /vehicle/lights?feature=headlamp_mode&value=Off -> 200
+18:06:15  put /vehicle/body?doors_locked=true -> 200
+18:06:15  sh s00_installed_sha256: 8bc11e8a052ffbb4e69c90d54d703643cab157e82db93fc95d7d4db74b4bb24d  /data/app/~~KIPJlAAke9n4YglpPa3x9A==/com.contest.resafety.fullhmi.aurora-FE0AG1q-CQI_dKSzOtd8XA==/base.apk
+18:06:24  car s01_car: {"gear": "Park", "speed_kph": 0, "locks": [true, true, true, true], "cabin": false, "headlamp_mode": "Off", "web_active": null}
+18:06:27  ui s01_now: RE:SAFETY Full HMI Final Concept / 상단 상태 표시 (콘셉트) / RE:SAFETY · Pleos 차량 연결 / 사고 상황 시뮬레이션 / 시뮬레이션 종료 ✕ / RE:SAFETY / RE:SAFETY / 사고 대응 / 긴급 / SOS 받기 설정 열기 / 119 전화 연결 구급·화재 · 통화는 직접 / SOS 주변 요청 · 위치 · 상태 / 사고 후 / 보호 모드 조명·문 잠금을 한 번에 요청 / 사고 상황 정리 행동 확인부터 QR까지 6단계 / 좌석·안전벨트 차량 보고와 직접 확인 / 보험·견인 연락과 현장 공유 / 기록·준비 / 출발 전 확인 / 사고 기록
+18:06:35  tap "시뮬레이션 종료" at (1690,124)
+18:06:40  tap "좌석 · 안전벨트 확인" at (1701,672)
+18:06:47  tap "안전벨트 조회" at (1701,1148)
+18:06:53  shot s02_seat_screen
+18:06:53  log s02_app_log: 5 lines
+18:06:56  tap "← 홈" at (1171,354)

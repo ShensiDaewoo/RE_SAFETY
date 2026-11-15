@@ -1,0 +1,43 @@
+11-15 12:19:02.474 I/FullHMI (23579): TTS_INIT pleos on-device ready
+11-15 12:19:02.759 I/FullHMIVeh(23579): NAVI initialized
+11-15 12:19:02.780 I/FullHMIVeh(23579): OBS NAVI_ADDRESS received chars=7
+11-15 12:19:02.899 I/FullHMI (23579): SCENE_NATIVE READY -> ACCIDENT_RESPONSE vehicle=true
+11-15 12:19:02.899 I/FullHMI (23579): SCENE READY -> ACCIDENT_RESPONSE motion=parked src=vehicle why=vehicle signal
+11-15 12:19:03.063 I/FullHMI (23579): SCENE_RASTER a 64x54 152ms
+11-15 12:19:04.580 I/FullHMI (23579): SCENE_RASTER n (prepared) 16ms
+11-15 12:19:14.072 I/FullHMI (23579): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=vehicle why=render
+11-15 12:19:14.072 I/FullHMI (23579): SCENE_NATIVE ACCIDENT_RESPONSE -> READY vehicle=true
+11-15 12:19:19.074 I/FullHMI (23579): SCENE_NATIVE READY -> DRIVING vehicle=true
+11-15 12:19:19.074 I/FullHMI (23579): SCENE READY -> DRIVING motion=moving src=vehicle why=vehicle signal
+11-15 12:19:19.081 I/FullHMIVeh(23579): NAVI requestNavigationScreen(Foreground) sent
+11-15 12:19:19.081 I/FullHMI (23579): SCENE_HANDOVER to Pleos navigation: ok
+11-15 12:19:39.790 I/FullHMI (23579): SCENE_NATIVE DRIVING -> READY vehicle=true
+11-15 12:19:39.795 I/FullHMI (23579): SCENE DRIVING -> READY motion=parked src=vehicle why=parked for 2 s
+11-15 12:19:39.804 I/FullHMI (23579): SCENE_RETURN requested for READY
+11-15 12:19:42.306 I/FullHMI (23579): SCENE_RETURN result for READY: in front
+11-15 12:19:44.825 I/FullHMI (23579): SCENE_NATIVE READY -> DRIVING vehicle=true
+11-15 12:19:44.825 I/FullHMI (23579): SCENE READY -> DRIVING motion=moving src=vehicle why=vehicle signal
+11-15 12:19:44.826 I/FullHMIVeh(23579): NAVI requestNavigationScreen(Foreground) sent
+11-15 12:19:44.826 I/FullHMI (23579): SCENE_HANDOVER to Pleos navigation: ok
+11-15 12:19:52.216 I/FullHMI (23579): SCENE_NATIVE DRIVING -> ACCIDENT_PENDING vehicle=true
+11-15 12:19:52.345 I/FullHMI (23579): SCENE DRIVING -> ACCIDENT_PENDING motion=moving src=vehicle why=render
+11-15 12:19:52.389 I/FullHMI (23579): TTS_SPEAK chars=56
+11-15 12:19:52.397 I/FullHMI (23579): TTS_EVENT start
+11-15 12:19:59.235 I/FullHMI (23579): TTS_EVENT done
+11-15 12:20:17.798 I/FullHMI (23579): SCENE ACCIDENT_PENDING -> ACCIDENT_RESPONSE motion=parked src=vehicle why=app shown again
+11-15 12:20:17.809 I/FullHMI (23579): SCENE_NATIVE ACCIDENT_PENDING -> ACCIDENT_RESPONSE vehicle=true
+11-15 12:20:17.956 I/FullHMI (23579): SCENE_RETURN requested for ACCIDENT_RESPONSE
+11-15 12:20:17.956 I/FullHMI (23579): TTS_SPEAK chars=30
+11-15 12:20:17.977 I/FullHMI (23579): TTS_EVENT start
+11-15 12:20:20.457 I/FullHMI (23579): SCENE_RETURN result for ACCIDENT_RESPONSE: in front
+11-15 12:20:22.062 I/FullHMI (23579): TTS_EVENT done
+11-15 12:20:26.389 I/FullHMI (23579): PROTECT_RESULT restoring=false 미등 켜짐 확인 / 후방 안개등 미지원 건너뜀 / 실내등 켜짐 확인 / 앞뒤 문 4개 잠금 해제 확인
+11-15 12:20:26.389 I/FullHMI (23579): TTS_SPEAK chars=39
+11-15 12:20:26.397 I/FullHMI (23579): TTS_EVENT start
+11-15 12:20:31.968 I/FullHMI (23579): TTS_EVENT done
+11-15 12:20:36.313 I/FullHMI (23579): PROTECT_RESULT restoring=true 미등 원래대로 확인 / 실내등 원래대로 확인 / 앞뒤 문 4개 잠금 원래대로 확인
+11-15 12:20:36.313 I/FullHMI (23579): TTS_SPEAK chars=44
+11-15 12:20:36.324 I/FullHMI (23579): TTS_EVENT start
+11-15 12:20:42.432 I/FullHMI (23579): TTS_EVENT done
+11-15 12:20:47.546 I/FullHMI (23579): SCENE_NATIVE ACCIDENT_RESPONSE -> READY vehicle=true
+11-15 12:20:47.546 I/FullHMI (23579): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=vehicle why=render

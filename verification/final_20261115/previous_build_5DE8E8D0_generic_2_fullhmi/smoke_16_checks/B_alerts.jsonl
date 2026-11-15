@@ -1,0 +1,2 @@
+{"label": "B", "event": "start", "receive": true}
+{"label": "B", "event": "alert", "banner": "TEST / 실제 사고 아님", "has_test_banner": true, "distance_band": "300m 이내", "keys": ["banner", "distance_band", "expires_in_s", "message", "request_id", "state"], "ack_status": {"ok": true, "state": "ACKED"}}

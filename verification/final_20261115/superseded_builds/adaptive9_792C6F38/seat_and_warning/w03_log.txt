@@ -1,0 +1,90 @@
+--------- beginning of main
+
+11-15 17:42:03.320 I/FullHMI (16955): STATE {"warn":0,"warnOn":false,"scene":"READY","motion":"parked","sceneLog":["READY>ACCIDENT_RESPONSE","ACCIDENT_RESPONSE>READY"],"layout":"pleos-panel","hmi":"NORMAL","screen":"seat","sos":"idle","kind":"","matched":0,"counts":{},"conn":"unknown","recv":false,"alerts":0,"guide":0,"gactive":false,"checks":0,"minor":0,"major":0,"rec":53,"qr":0,"qrBig":false,"qrSplit":false,"qrPart":0,"qrParts":0,"bg":"photo","dstate":"normal","typo":null,"consent":false,"sim":false,"tries":0,"failStep":-1,"veh":{"sdk":"ready","gear":"P","kmh":0,"loc":true,"addr":true,"locStatus":"차량 위치 수신","seats":{"D":{"occ":"y","belt":"-"},"P":{"occ":"n","belt":"-"},"RL":{"occ":"y","belt":"-"},"RR":{"occ":"n","belt":"-"}},"doors":{"FL":"closed","FR":"closed","RL":"closed","RR":"closed","TG":"closed"},"tts":"ready","stt":"ready","extra":{"WIPER":"ON","LOWBEAM":"OFF","EV_SOC":"100","FUEL_PCT":null},"ho":0},"prot":{"src":"vehicle","state":"off","on":0,"res":{},"hist":14,"fog":false,"failNext":false},"seats":{"occ":0,"belt":0,"nobelt":0,"help":0,"unknown":4,"chk":0,"saved":false,"sim":true},"tow":{"ins":false,"insDigits":0,"towp":false,"when":false,"where":0,"target":"ins","items":4,"pii":false,"qr":0,"msg":false,"guide":false},"pre":{"chk":0,"memo":0,"saved":false,"car":false},"ev":{"n":0,"level":"","auto":false,"prompt":false,"ignored":0,"dup":0,"stale":0,"restored":"active"},"inc":{"id":null,"state":"ENDED","events":0,"journal":4,"last":{"id":"adaptive-846725","outcome":"ACCEPTED","action":"ENTER_ACC"},"accepted":4,"absorbed":0},"seatctl":{"seat":"D","tab":"ctl","mode":"pos","preset":"p1","v":{"heat":0,"vent":0,"fore":3,"height":1.5,"rec":110}},"sosRid":"","sosResumed":false,"sosLost":0,"sosEnd":"","pageErrors":0,"labqr":null,"lab":{"relay":false,"persisted":false,"pos":false},"dup119":-1}
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT about 226 16 289 38
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT accOn 692 16 125 38
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT back 273 229 93 73
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT carplan 578 304 277 647
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sv_D 927 546 307 33
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT so_D 1248 521 166 45
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sv_P 927 647 307 33
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT so_P 1248 621 166 45
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sv_RL 927 747 307 33
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT so_RL 1248 721 166 45
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sv_RR 927 847 307 33
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT so_RR 1248 821 166 45
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT seatsim 273 1013 1153 91
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sk0 303 1205 1092 80
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sk1 303 1284 1092 81
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT sk2 303 1365 1092 81
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT seatsave 303 1459 699 76
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT seatreset 1019 1459 376 76
+
+11-15 17:42:03.332 I/FullHMI (16955): RECT seatsaved 1339 1553 56 44
+
+11-15 17:42:11.325 I/FullHMI (16955): STATE {"warn":0,"warnOn":false,"scene":"READY","motion":"parked","sceneLog":["READY>ACCIDENT_RESPONSE","ACCIDENT_RESPONSE>READY"],"layout":"pleos-panel","hmi":"NORMAL","screen":"home","sos":"idle","kind":"","matched":0,"counts":{},"conn":"unknown","recv":false,"alerts":0,"guide":0,"gactive":false,"checks":0,"minor":0,"major":0,"rec":53,"qr":0,"qrBig":false,"qrSplit":false,"qrPart":0,"qrParts":0,"bg":"photo","dstate":"normal","typo":{"cards":0,"titleStyles":0,"subStyles":0,"bannerStyles":0,"title":"","sub":"","banner":"","sameFamilyWeightLh":false},"consent":false,"sim":false,"tries":0,"failStep":-1,"veh":{"sdk":"ready","gear":"P","kmh":0,"loc":true,"addr":true,"locStatus":"차량 위치 수신","seats":{"D":{"occ":"y","belt":"-"},"P":{"occ":"n","belt":"-"},"RL":{"occ":"y","belt":"-"},"RR":{"occ":"n","belt":"-"}},"doors":{"FL":"closed","FR":"closed","RL":"closed","RR":"closed","TG":"closed"},"tts":"ready","stt":"ready","extra":{"WIPER":"ON","LOWBEAM":"OFF","EV_SOC":"100","FUEL_PCT":null},"ho":0},"prot":{"src":"vehicle","state":"off","on":0,"res":{},"hist":14,"fog":false,"failNext":false},"seats":{"occ":0,"belt":0,"nobelt":0,"help":0,"unknown":4,"chk":0,"saved":false,"sim":true},"tow":{"ins":false,"insDigits":0,"towp":false,"when":false,"where":0,"target":"ins","items":4,"pii":false,"qr":0,"msg":false,"guide":false},"pre":{"chk":0,"memo":0,"saved":false,"car":false},"ev":{"n":0,"level":"","auto":false,"prompt":false,"ignored":0,"dup":0,"stale":0,"restored":"active"},"inc":{"id":null,"state":"ENDED","events":0,"journal":4,"last":{"id":"adaptive-846725","outcome":"ACCEPTED","action":"ENTER_ACC"},"accepted":4,"absorbed":0},"seatctl":{"seat":"D","tab":"ctl","mode":"pos","preset":"p1","v":{"heat":0,"vent":0,"fore":3,"height":1.5,"rec":110}},"sosRid":"","sosResumed":false,"sosLost":0,"sosEnd":"","pageErrors":0,"labqr":null,"lab":{"relay":false,"persisted":false,"pos":false},"dup119":-1}
+
+11-15 17:42:11.328 I/FullHMI (16955): RECT about 226 16 289 38
+
+11-15 17:42:11.328 I/FullHMI (16955): RECT accOn 692 16 125 38
+
+11-15 17:42:11.329 I/FullHMI (16955): RECT cpre 273 271 1153 190
+
+11-15 17:42:11.329 I/FullHMI (16955): RECT cseat 273 487 1153 190
+
+11-15 17:42:11.329 I/FullHMI (16955): RECT cseatctl 273 704 1153 190
+
+11-15 17:42:11.329 I/FullHMI (16955): RECT crec 273 921 1153 190
+
+11-15 17:42:15.822 I/FullHMI (16955): SCENE_NATIVE READY -> ACCIDENT_RESPONSE vehicle=true
+
+11-15 17:42:15.822 I/FullHMI (16955): SCENE READY -> ACCIDENT_RESPONSE motion=parked src=vehicle why=render
+
+11-15 17:42:15.827 I/FullHMI (16955): STATE {"warn":0,"warnOn":false,"scene":"ACCIDENT_RESPONSE","motion":"parked","sceneLog":["READY>ACCIDENT_RESPONSE","ACCIDENT_RESPONSE>READY","READY>ACCIDENT_RESPONSE"],"layout":"pleos-panel","hmi":"ACC","screen":"home","sos":"idle","kind":"","matched":0,"counts":{},"conn":"unknown","recv":false,"alerts":0,"guide":0,"gactive":false,"checks":0,"minor":0,"major":0,"rec":54,"qr":0,"qrBig":false,"qrSplit":false,"qrPart":0,"qrParts":0,"bg":"photo","dstate":"accident","typo":{"cards":6,"titleStyles":1,"subStyles":1,"bannerStyles":1,"title":"700|0.460rem|lh 1.250|ls 0","sub":"500|0.330rem|lh 1.300|ls 0","banner":"700|0.540rem|lh 1.250|ls 0","sameFamilyWeightLh":true},"consent":false,"sim":false,"tries":0,"failStep":-1,"veh":{"sdk":"ready","gear":"P","kmh":0,"loc":true,"addr":true,"locStatus":"차량 위치 수신","seats":{"D":{"occ":"y","belt":"-"},"P":{"occ":"n","belt":"-"},"RL":{"occ":"y","belt":"-"},"RR":{"occ":"n","belt":"-"}},"doors":{"FL":"closed","FR":"closed","RL":"closed","RR":"closed","TG":"closed"},"tts":"ready","stt":"ready","extra":{"WIPER":"ON","LOWBEAM":"OFF","EV_SOC":"100","FUEL_PCT":null},"ho":0},"prot":{"src":"vehicle","state":"off","on":0,"res":{},"hist":14,"fog":false,"failNext":false},"seats":{"occ":0,"belt":0,"nobelt":0,"help":0,"unknown":4,"chk":0,"saved":false,"sim":true},"tow":{"ins":false,"insDigits":0,"towp":false,"when":false,"where":0,"target":"ins","items":4,"pii":false,"qr":0,"msg":false,"guide":false},"pre":{"chk":0,"memo":0,"saved":false,"car":false},"ev":{"n":0,"level":"","auto":false,"prompt":false,"ignored":0,"dup":0,"stale":0,"restored":"active"},"inc":{"id":"inc-user-1794732135815-3","state":"ACTIVE","events":0,"journal":4,"last":{"id":"adaptive-846725","outcome":"ACCEPTED","action":"ENTER_ACC"},"accepted":4,"absorbed":0},"seatctl":{"seat":"D","tab":"ctl","mode":"pos","preset":"p1","v":{"heat":0,"vent":0,"fore":3,"height":1.5,"rec":110}},"sosRid":"","sosResumed":false,"sosLost":0,"sosEnd":"","pageErrors":0,"labqr":null,"lab":{"relay":false,"persisted":false,"pos":false},"dup119":-1}
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT about 226 16 289 38
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT accOff 743 16 188 38
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT recvset 1248 250 178 39
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT b119 273 300 568 201
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT bsos 857 300 568 201
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT cprot 273 569 568 182
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT cguide 857 569 568 182
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT cseat 273 769 568 182
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT ctow 857 769 568 182
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT cpre 273 1020 568 99
+
+11-15 17:42:15.828 I/FullHMI (16955): RECT crec 857 1020 568 99
+
+11-15 17:42:15.836 I/FullHMI (16955): WARN shown src=sig n=1
+
+11-15 17:42:15.919 I/FullHMI (16955): WARN countdown started (frame drawn)
+
+11-15 17:42:19.889 I/FullHMI (16955): WARN closed
+

@@ -1,0 +1,105 @@
+{
+ "gleo_schema_scan_lines": [
+  "11-15 18:10:34.022 I/[GAA]   ( 2904): [Schema] InstalledPackages User App Packages : [com.contest.resafety.fullhmi.aurora, com.contest.signalprobe.fig.test, com.contest.signalprobe.r2d.lab, com.contest.signalprobe.fig, com.contest.signalprobe.r2d, com.contest.signalprobe.r2d.test, com.contest.signalprobe.r2d.labhard, com.contest.signalprobe.sosdemo]",
+  "11-15 18:10:34.023 I/[GAA]   ( 2904): [Schema] Loaded schema.json from com.contest.resafety.fullhmi.aurora:",
+  "11-15 18:10:34.063 I/[GAA]   ( 2904): [Schema] InstalledPackages User App Packages : [com.contest.resafety.fullhmi.aurora, com.contest.signalprobe.fig.test, com.contest.signalprobe.r2d.lab, com.contest.signalprobe.fig, com.contest.signalprobe.r2d, com.contest.signalprobe.r2d.test, com.contest.signalprobe.r2d.labhard, com.contest.signalprobe.sosdemo]",
+  "11-15 18:10:34.064 I/[GAA]   ( 2904): [Schema] Loaded schema.json from com.contest.resafety.fullhmi.aurora:",
+  "11-15 18:10:34.104 I/[GAA]   ( 2904): [Schema] InstalledPackages User App Packages : [com.contest.resafety.fullhmi.aurora, com.contest.signalprobe.fig.test, com.contest.signalprobe.r2d.lab, com.contest.signalprobe.fig, com.contest.signalprobe.r2d, com.contest.signalprobe.r2d.test, com.contest.signalprobe.r2d.labhard, com.contest.signalprobe.sosdemo]",
+  "11-15 18:10:34.104 I/[GAA]   ( 2904): [Schema] Loaded schema.json from com.contest.resafety.fullhmi.aurora:"
+ ],
+ "stt_memo_chars_before_after": [
+  0,
+  12
+ ],
+ "stt_lines": [
+  "I/FullHMI (28622): STT_INIT pleos on-device ready",
+  "I/FullHMI (28622): STT_TEST_AUDIO loaded 84320 bytes",
+  "I/FullHMI (28622): STT_START field=pre.memo source=test-audio",
+  "I/FullHMI (28622): STT_EVENT started",
+  "I/FullHMI (28622): STT_RESULT final=false chars=1",
+  "I/FullHMI (28622): STT_EVENT started",
+  "I/FullHMI (28622): STT_RESULT final=false chars=3",
+  "I/FullHMI (28622): STT_EVENT started",
+  "I/FullHMI (28622): STT_RESULT final=false chars=7",
+  "I/FullHMI (28622): STT_EVENT started",
+  "I/FullHMI (28622): STT_RESULT final=false chars=10",
+  "I/FullHMI (28622): STT_EVENT started",
+  "I/FullHMI (28622): STT_RESULT final=false chars=12",
+  "I/FullHMI (28622): STT_EVENT ended",
+  "I/FullHMI (28622): STT_RESULT final=true chars=12",
+  "I/FullHMI (28622): STT_TEST_AUDIO sent 84320 bytes"
+ ],
+ "gleo_functions": {
+  "OPEN_ACCIDENT_RESPONSE": {
+   "screen": "home",
+   "hmi": "ACC",
+   "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+   "calls_before_after": [
+    0,
+    0
+   ],
+   "app_lines": [
+    "I/FullHMI (28622): GLEO_ACTION received OPEN_ACCIDENT_RESPONSE param=2 chars",
+    "I/FullHMI (28622): GLEO_CALLBACK sent {\"functionName\":\"OPEN_ACCIDENT_RESPONSE\",\"status\":\"success\",\"message\":\"The accident response screen was opened.\"}"
+   ]
+  },
+  "OPEN_ACCIDENT_GUIDE": {
+   "screen": "guide",
+   "hmi": "ACC",
+   "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+   "calls_before_after": [
+    0,
+    0
+   ],
+   "app_lines": [
+    "I/FullHMI (28622): GLEO_ACTION received OPEN_ACCIDENT_GUIDE param=2 chars",
+    "I/FullHMI (28622): GLEO_CALLBACK sent {\"functionName\":\"OPEN_ACCIDENT_GUIDE\",\"status\":\"success\",\"message\":\"The accident summary was opened.\"}"
+   ]
+  },
+  "OPEN_EMERGENCY_CALL_SCREEN": {
+   "screen": "guide",
+   "hmi": "ACC",
+   "focus": "ai.umos.callandmessage/ai.umos.mainscreen.MainScreenActivity",
+   "calls_before_after": [
+    0,
+    0
+   ],
+   "app_lines": [
+    "I/FullHMI (28622): GLEO_ACTION received OPEN_EMERGENCY_CALL_SCREEN param=2 chars",
+    "I/FullHMI (28622): DIAL_SCREEN_OPENED number=119 (call not placed by app)",
+    "I/FullHMI (28622): GLEO_CALLBACK sent {\"functionName\":\"OPEN_EMERGENCY_CALL_SCREEN\",\"status\":\"success\",\"message\":\"The dial screen was opened with 119. The call is not placed by the app.\"}"
+   ]
+  }
+ },
+ "notes": [
+  "install: Success",
+  "schema scan lines mentioning this app: 6",
+  "test audio 84320 bytes, 2.6 s",
+  "NOT FOUND accOff",
+  "stt state before: ready",
+  "tapped cpre",
+  "tapped stt_pre_memo",
+  "app: I/FullHMI (28622): STT_INIT pleos on-device ready",
+  "app: I/FullHMI (28622): STT_TEST_AUDIO loaded 84320 bytes",
+  "app: I/FullHMI (28622): STT_START field=pre.memo source=test-audio",
+  "app: I/FullHMI (28622): STT_EVENT started",
+  "app: I/FullHMI (28622): STT_RESULT final=false chars=1",
+  "app: I/FullHMI (28622): STT_EVENT started",
+  "app: I/FullHMI (28622): STT_RESULT final=false chars=3",
+  "app: I/FullHMI (28622): STT_EVENT started",
+  "app: I/FullHMI (28622): STT_RESULT final=false chars=7",
+  "app: I/FullHMI (28622): STT_EVENT started",
+  "app: I/FullHMI (28622): STT_RESULT final=false chars=10",
+  "app: I/FullHMI (28622): STT_EVENT started",
+  "app: I/FullHMI (28622): STT_RESULT final=false chars=12",
+  "app: I/FullHMI (28622): STT_EVENT ended",
+  "app: I/FullHMI (28622): STT_RESULT final=true chars=12",
+  "app: I/FullHMI (28622): STT_TEST_AUDIO sent 84320 bytes",
+  "tapped back",
+  "NOT FOUND accOff",
+  "OPEN_ACCIDENT_RESPONSE: {\"screen\": \"home\", \"hmi\": \"ACC\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"calls_before_after\": [0, 0], \"app_lines\": [\"I/FullHMI (28622): GLEO_ACTION received OPEN_ACCIDENT_RESPONSE param=2 chars\", \"I/FullHMI (28622): GLEO_CALLBACK sent {\\\"functionName\\\":\\\"OPEN_ACCIDENT_RESPONSE\\\",\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"The accident response screen was opened.\\\"}\"]}",
+  "OPEN_ACCIDENT_GUIDE: {\"screen\": \"guide\", \"hmi\": \"ACC\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"calls_before_after\": [0, 0], \"app_lines\": [\"I/FullHMI (28622): GLEO_ACTION received OPEN_ACCIDENT_GUIDE param=2 chars\", \"I/FullHMI (28622): GLEO_CALLBACK sent {\\\"functionName\\\":\\\"OPEN_ACCIDENT_GUIDE\\\",\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"The accident summary was opened.\\\"}\"]}",
+  "OPEN_EMERGENCY_CALL_SCREEN: {\"screen\": \"guide\", \"hmi\": \"ACC\", \"focus\": \"ai.umos.callandmessage/ai.umos.mainscreen.MainScreenActivity\", \"calls_before_after\": [0, 0], \"app_lines\": [\"I/FullHMI (28622): GLEO_ACTION received OPEN_EMERGENCY_CALL_SCREEN param=2 chars\", \"I/FullHMI (28622): DIAL_SCREEN_OPENED number=119 (call not placed by app)\", \"I/FullHMI (28622): GLEO_CALLBACK sent {\\\"functionName\\\":\\\"OPEN_EMERGENCY_CALL_SCREEN\\\",\\\"status\\\":\\\"success\\\",\\\"message\\\":\\\"The dial screen was opened with 119. The call is not placed by the app.\\\"}\"]}",
+  "NOT FOUND accOff"
+ ]
+}

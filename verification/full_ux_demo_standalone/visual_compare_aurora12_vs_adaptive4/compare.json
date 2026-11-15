@@ -1,0 +1,585 @@
+{
+ "before": {
+  "apk": "RE-SAFETY_FullHMI_0.4.0-aurora12.apk",
+  "sha256": "C864766DF59C8D87D743D630043A32E53FA30A5EED6FF0FA0099FB96D23EA7D6"
+ },
+ "after": {
+  "apk": "RE-SAFETY_AdaptiveHMI_0.5.0-adaptive4.apk",
+  "sha256": "5DE8E8D08CA130E2711C75B7CFB96CD40633E51AA2E1E310EDB1178F1BF51C63"
+ },
+ "app_window": [
+  0,
+  0,
+  2560,
+  1440
+ ],
+ "pixel_threshold": 24,
+ "screens": [
+  {
+   "screen": "r01_home",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     39,
+     45
+    ],
+    [
+     2386,
+     23,
+     40,
+     43
+    ]
+   ]
+  },
+  {
+   "screen": "r02_pre",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     23,
+     40,
+     43
+    ]
+   ]
+  },
+  {
+   "screen": "r03_seat",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     23,
+     40,
+     43
+    ]
+   ]
+  },
+  {
+   "screen": "r04_seatctl",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     23,
+     40,
+     43
+    ]
+   ]
+  },
+  {
+   "screen": "r05_record",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     23,
+     40,
+     43
+    ]
+   ]
+  },
+  {
+   "screen": "r06_about",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     23,
+     40,
+     43
+    ]
+   ]
+  },
+  {
+   "screen": "a01_home",
+   "same_screen_reached": true,
+   "changed_pct": 0.166,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     200,
+     966,
+     112,
+     68
+    ],
+    [
+     503,
+     976,
+     140,
+     79
+    ]
+   ]
+  },
+  {
+   "screen": "a02_protect",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a03_guide1_actions",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a04_guide2_injury",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a05_guide3_vehicle",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a06_guide4_share",
+   "same_screen_reached": true,
+   "changed_pct": 0.008,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a07_guide5_qr",
+   "same_screen_reached": true,
+   "changed_pct": 0.39,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     2127,
+     680,
+     45,
+     53
+    ],
+    [
+     2185,
+     680,
+     45,
+     53
+    ],
+    [
+     1180,
+     681,
+     188,
+     194
+    ],
+    [
+     103,
+     800,
+     129,
+     54
+    ],
+    [
+     1193,
+     864,
+     195,
+     168
+    ],
+    [
+     104,
+     901,
+     125,
+     152
+    ],
+    [
+     1593,
+     975,
+     37,
+     31
+    ]
+   ]
+  },
+  {
+   "screen": "a08_guide6_done",
+   "same_screen_reached": true,
+   "changed_pct": 0.009,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a09_seat",
+   "same_screen_reached": true,
+   "changed_pct": 0.009,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ]
+   ]
+  },
+  {
+   "screen": "a10_seat_belt_query",
+   "same_screen_reached": true,
+   "changed_pct": 0.177,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     103,
+     800,
+     129,
+     54
+    ],
+    [
+     104,
+     901,
+     125,
+     152
+    ],
+    [
+     2062,
+     1250,
+     39,
+     44
+    ],
+    [
+     2102,
+     1250,
+     40,
+     44
+    ]
+   ]
+  },
+  {
+   "screen": "a11_tow",
+   "same_screen_reached": true,
+   "changed_pct": 0.329,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     103,
+     800,
+     129,
+     54
+    ],
+    [
+     104,
+     901,
+     208,
+     152
+    ],
+    [
+     503,
+     976,
+     140,
+     79
+    ]
+   ]
+  },
+  {
+   "screen": "a12_belt_info",
+   "same_screen_reached": true,
+   "changed_pct": 0.167,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     200,
+     966,
+     112,
+     68
+    ],
+    [
+     503,
+     976,
+     140,
+     79
+    ]
+   ]
+  },
+  {
+   "screen": "a13_record",
+   "same_screen_reached": true,
+   "changed_pct": 0.386,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     1207,
+     484,
+     86,
+     48
+    ],
+    [
+     1163,
+     486,
+     40,
+     46
+    ],
+    [
+     1208,
+     558,
+     85,
+     48
+    ],
+    [
+     1163,
+     560,
+     40,
+     46
+    ],
+    [
+     1208,
+     632,
+     85,
+     48
+    ],
+    [
+     1163,
+     634,
+     40,
+     46
+    ],
+    [
+     103,
+     800,
+     129,
+     54
+    ],
+    [
+     104,
+     901,
+     208,
+     152
+    ],
+    [
+     503,
+     976,
+     140,
+     79
+    ]
+   ]
+  },
+  {
+   "screen": "a14_pre",
+   "same_screen_reached": true,
+   "changed_pct": 0.33,
+   "changed_rects_xywh": [
+    [
+     2427,
+     21,
+     40,
+     45
+    ],
+    [
+     2386,
+     24,
+     40,
+     42
+    ],
+    [
+     491,
+     129,
+     48,
+     35
+    ],
+    [
+     103,
+     800,
+     129,
+     54
+    ],
+    [
+     104,
+     901,
+     208,
+     152
+    ],
+    [
+     503,
+     976,
+     140,
+     79
+    ]
+   ]
+  }
+ ]
+}

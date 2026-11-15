@@ -1,0 +1,13 @@
+18:38:25 relay up=True
+18:38:35 tap accOn
+18:38:41 tap recvset
+18:38:43 tap recv
+18:38:45 receive on=True conn=ok
+18:38:48 sender E: matched
+18:38:52 saved S2_sos_received_on_pleos.png
+18:38:52 tap ack
+18:38:55 sender status counts: {"PENDING": 0, "DELIVERED": 0, "ACKED": 1, "DECLINED": 0, "WITHDRAWN": 0}
+18:38:56 saved S3_after_ack_on_pleos.png
+18:38:56 tap recv
+18:38:58 tap back
+18:39:00 tap accOff

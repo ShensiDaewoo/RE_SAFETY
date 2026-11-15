@@ -1,0 +1,124 @@
+CallsManager: 
+
+  mCalls: 
+
+  mCallAudioManager:
+
+    All calls:
+
+    Active dialing, or connecting calls:
+
+    Ringing calls:
+
+    Holding calls:
+
+    Foreground call:
+
+    null
+
+    CallAudioModeStateMachine:
+
+      History:
+
+      2026-11-15T07:27:05.133575 - Enter UNFOCUSED
+
+      Pending Msg:
+
+      Looper (CallAudioModeStateMachine, tid 210) {5a296dd}
+
+        (Total messages: 0, polling=true, quitting=false)
+
+    CallAudioRouteStateMachine:
+
+      Current state: QuiescentSpeakerRoute
+
+      Pending messages:
+
+        Looper (com.android.server.telecom.CallAudioRouteStateMachine, tid 199) {c1fc252}
+
+          (Total messages: 0, polling=true, quitting=false)
+
+    BluetoothDeviceManager:
+
+  mTtyManager:
+
+    mCurrentTtyMode: 0
+
+  mInCallController:
+
+    mInCallServices (InCalls registered):
+
+    ServiceConnections (InCalls bound):
+
+    CarModeTracker:
+
+      Current car mode apps:
+
+      Car mode history:
+
+  mCallDiagnosticServiceController:
+
+    activeCallDiagnosticService: 
+
+    isConnected: false
+
+  mCallAnomalyWatchdog:
+
+    Anomaly log:
+
+    Pending timeouts: 
+
+    Pending destruction: 
+
+  mEmergencyCallDiagnosticLogger:
+
+      PERSISTED DIAGNOSTIC DATA FROM DROP BOX
+
+      END OF PERSISTED DIAGNOSTIC DATA FROM DROP BOX
+
+  mDefaultDialerCache:
+
+    User 0: ai.umos.callandmessage
+
+    User 10: ai.umos.callandmessage
+
+  mConnectionServiceRepository:
+
+    mServiceCache:
+
+  mRoleManager:
+
+    DefaultCallRedirectionApp: 
+
+    DefaultCallScreeningApp: 
+
+    DefaultCallCompanionApps: (override ) 
+
+  mConnectionSvrFocusMgr:
+
+    Call Focus History:
+
+PhoneAccountRegistrar: 
+
+  xmlVersion: 9
+
+  defaultOutgoing: ComponentInfo{com.android.phone/com.android.services.telephony.TelephonyConnectionService}, 1, UserHandle{0}
+
+  outgoingPhoneAccountForTelScheme: ComponentInfo{com.android.phone/com.android.services.telephony.TelephonyConnectionService}, 1, UserHandle{0}
+
+  simCallManager: null
+
+  phoneAccounts:
+
+    [[X] PhoneAccount: ComponentInfo{com.android.phone/com.android.services.telephony.TelephonyConnectionService}, 1, UserHandle{0} Capabilities: CallProvider MultiUser PlaceEmerg SimSub  Audio Routes: BESW Schemes: tel voicemail  Extras: Bundle[{android.telecom.extra.SUPPORTS_VIDEO_CALLING_FALLBACK=true}] GroupId: ***]
+
+    test emergency PhoneAccount filter: null
+
+Analytics:
+
+  Hardware Version: 
+
+  Past analytics dumps: 
+
+Historical Events:
+

@@ -1,0 +1,34 @@
+{
+  "packageName": "com.contest.resafety.fullhmi.aurora",
+  "appDescription": "A vehicle safety app that helps the driver respond in the first minutes after a traffic accident: emergency call screen, accident response screen and a step-by-step accident summary.",
+  "version": "0.6.0",
+  "actionCalls": [
+    {
+      "type": "function",
+      "function": {
+        "name": "OPEN_ACCIDENT_RESPONSE",
+        "description": "Open the accident response screen of the safety app, which shows the emergency call, nearby help request, protect mode and accident summary buttons.",
+        "parameters": { "type": "object", "properties": {}, "required": [] },
+        "component": "activity"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "OPEN_ACCIDENT_GUIDE",
+        "description": "Open the step-by-step accident summary in the safety app, where the driver checks actions taken, enters injuries and makes a QR code to share.",
+        "parameters": { "type": "object", "properties": {}, "required": [] },
+        "component": "activity"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "OPEN_EMERGENCY_CALL_SCREEN",
+        "description": "Open the phone dial screen with the emergency number 119 entered. The call is not placed automatically; the user presses the call button.",
+        "parameters": { "type": "object", "properties": {}, "required": [] },
+        "component": "activity"
+      }
+    }
+  ]
+}

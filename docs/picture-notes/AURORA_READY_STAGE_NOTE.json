@@ -1,0 +1,11 @@
+{
+ "file": "assets/hmi/HMI_STAGE_READY.webp",
+ "role": "background of the whole screen behind the left view and the app panel, READY state (aurora design)",
+ "pixels": [
+  1672,
+  941
+ ],
+ "sha256": "96F38F0C41F7269D44306776AD4CE369A2C3BF40625F7B81D6A56648B1B7459B",
+ "bytes": 59394,
+ "provenance": "Picture handed over by the project owner in the work session of 2026-11-14 (webp), bundled unchanged. How it was made and under which licence it may be published was NOT stated; to be confirmed by the project owner before submission."
+}

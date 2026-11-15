@@ -1,0 +1,4 @@
+Runs of earlier builds and invalid runs are kept in the work folder, not in this repository:
+adaptive_pleos_20261115_120920_scenes_OK_navi_handover_refused_permission_one_flap_after_parking
+adaptive_pleos_20261115_121222_navi_handover_OK_return_only_after_manual_reopen
+adaptive_pleos_20261115_121510_INVALID_second_half_test_left_car_in_P_at_44kmh

@@ -1,0 +1,23 @@
+{
+ "accident_left_view": {
+  "file": "assets/hmi/HMI_BG_02_ACCIDENT.png",
+  "pixels": [
+   1024,
+   1536
+  ],
+  "sha256": "D01AA4978267B02089F891E701AB5906D53AE7EC85F946128576240D7731473F",
+  "source_file_sha256": "49325A9D71802611505F559EFEB3E62E346C259BF3C88D395A652748F246BF40",
+  "provenance": "Picture handed over by the project owner in the work session of 2026-11-14 (webp). How it was made and under which licence it may be published was NOT stated; to be confirmed by the project owner before submission.",
+  "edit": "On the owner's instruction the red warning triangle beside the front wheel and its mirror image on the road were taken out (tools/remove_triangle.py: road texture from the same picture blended in, lane marking drawn through, no image generation). The foot of the traffic cone that stood behind the tip of the triangle was filled row by row from the cone pixels beside it. About 6 % of the pixels changed. Before/after: ACCIDENT_PHOTO_triangle_removed_before_after.png. The unedited file is kept at hmi-assets/previous (not bundled)."
+ },
+ "accident_stage": {
+  "file": "assets/hmi/HMI_STAGE_ACCIDENT.webp",
+  "pixels": [
+   1094,
+   1438
+  ],
+  "sha256": "AF27478B391FB2ECC3C87D90A0BD48A81D52679B952D0E90F1EFCA34A6B0050A",
+  "provenance": "Picture handed over by the project owner in the work session of 2026-11-14 (webp). How it was made and under which licence it may be published was NOT stated; to be confirmed by the project owner before submission.",
+  "edit": "none; shown stretched to the screen (portrait picture on a landscape screen)"
+ }
+}

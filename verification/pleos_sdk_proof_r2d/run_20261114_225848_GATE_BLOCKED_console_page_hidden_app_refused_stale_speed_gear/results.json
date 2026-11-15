@@ -1,0 +1,55 @@
+{
+ "apk_package": "com.contest.signalprobe.r2d",
+ "before": {
+  "gear": "Park",
+  "speed": 0,
+  "locks": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "cabin": false,
+  "headlamp_mode": "Off",
+  "web_active": null
+ },
+ "after_protect": {
+  "gear": "Park",
+  "speed": 0,
+  "locks": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "cabin": false,
+  "headlamp_mode": "Off",
+  "web_active": null
+ },
+ "after_undo": {
+  "gear": "Park",
+  "speed": 0,
+  "locks": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "cabin": false,
+  "headlamp_mode": "Off",
+  "web_active": null
+ },
+ "protect_changed_the_car_as_requested": false,
+ "undo_restored_the_car": true,
+ "app_result_lines": [],
+ "notes": [
+  "console PUT status: {\"/vehicle/controls?speed=0&accelerator=0&brake=0\": 200, \"/vehicle/gear?gear=Park\": 200, \"/vehicle/body?cabin_light=false\": 200, \"/vehicle/lights?feature=headlamp_mode&value=Off\": 200, \"/vehicle/body?doors_locked=true\": 200}",
+  "installed apk sha256: DCBAF29B0BF705BC1F3D0450A8B16C225B151E03B265088093A2E75AA8FC668D",
+  "tapped \"보호 모드\" at (949, 673)",
+  "before        {\"gear\": \"Park\", \"speed\": 0, \"locks\": [true, true, true, true], \"cabin\": false, \"headlamp_mode\": \"Off\", \"web_active\": null}",
+  "tapped \"보호 모드 켜기\" at (1787, 1206)",
+  "after-protect {\"gear\": \"Park\", \"speed\": 0, \"locks\": [true, true, true, true], \"cabin\": false, \"headlamp_mode\": \"Off\", \"web_active\": null}",
+  "NOT FOUND \"되돌리기\"",
+  "after-undo    {\"gear\": \"Park\", \"speed\": 0, \"locks\": [true, true, true, true], \"cabin\": false, \"headlamp_mode\": \"Off\", \"web_active\": null}"
+ ]
+}

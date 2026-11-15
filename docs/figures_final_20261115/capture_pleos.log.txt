@@ -1,0 +1,16 @@
+18:19:08 tap accOff
+18:19:11 installed sha256: 8bc11e8a052ffbb4e69c90d54d703643cab157e82db93fc95d7d4db74b4bb24d
+18:19:14 saved P1_ready_pleos.png 2560x1440
+18:19:15 tap cseat
+18:19:18 tap seatsim
+18:19:25 saved P2_seats_vs_console.png 2560x1440
+18:19:25 tap back
+18:19:28 drive: gear D, 30 km/h
+18:19:39 saved P3_driving_pleos_navigation.png 2560x1440
+18:19:59 saved P4_warning_after_parking.png (red share 0.328 of the best of 10)
+18:20:02 saved P5_accident_home_pleos.png 2560x1440
+18:20:03 tap cprot
+18:20:06 tap proton
+18:20:16 saved P6_protect_on_pleos.png 2560x1440
+18:20:16 tap protoff
+18:20:25 tap back

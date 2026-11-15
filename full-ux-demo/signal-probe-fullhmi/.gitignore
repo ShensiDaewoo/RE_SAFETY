@@ -1,0 +1,27 @@
+# Build outputs and tool caches
+build/
+app/build/
+.gradle/
+.kotlin/
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local machine settings (SDK path) and secrets: never commit
+local.properties
+*.jks
+*.keystore
+*.p12
+*.pem
+*.env
+google-services.json
+
+# Binary evidence (APKs, screenshots, images) kept on disk, not in history
+*.apk
+*.aab
+evidence/**/*.png
+evidence/**/*.webp
+evidence/**/*.jpg
+_shots/

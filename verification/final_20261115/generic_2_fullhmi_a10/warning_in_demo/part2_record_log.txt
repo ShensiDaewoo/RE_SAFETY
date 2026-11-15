@@ -1,0 +1,19 @@
+18:01:14 ready to record: ('READY', 'NORMAL', 'home')
+18:01:20 tap lgo
+18:01:24 tap dacc
+18:01:29 tap dstop
+18:01:34 WARNING screen shown and closed (4.4 s)
+18:01:36 tap cprot
+18:01:39 tap proton
+18:01:46 tap back
+18:01:49 tap cguide
+18:01:52 tap chk0
+18:01:54 tap chk1
+18:01:55 tap gnext
+18:01:58 tap majorp
+18:02:00 tap gnext
+18:02:03 tap gnext
+18:02:06 tap gnext
+18:02:12 tap back
+18:02:15 tap accOff
+18:02:19 recorded 63 s

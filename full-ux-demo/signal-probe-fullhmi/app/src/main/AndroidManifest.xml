@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Only for the nearby-SOS TEST relay on the development PC (cleartext limited to 10.0.2.2 / loopback by the network config).
+         No CALL_PHONE, no location permission, no vehicle permission. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- aurora13: protect mode on a Pleos head unit, the same set the R2D submission app uses for it.
+         CAR_SPEED (runtime) and CAR_POWERTRAIN (normal): gear P + 0 km/h gate. CAR_LIGHTS / CAR_DOORS: read back.
+         CONTROL_CAR_LIGHTS / CONTROL_CAR_DOORS: tail lamp, rear fog lamp, cabin light, unlock of the four side doors, on a user tap only.
+         No windows, trunk, hood, location or call permission. -->
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_LIGHTS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_DOORS" />
+    <!-- aurora14, reads only, the same permissions the R2D submission app declares for them:
+         CAR_SEATS = seat occupancy and belt buckle report. FUSED_LOCATION (runtime) = vehicle position for the hand-over summary and its QR.
+         NAVI_ROUTE = NaviHelper.getCurrentLocationInfo (address text); the app never requests a route. -->
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />
+    <uses-permission android:name="pleos.car.permission.FUSED_LOCATION" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <!-- adaptive: scene B (driving) is handed to the Pleos navigation. NaviHelper.requestNavigationScreen() needs this permission
+         (Pleos doc "NaviHelper / Declaring Permission"; without it the emulator answered SecurityException, run adaptive_pleos_20261115_120920). -->
+    <uses-permission android:name="pleos.car.permission.NAVI_CUSTOM_MAP" />
+    <!-- aurora15: Pleos TextToSpeech SDK (on-device mode). The SDK refuses to start without it (seen on the emulator 2026-11-15:
+         "Permission pleos.car.permission.TTS_SERVICE is required"). Used only to speak the protect-mode result. -->
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+    <!-- adaptive6, the rest of what the R2D submission app reads (same permissions as R2D): CAR_INFO = VIN (only the last 6 characters
+         are shown), CAR_DRIVE = odometer and remaining range, CAR_ENERGY = battery / fuel, CAR_WINDOWS = front wiper state. Read only. -->
+    <uses-permission android:name="pleos.car.permission.CAR_INFO" />
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <uses-permission android:name="pleos.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="pleos.car.permission.CAR_WINDOWS" />
+    <!-- adaptive6: Pleos SpeechToText SDK, on-device mode (voice input into the place and memo fields, on a tap only) -->
+    <uses-permission android:name="pleos.car.permission.STT_SERVICE" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security"
+        android:theme="@style/FullHmiTheme">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|smallestScreenSize"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustPan|stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- adaptive6: Gleo Interface. The three functions of assets/schema.json ("component": "activity"); Gleo starts this activity
+                 with the function name as the intent action (Pleos guide "Delivering the Schema to Gleo"). They only OPEN screens:
+                 no call is placed and nothing in the vehicle is changed by voice. -->
+            <intent-filter>
+                <action android:name="OPEN_ACCIDENT_RESPONSE" />
+                <action android:name="OPEN_ACCIDENT_GUIDE" />
+                <action android:name="OPEN_EMERGENCY_CALL_SCREEN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

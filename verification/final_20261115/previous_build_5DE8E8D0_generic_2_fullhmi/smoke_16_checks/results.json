@@ -1,0 +1,88 @@
+{
+ "build": "com.contest.resafety.fullhmi.aurora",
+ "passed": 16,
+ "total": 16,
+ "minutes": 3.2,
+ "results": [
+  {
+   "check": "S0 build under test",
+   "pass": true,
+   "detail": "['versionName=0.5.0-adaptive4'] apk sha256=5DE8E8D08CA130E2711C75B7CFB96CD40633E51AA2E1E310EDB1178F1BF51C63"
+  },
+  {
+   "check": "S1a ready home: four cards and the two left buttons, no page error",
+   "pass": true,
+   "detail": "{\"hmi\": \"NORMAL\", \"keys\": [\"about\", \"accOn\", \"cpre\", \"crec\", \"cseat\", \"cseatctl\", \"lgo\", \"lsys\"]}"
+  },
+  {
+   "check": "S1b ready: each card opens its screen and \"← 홈\" returns home",
+   "pass": true,
+   "detail": "{\"cpre\": \"pre->home\", \"cseat\": \"seat->home\", \"cseatctl\": \"seatctl->home\", \"crec\": \"record->home\", \"lsys\": \"info->home\"}"
+  },
+  {
+   "check": "S2a accident home: 119, SOS, six cards, SOS settings and the two left buttons",
+   "pass": true,
+   "detail": "{\"b119\": true, \"bsos\": true, \"cprot\": true, \"cguide\": true, \"cseat\": true, \"ctow\": true, \"cpre\": true, \"crec\": true, \"recvset\": true, \"l119\": true, \"belt\": true, \"accOff\": true}"
+  },
+  {
+   "check": "S2b accident: each card opens its screen and \"← 홈\" returns home (SOS settings opens the SOS screen)",
+   "pass": true,
+   "detail": "{\"cprot\": \"prot->home\", \"cseat\": \"seat->home\", \"ctow\": \"tow->home\", \"cpre\": \"pre->home\", \"crec\": \"record->home\", \"recvset\": \"sos->home\", \"cguide\": \"guide->home\"}"
+  },
+  {
+   "check": "S3 the 119 banner opens the dialer with 119 and places no call",
+   "pass": true,
+   "detail": "DIAL_SCREEN_OPENED number=119 (call not placed by app) | calls 0->0"
+  },
+  {
+   "check": "S4a a SUSPECTED event shows the question first; \"사고 대응 화면 열기\" switches to the accident screen",
+   "pass": true,
+   "detail": "prompt=True -> hmi=ACC"
+  },
+  {
+   "check": "S4b the same event again is recognised as a duplicate and changes nothing",
+   "pass": true,
+   "detail": "{\"n\": 1, \"level\": \"SUSPECTED\", \"auto\": false, \"prompt\": false, \"ignored\": 0, \"dup\": 1, \"stale\": 0, \"restored\": \"\"}"
+  },
+  {
+   "check": "S4c a DETECTED event switches straight to the accident screen",
+   "pass": true,
+   "detail": "{\"hmi\": \"ACC\", \"ev\": {\"n\": 1, \"level\": \"DETECTED\", \"auto\": true, \"prompt\": false, \"ignored\": 0, \"dup\": 0, \"stale\": 0, \"restored\": \"\"}}"
+  },
+  {
+   "check": "S5 SOS from the accident home: consent, one request, delivered to the test receiver, acknowledged",
+   "pass": true,
+   "detail": "relay=True consent=True phases=['sending', 'accepted', 'acked'] created=1 receiver alerts=1"
+  },
+  {
+   "check": "S5b (first run checked the log, but record lines are not logged) the page inside the installed APK: SOS record lines use \"가 : 나\"",
+   "pass": true,
+   "detail": "'근처 SOS : ' x6, '근처 SOS: ' x0"
+  },
+  {
+   "check": "S6a a guide in progress survives an app restart (step 5 of 6, the same inputs)",
+   "pass": true,
+   "detail": "{\"gactive\": true, \"guide\": 4, \"checks\": 4, \"minor\": 1, \"major\": 1, \"screen\": \"home\", \"hmi\": \"ACC\"}"
+  },
+  {
+   "check": "S6c the long summary is shown as several QRs; every part is read (2 of 3 readers) and the parts together give one text",
+   "pass": true,
+   "detail": "{\"mode\": \"auto\", \"parts\": 3, \"read\": [true, true, true], \"small view = part 1\": true}"
+  },
+  {
+   "check": "S6b the guide QR text, put together, is the new briefing form with \"가 : 나\" (when, where, injuries, actions, vehicle)",
+   "pass": true,
+   "detail": "{\"chars\": 193, \"lines\": [\"[RE:SAFETY] 사고 요약 (Full HMI 시연)\", \"시각 : 2026-11-15 07:25 (기기 시계)\", \"위치 : 0.00000, 0.00000 (시험용 가상 위치)\", \"부상 : 경미 1명 · 중상 1명 (탑승자 입력)\", \"현장 조치 : 4개 중 4개 확인 (탑승자 입력)\", \"차량 : 정차 · 기어 P (시뮬레이션 값)\", \"※ 시연 데이터 · 신고 아님\"]}"
+  },
+  {
+   "check": "S7 the insurance/tow QR is read (2 of 3 readers) and has the new form",
+   "pass": true,
+   "detail": "[\"[RE:SAFETY] 보험사용 요약 (Full HMI 시연)\", \"사고 시각 : 2026-11-15 07:25 (사용자 입력)\", \"위치 : 미입력 (사용자 입력)\", \"부상 : 경미 1명 · 중상 1명 (탑승자 입력)\", \"현장 조치 : 4개 중 4개 확인 (탑승자 입력)\", \"※ 자동 접수·자동 출동 아님 · 신고 아님\"]"
+  },
+  {
+   "check": "S8 no page error during the whole run",
+   "pass": true,
+   "detail": "pageErrors=0"
+  }
+ ]
+}

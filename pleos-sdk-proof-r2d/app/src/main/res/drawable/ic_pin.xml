@@ -1,0 +1,5 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp" android:viewportWidth="48" android:viewportHeight="48">
+    <!-- R2D: location pin, drawn for this project (same geometry as the PATH D+ HTML 'pin' icon). Tinted in code. -->
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="2.8" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M24 44S10 31 10 21a14 14 0 0 1 28 0c0 10-14 23-14 23Z"/>
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="2.8" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M24 16a5 5 0 1 0 0.01 0Z"/>
+</vector>

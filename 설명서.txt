@@ -1,0 +1,35 @@
+﻿RE:SAFETY 설치 설명서
+팀 Aurora : Dawn · 2026-11-15
+
+[APK 두 개] apk 폴더
+
+1) Aurora Dawn_RE-SAFETY_release.apk  ← 메인 앱 (30.6 MB)
+   SHA-256 8BC11E8A052FFBB4E69C90D54D703643CAB157E82DB93FC95D7D4DB74B4BB24D
+   - Pleos Connect 에뮬레이터: 오른쪽 앱 영역에 RE:SAFETY 패널. 실제 Pleos SDK와 차량 신호 사용 (시연 영상 1부)
+   - 일반 Android 기기·에뮬레이터: Aurora 디자인이 화면 전체에 뜸. 차량 값과 사고 신호는 시뮬레이션 (시연 영상 2부)
+   - 앱 목록 이름: "RE:SAFETY Full HMI …"
+
+2) Aurora Dawn_RE-SAFETY-SDKProof_release.apk  ← Pleos SDK 실증본 (9.0 MB)
+   SHA-256 DCBAF29B0BF705BC1F3D0450A8B16C225B151E03B265088093A2E75AA8FC668D
+   - Pleos Connect 에뮬레이터 전용. 일반 Android에서는 열리지 않음 (차량용 Android 라이브러리 필요)
+   - SDK 호출 결과를 Pleos Virtual Console 값과 대조한 시험 근거용
+   - 앱 목록 이름: "RE:SAFETY"
+
+[설치]
+Pleos Connect 에뮬레이터 (둘 다 설치)
+  adb install --user 10 -r "Aurora Dawn_RE-SAFETY_release.apk"
+  adb install --user 10 -r "Aurora Dawn_RE-SAFETY-SDKProof_release.apk"
+  → 아래 바 가운데 네모 4개(앱 라이브러리) → [앱] 탭에서 실행
+  → 첫 실행 때 위치·속도 권한 허용, Virtual Console 페이지를 열어 두면 차량 신호가 들어옴
+
+일반 Android (메인 앱만, 가로 화면·태블릿 권장)
+  adb install -r "Aurora Dawn_RE-SAFETY_release.apk"
+  또는 APK를 기기로 옮겨 실행 → "출처를 알 수 없는 앱" 허용 → 설치
+
+[알아 둘 것]
+- 119·112는 전화 화면만 열고 발신하지 않습니다.
+- 사고 신호는 가상 이벤트, 근처 SOS는 개발 PC의 시험 서버로만 동작합니다.
+- 주행 중(P가 아닐 때)에는 Pleos가 앱 화면을 가리므로 정차 후 사용합니다.
+
+[더 보기]
+README.md · 시연 영상 docs/demo/RE-SAFETY_demo_20261115.mp4 · 시험 근거 verification/final_20261115/EVIDENCE.md

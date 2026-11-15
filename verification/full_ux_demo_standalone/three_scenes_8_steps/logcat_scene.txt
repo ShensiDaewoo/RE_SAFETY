@@ -1,0 +1,8 @@
+11-15 03:25:57.176 I/FullHMI ( 2020): SCENE READY -> DRIVING motion=moving src=sim why=render
+11-15 03:25:59.941 I/FullHMI ( 2020): SCENE DRIVING -> READY motion=parked src=sim why=render
+11-15 03:26:03.222 I/FullHMI ( 2020): SCENE READY -> DRIVING motion=moving src=sim why=render
+11-15 03:26:05.536 I/FullHMI ( 2020): SCENE DRIVING -> ACCIDENT_PENDING motion=moving src=sim why=render
+11-15 03:26:08.338 I/FullHMI ( 2020): SCENE ACCIDENT_PENDING -> ACCIDENT_RESPONSE motion=parked src=sim why=render
+11-15 03:26:11.714 I/FullHMI ( 2020): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=sim why=render
+11-15 03:26:15.792 I/FullHMI ( 2020): SCENE READY -> ACCIDENT_RESPONSE motion=parked src=sim why=render
+11-15 03:26:19.978 I/FullHMI ( 2020): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=sim why=render

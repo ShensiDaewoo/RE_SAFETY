@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""Validate and install externally generated RE:SAFETY HMI PNG assets."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import shutil
+import struct
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+RUNTIME_FILES = {
+    "HMI_BG_01_NORMAL.png": "hmi_bg_01_normal.png",
+    "HMI_BG_02_ACCIDENT.png": "hmi_bg_02_accident.png",
+}
+REFERENCE_FILES = (
+    "HMI_REF_03_VEHICLE_DETAIL.png",
+    "HMI_REF_04_NIGHT_ENVIRONMENT.png",
+)
+ALL_FILES = (*RUNTIME_FILES.keys(), *REFERENCE_FILES)
+MIN_WIDTH = 1600
+MIN_HEIGHT = 2000
+
+
+def png_dimensions(path: Path) -> tuple[int, int]:
+    with path.open("rb") as file:
+        signature = file.read(8)
+        if signature != PNG_SIGNATURE:
+            raise ValueError("PNG signature가 아닙니다")
+        length = struct.unpack(">I", file.read(4))[0]
+        chunk_type = file.read(4)
+        if chunk_type != b"IHDR" or length < 8:
+            raise ValueError("유효한 PNG IHDR을 찾을 수 없습니다")
+        width, height = struct.unpack(">II", file.read(8))
+    return width, height
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for chunk in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def copy_file(source: Path, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, destination)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source", type=Path, default=Path("hmi-assets/incoming"))
+    parser.add_argument("--web-dir", type=Path, default=Path("public/assets/hmi"))
+    parser.add_argument("--archive-dir", type=Path, default=Path("artifacts/hmi-visuals"))
+    parser.add_argument("--android-web-assets-dir", type=Path)
+    parser.add_argument("--android-res-dir", type=Path)
+    parser.add_argument("--verify-only", action="store_true")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    missing = [name for name in ALL_FILES if not (args.source / name).is_file()]
+    if missing:
+        print("필수 HMI PNG가 없습니다:", file=sys.stderr)
+        for name in missing:
+            print(f"  - {args.source / name}", file=sys.stderr)
+        print("임시 placeholder는 허용되지 않습니다.", file=sys.stderr)
+        return 2
+
+    manifest = {
+        "verifiedAtUtc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "sourceDirectory": args.source.as_posix(),
+        "assets": [],
+    }
+    errors: list[str] = []
+    for name in ALL_FILES:
+        path = args.source / name
+        try:
+            width, height = png_dimensions(path)
+        except (OSError, ValueError, struct.error) as error:
+            errors.append(f"{name}: {error}")
+            continue
+        if width < MIN_WIDTH or height < MIN_HEIGHT:
+            errors.append(
+                f"{name}: {width}x{height}, 최소 {MIN_WIDTH}x{MIN_HEIGHT}보다 작습니다"
+            )
+        if width * 5 != height * 4:
+            errors.append(f"{name}: {width}x{height}, 정확한 4:5 비율이 아닙니다")
+        manifest["assets"].append(
+            {
+                "fileName": name,
+                "width": width,
+                "height": height,
+                "sizeBytes": path.stat().st_size,
+                "sha256": sha256(path),
+                "runtime": name in RUNTIME_FILES,
+            }
+        )
+
+    if errors:
+        print("HMI 이미지 검증 실패:", file=sys.stderr)
+        for error in errors:
+            print(f"  - {error}", file=sys.stderr)
+        return 1
+
+    print("HMI 이미지 검증 통과:")
+    for asset in manifest["assets"]:
+        print(
+            f"  - {asset['fileName']}: {asset['width']}x{asset['height']}, "
+            f"{asset['sizeBytes']} bytes"
+        )
+
+    if args.verify_only:
+        return 0
+
+    for name in RUNTIME_FILES:
+        source = args.source / name
+        copy_file(source, args.web_dir / name)
+        if args.android_web_assets_dir:
+            copy_file(source, args.android_web_assets_dir / name)
+        if args.android_res_dir:
+            copy_file(source, args.android_res_dir / RUNTIME_FILES[name])
+
+    for name in ALL_FILES:
+        copy_file(args.source / name, args.archive_dir / name)
+
+    args.archive_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = args.archive_dir / "HMI_ASSET_MANIFEST.json"
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"검증 매니페스트: {manifest_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,1515 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>RE:SAFETY Full HMI Final Concept</title>
+<style>
+/* Design canvas 2560x1440; 1rem = 100 design px, scaled to the viewport. */
+html{font-size:min(calc(100vw / 25.6),calc(100vh / 14.4))}
+/* Design tokens. Every function card (protect, guide, seat, tow, pre-drive check, record, resume row) takes its type from the --card-* tokens;
+   the two emergency banners share family, weight and line height and differ only by --banner-title-size. */
+:root{
+  --font-ui:"Noto Sans KR","Noto Sans CJK KR","Malgun Gothic",system-ui,sans-serif;
+  --card-title-size:.46rem;--card-title-weight:700;--card-title-lh:1.25;--card-title-ls:0;
+  --card-sub-size:.29rem;--card-sub-weight:500;--card-sub-lh:1.3;
+  --banner-title-size:.54rem;
+  --card-pad-x:.32rem;--card-gap:.28rem;--card-radius:.24rem;--card-icon:.9rem;
+  /* driving-view photo background (HMI_BG_01/02, 4:5): width-fit, shifted up so the vehicle band sits between the headline and the buttons */
+  --bg-size:100%;--bg-shift:-1rem;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;height:100vh;overflow:hidden;background:#05070b;color:#151924;font-family:var(--font-ui);user-select:none}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+b{font-weight:700}
+#stage{position:absolute;left:50%;top:50%;width:25.6rem;height:14.4rem;transform:translate(-50%,-50%);background:radial-gradient(120% 90% at 70% 40%,#141926 0,#0a0d14 55%,#07090e 100%);overflow:hidden}
+/* ---------- top strip (concept of the system status bar) ---------- */
+#top{position:absolute;left:0;right:0;top:0;height:.82rem;z-index:6;color:#fff;font-size:.3rem;border-bottom:.015rem solid rgba(255,255,255,.13);background:linear-gradient(rgba(6,8,13,.92),rgba(6,8,13,.72))}
+#top>*{position:absolute;top:50%;transform:translateY(-50%)}
+.logo{left:.6rem;display:flex;align-items:center;gap:.14rem;font-size:.33rem;font-weight:800;letter-spacing:.005rem}
+.logo svg{width:.36rem;height:.3rem}
+.vd{width:.015rem;height:.4rem;background:rgba(255,255,255,.35)}
+.lanechip{left:4.13rem;width:.86rem;height:.44rem;border-radius:.07rem;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
+.lanechip svg{width:.34rem;height:.34rem}
+#top small{font-size:.26rem;margin-left:.05rem}
+#chips{left:10.62rem;display:flex;align-items:center;gap:.14rem}
+.chip{font-size:.19rem;font-weight:800;border-radius:.3rem;padding:.07rem .2rem;letter-spacing:.01rem;white-space:nowrap;line-height:1.3}
+.chip.concept{background:rgba(58,47,18,.9);color:#ffd391;border:.02rem solid rgba(255,179,64,.6)}
+.chip.sim{background:#D2334A;color:#fff}
+.chip.ctl{background:rgba(255,255,255,.1);color:#e8ebf0;border:.02rem solid rgba(255,255,255,.3)}
+#tr{right:.42rem;display:flex;align-items:center;gap:.36rem}
+#tr svg{width:.4rem;height:.4rem}
+.avatar{width:.62rem;height:.62rem;border-radius:50%;border:.02rem solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#d9a7ff;font-size:.28rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+/* ---------- left: driving view concept ---------- */
+#left{position:absolute;left:0;top:.82rem;width:10.3rem;bottom:0;color:#fff;overflow:hidden;background:#0b0e15}
+#scene{position:absolute;left:0;right:0;top:0;height:8.75rem}
+#scene svg,#scene canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+/* Photo background layer (ASSET_CONTRACT: HMI_BG_01_NORMAL / HMI_BG_02_ACCIDENT). Connected only when BOTH files are bundled (data-bg="photo");
+   a state change swaps the image URL through the attribute, the DOM stays. The picture carries no text or UI: those stay HTML above it. */
+#bg{position:absolute;left:0;right:0;top:0;bottom:0;display:none;background-repeat:no-repeat;background-size:var(--bg-size) auto;background-position:50% var(--bg-shift)}
+/* The photo is painted by #sceneFx (the layer right above the vector drawing): shade on top, photo below it, solid colour at the bottom, so the
+   vector drawing underneath is fully covered. The layer ends above the icon rows (10.1rem): the page keeps exactly the structure of the vector build; only this one layer differs. */
+#left[data-bg="photo"]{--bg-size:100%;--bg-shift:-.34rem;--bg-photo:url("assets/hmi/HMI_BG_01_NORMAL.png")}
+#left[data-bg="photo"][data-driving-state="accident"]{--bg-photo:url("assets/hmi/HMI_BG_02_ACCIDENT.png")}
+#left[data-bg="photo"] #sceneFx{height:10.1rem;background:linear-gradient(rgba(6,8,13,.86) 0,rgba(6,8,13,.62) 2.2rem,rgba(8,10,16,.3) 3.7rem,rgba(8,10,16,0) 4.9rem,rgba(11,14,21,0) 8.2rem,rgba(11,14,21,.7) 9.3rem,#0b0e15 100%),radial-gradient(7.4rem 5.6rem at 52% 6.3rem,rgba(4,6,10,0) 58%,rgba(4,6,10,.5) 100%),var(--bg-photo) 50% var(--bg-shift)/var(--bg-size) auto no-repeat #0b0e15}
+body.acc #left[data-bg="photo"] #sceneFx{background:radial-gradient(4.6rem 2.2rem at 50% 1.05rem,rgba(255,45,70,.15) 0,rgba(255,45,70,0) 100%),linear-gradient(rgba(10,7,12,.86) 0,rgba(10,7,12,.62) 2.2rem,rgba(10,8,14,.3) 3.7rem,rgba(10,8,14,0) 4.9rem,rgba(11,14,21,0) 8.2rem,rgba(11,14,21,.7) 9.3rem,#0b0e15 100%),radial-gradient(7.4rem 5.6rem at 52% 6.3rem,rgba(4,6,10,0) 58%,rgba(4,6,10,.5) 100%),var(--bg-photo) 50% var(--bg-shift)/var(--bg-size) auto no-repeat #0b0e15}
+/* MASTER pass (left = lead): glass call-to-action buttons, moving emergency lights, hazard lamps, quiet label, calmer glow. Photo mode only. */
+#left[data-bg="photo"] .cbtn{background:linear-gradient(rgba(26,30,41,.7),rgba(11,14,21,.8));border-color:rgba(255,255,255,.36);-webkit-backdrop-filter:blur(.14rem) saturate(1.2);backdrop-filter:blur(.14rem) saturate(1.2);box-shadow:0 .1rem .32rem rgba(0,0,0,.5),inset 0 .02rem 0 rgba(255,255,255,.18)}
+#left[data-bg="photo"] .cbtn.red{background:linear-gradient(rgba(104,22,38,.8),rgba(58,12,23,.84));border-color:#ff7184;box-shadow:0 .1rem .32rem rgba(0,0,0,.5),0 0 .16rem rgba(255,60,80,.3),inset 0 .02rem 0 rgba(255,170,180,.28)}
+#left[data-bg="photo"] .cbtn .tx span{color:#e4e7ed}
+#left[data-bg="photo"] .cbtn.red .tx span{color:#ffb6bf}
+#left[data-bg="photo"] #headline h1{text-shadow:0 .02rem .14rem rgba(0,0,0,.92),0 0 .5rem rgba(0,0,0,.5)}
+#left[data-bg="photo"] #headline p{color:#f3f5f8;text-shadow:0 .02rem .1rem rgba(0,0,0,.95),0 0 .36rem rgba(0,0,0,.55)}
+#left[data-bg="photo"] .simchip{position:absolute;left:.32rem;top:.14rem;margin:0;text-align:left;font-size:.185rem;font-weight:600;line-height:1.42;letter-spacing:0;color:#ffdfae;border:0;border-left:.03rem solid rgba(255,186,84,.85);border-radius:0;padding:.01rem 0 .01rem .12rem;background:none;text-shadow:0 .01rem .08rem rgba(0,0,0,.9)}
+#left[data-bg="photo"] .simchip i{display:block;height:0;overflow:hidden}
+body.acc #left[data-bg="photo"] .gear b{box-shadow:0 0 .16rem rgba(255,70,90,.42),inset 0 0 .1rem rgba(255,70,90,.3)}
+body.acc #left[data-bg="photo"] #sceneFx::before,body.acc #left[data-bg="photo"] #sceneFx::after{content:"";position:absolute;left:1.3rem;top:4.2rem;width:1.9rem;height:3.4rem;pointer-events:none;mix-blend-mode:screen}
+body.acc #left[data-bg="photo"] #sceneFx::before{background:radial-gradient(.34rem .22rem at 41% 20.500%,rgba(255,70,90,.95) 0,rgba(255,60,80,0) 100%),radial-gradient(.42rem 1.15rem at 43% 60%,rgba(255,50,70,.3) 0,rgba(255,50,70,0) 100%);animation:flash .66s steps(1) infinite}
+body.acc #left[data-bg="photo"] #sceneFx::after{background:radial-gradient(.34rem .22rem at 63% 20.500%,rgba(90,150,255,.95) 0,rgba(70,130,255,0) 100%),radial-gradient(.42rem 1.15rem at 61% 60%,rgba(70,130,255,.28) 0,rgba(70,130,255,0) 100%);animation:flash .66s steps(1) infinite reverse}
+body.acc #left[data-bg="photo"] #headline::after{content:"";position:absolute;left:0;top:-.2rem;width:10.3rem;height:8rem;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(.5rem .26rem at 2.92rem 6.4rem,rgba(255,176,48,.7) 0,rgba(255,150,30,0) 100%),radial-gradient(.62rem .3rem at 5.62rem 6.56rem,rgba(255,176,48,.78) 0,rgba(255,150,30,0) 100%);animation:blink 1s steps(1) infinite}
+#left[data-bg="photo"] #syscap{color:rgba(255,255,255,.5)}
+#left[data-bg="photo"] .cbtn.red{background:linear-gradient(rgba(104,22,38,.8),rgba(58,12,23,.84))}
+#left[data-bg="photo"] .cbtn.go{background:linear-gradient(rgba(18,40,74,.78),rgba(14,30,56,.66))}
+#sceneFx{position:absolute;left:0;right:0;top:0;height:8.75rem;pointer-events:none;background:linear-gradient(rgba(8,10,16,.82) 0,rgba(8,10,16,.5) 30%,rgba(8,10,16,0) 52%,rgba(11,14,21,0) 84%,#0b0e15 100%)}
+body.acc #sceneFx{background:radial-gradient(60% 34% at 50% 14%,rgba(255,45,70,.26) 0,rgba(255,45,70,0) 100%),linear-gradient(rgba(12,8,14,.84) 0,rgba(12,8,14,.5) 30%,rgba(12,8,14,0) 52%,rgba(11,14,21,0) 84%,#0b0e15 100%)}
+.gear{position:absolute;right:.3rem;top:.34rem;display:flex;align-items:center;gap:.2rem;font-size:.37rem;color:#aeb4bf;letter-spacing:.01rem;z-index:3}
+.gear b{color:#fff;border:.03rem solid #dfe3ea;border-radius:.08rem;padding:0 .13rem;font-weight:600;line-height:1.35}
+body.acc .gear b{border-color:#ff5a6e;color:#ffc2ca;box-shadow:0 0 .22rem rgba(255,70,90,.65),inset 0 0 .12rem rgba(255,70,90,.4)}
+.adas{position:absolute;right:.44rem;top:1.12rem;width:.56rem;height:.86rem;z-index:3}
+#headline{position:absolute;left:0;right:0;top:.2rem;text-align:center;z-index:2}
+#headline svg{width:6.2rem;height:1.42rem;display:block;margin:0 auto}
+#headline h1{margin:.06rem 0 0;font-size:.5rem;font-weight:700;letter-spacing:-.01rem;text-shadow:0 .02rem .12rem rgba(0,0,0,.8)}
+#headline p{margin:.12rem .6rem 0;font-size:.265rem;line-height:1.48;color:#eef0f4;text-shadow:0 .02rem .1rem rgba(0,0,0,.9)}
+.simchip i{font-style:normal}
+.simchip{display:inline-block;margin-top:.1rem;font-size:.19rem;font-weight:700;color:#ffd391;border:.02rem solid rgba(255,179,64,.65);border-radius:.08rem;padding:.03rem .12rem;background:rgba(0,0,0,.45)}
+#lbtns{position:absolute;left:.42rem;right:.26rem;top:8.66rem;display:flex;gap:.24rem;z-index:3}
+.cbtn{flex:1;min-width:0;height:1.18rem;border-radius:.24rem;display:flex;align-items:center;gap:.2rem;padding:0 .22rem 0 .3rem;border:.02rem solid rgba(255,255,255,.4);background:linear-gradient(rgba(255,255,255,.13),rgba(255,255,255,.05));color:#fff;box-shadow:inset 0 .02rem 0 rgba(255,255,255,.12)}
+.cbtn.red{border-color:#ff6377;background:linear-gradient(rgba(255,70,90,.24),rgba(255,70,90,.1));box-shadow:0 0 .3rem rgba(255,60,80,.45),inset 0 0 .2rem rgba(255,60,80,.25)}
+.cbtn.go{border-color:rgba(120,200,255,.7);background:linear-gradient(rgba(70,150,255,.2),rgba(70,150,255,.08))}
+.cbtn>svg{width:.7rem;height:.7rem;flex:none}
+.cbtn.red>svg{color:#ff8a98}
+.cbtn .tx{flex:1;min-width:0}
+.cbtn b{display:block;font-size:.3rem;line-height:1.25;white-space:nowrap}
+.cbtn .tx span{display:block;font-size:.205rem;color:#d3d7df;margin-top:.04rem;white-space:nowrap}
+.cbtn.red .tx span{color:#ff9aa6}
+.cbtn .cv{width:.26rem;height:.26rem;flex:none}
+.cbtn:active{filter:brightness(1.35)}
+/* bottom system HMI concept (not functional) */
+#lrow{position:absolute;left:1.3rem;right:1.0rem;top:10.2rem;display:flex;justify-content:space-between}
+#lrow button{width:.86rem;height:.7rem}#lrow svg{width:100%;height:100%}
+#lrow button.dim{opacity:.38}
+#lline{position:absolute;left:.5rem;right:.3rem;top:11.3rem;height:.015rem;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.35) 12%,rgba(255,255,255,.35) 88%,rgba(255,255,255,0))}
+#dock{position:absolute;left:.5rem;right:.3rem;top:11.52rem;height:.84rem;display:flex}
+#dock button{flex:1;display:flex;align-items:center;justify-content:center;border-left:.015rem solid rgba(255,255,255,.3);position:relative}
+#dock button:first-child{border-left:0}
+#dock svg{width:.78rem;height:.66rem}
+#dock button.cur::after{content:"";position:absolute;left:50%;bottom:-.05rem;width:.36rem;height:.06rem;margin-left:-.18rem;border-radius:.03rem;background:rgba(255,255,255,.55)}
+#ldots{position:absolute;left:0;right:0;top:12.74rem;display:flex;justify-content:center;gap:.14rem}
+#ldots i{width:.1rem;height:.1rem;border-radius:.03rem;background:rgba(255,255,255,.45)}#ldots i.on{width:.42rem;background:#fff}
+#syscap{position:absolute;left:0;right:0;top:13.08rem;text-align:center;font-size:.17rem;color:rgba(255,255,255,.42)}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:.12}}
+body.acc .haz{animation:blink 1s steps(1) infinite}
+@keyframes flash{0%,49%{opacity:1}50%,100%{opacity:.12}}
+.fl1{animation:flash .66s steps(1) infinite}.fl2{animation:flash .66s steps(1) infinite reverse}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.haz,.fl1,.fl2,.pulse{animation:none}}
+/* ---------- right: RE:SAFETY app card (interactive re-creation of the latest R2D design) ---------- */
+#app{position:absolute;left:10.56rem;top:1.4rem;right:.2rem;bottom:.68rem;border-radius:.32rem;background:#F3F5F8;overflow:hidden;display:flex;box-shadow:0 .12rem .6rem rgba(0,0,0,.55),0 0 0 .015rem rgba(255,255,255,.2)}
+#app{box-shadow:0 .12rem .6rem rgba(0,0,0,.55),0 0 0 .015rem rgba(160,205,255,.3),-.34rem 0 .9rem -.36rem rgba(88,190,255,.3)}
+body.acc #app{box-shadow:0 .12rem .6rem rgba(0,0,0,.55),0 0 0 .015rem rgba(255,150,165,.34),-.34rem 0 .9rem -.36rem rgba(255,55,80,.34)}
+body.acc #stage{background:radial-gradient(120% 90% at 70% 40%,#1a141f 0,#0d0a12 55%,#07090e 100%)}
+#rail{position:relative;width:2.02rem;background:#fff;border-right:.02rem solid #D4D9E1;flex:none}
+.it{position:absolute;left:.17rem;width:1.68rem;height:1.78rem;border-radius:.3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;font-size:.27rem}
+.it svg{width:.62rem;height:.62rem}.it.on{background:#FFE6EA;font-weight:700}   /* MASTER pass: pink stays, as an accent (lighter fill) */
+#q112{position:absolute;left:.29rem;bottom:.52rem;width:1.44rem;height:1.44rem;border-radius:50%;background:#2E6BE0;border:.045rem solid #8CB3F3;color:#fff;font-size:.56rem;font-weight:800;text-align:center;box-shadow:0 .05rem .16rem rgba(47,111,214,.45)}
+#main{position:relative;flex:1;padding:.36rem .34rem .4rem .44rem;display:flex;flex-direction:column;min-width:0}
+.mast{display:flex;align-items:center;height:.96rem;flex:none}
+.mast .t{font-size:.5rem;font-weight:800;position:relative;padding-bottom:.05rem}
+.mast .t::after{content:"";position:absolute;left:0;right:0;bottom:-.02rem;height:.04rem;background:#FF8499}
+.mast .d{width:.03rem;height:.58rem;background:#151924;margin:0 .44rem}.mast .s{font-size:.46rem;color:#586274;flex:1}
+.lab{font-size:.26rem;font-weight:700;color:#586274;margin:.26rem 0 .12rem .04rem;flex:none;display:flex;justify-content:space-between;align-items:center}
+.lab button{font-size:.25rem;font-weight:700;color:#855000;padding:.02rem .06rem}
+.row{display:flex;gap:.2rem}.grow{flex:1;min-height:0}
+.card{flex:1;min-width:0;border-radius:var(--card-radius);border:.03rem solid #D4D9E1;background:#fff;display:flex;align-items:center;gap:var(--card-gap);padding:0 var(--card-pad-x);min-height:1.1rem;box-shadow:0 .04rem 0 rgba(40,52,78,.2);
+  font-family:var(--font-ui);font-size:var(--card-title-size);font-weight:var(--card-title-weight);line-height:var(--card-title-lh);letter-spacing:var(--card-title-ls)}
+.card:active{filter:brightness(.95)}
+.card b{font-weight:var(--card-title-weight)}
+.card .sub{display:block;font-size:var(--card-sub-size);font-weight:var(--card-sub-weight);line-height:var(--card-sub-lh);letter-spacing:0;color:#586274;margin-top:.02rem;white-space:nowrap}
+.card .tx{flex:1;min-width:0;line-height:var(--card-title-lh)}
+.tile{width:var(--card-icon);height:var(--card-icon);border-radius:.2rem;background:#FFE6EA;display:flex;align-items:center;justify-content:center;flex:none}
+.tile svg{width:.54rem;height:.54rem}
+.chev{width:.38rem;height:.38rem;flex:none}
+.c119{background:#FFF6F7;border:.04rem solid #D2334A}.c119 b{color:#D2334A;font-size:var(--banner-title-size)}.c119 .tile{background:#D2334A;color:#fff}.c119 .chev{color:#D2334A}
+.csos{background:#FFF9EF;border:.04rem solid #F2CE98}.csos b{color:#C0620A;font-size:var(--banner-title-size)}.csos .tile{background:#C0620A;color:#fff}.csos .chev{color:#C0620A}
+.cok{background:#F6FBF9;border:.04rem solid #0E7360}.cok b{color:#0E7360}.cok .tile{background:#0E7360;color:#fff}
+.cpink{background:#FFF5F6;border:.04rem solid #FF8499}.cpink .tile{background:#FF8499}
+.card.plain .ic{width:var(--card-icon);height:.56rem;flex:none;display:flex;align-items:center;justify-content:center}.card.plain .ic svg{width:.56rem;height:.56rem}
+.card.cont{justify-content:center;height:1.2rem;flex:none}
+.card.cont em{font-style:normal;font-size:var(--card-sub-size);font-weight:var(--card-sub-weight);line-height:var(--card-sub-lh);color:#586274;margin-left:.2rem}
+.back{font-size:.32rem;font-weight:700;padding:.14rem .2rem .14rem .04rem;flex:none;align-self:flex-start}
+.panel{background:#fff;border:.03rem solid #D4D9E1;border-radius:.24rem;padding:.28rem .34rem}
+.panel.sos{border-color:#F2CE98}
+.panel h3{margin:0;font-size:.38rem;display:flex;align-items:center;gap:.14rem;flex-wrap:wrap}
+.tag{font-size:.2rem;font-weight:700;padding:.03rem .12rem;border-radius:.07rem;background:#FFE6EA;color:#742F40;white-space:nowrap}
+.tag.lab2{background:#FFF4E2;color:#855000}.tag.sim{background:#FFEFCF;color:#7A4A00}.tag.nat{background:#E3EEFF;color:#1d4696}.tag.oem{background:#E8EBF0;color:#343A47}.tag.ok{background:#E0F4EC;color:#0b5b4c}
+.steps{margin:.16rem 0 0;padding:0;list-style:none}
+.steps li{display:flex;align-items:center;gap:.16rem;font-size:.29rem;padding:.08rem 0;color:#8b9199}
+.steps li i{width:.38rem;height:.38rem;border-radius:50%;border:.03rem solid #C2C8D1;flex:none;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:.22rem;font-weight:800;color:#fff}
+.steps li.done{color:#151924}.steps li.done i{background:#0E7360;border-color:#0E7360}
+.steps li.now{color:#C0620A;font-weight:700}.steps li.now i{border-color:#C0620A;background:#FFF4E2}
+.steps li.bad{color:#D2334A;font-weight:700}.steps li.bad i{background:#D2334A;border-color:#D2334A}
+.steps li em{font-style:normal;color:#586274;font-weight:500;margin-left:.1rem}
+.msg{font-size:.32rem;font-weight:700;margin:.14rem 0 0;color:#C0620A}.msg.bad{color:#D2334A}.msg.ok{color:#0E7360}
+.btn{border-radius:.18rem;border:.03rem solid #D4D9E1;background:#fff;font-size:.31rem;font-weight:700;padding:0 .3rem;height:.9rem;text-align:center;white-space:nowrap}
+.btn.sos{background:#C0620A;border-color:#C0620A;color:#fff}.btn.dark{background:#151924;border-color:#151924;color:#fff}.btn.red{background:#D2334A;border-color:#D2334A;color:#fff}
+.btn:active{filter:brightness(.9)}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:.2rem;font-size:.29rem;padding:.11rem 0;border-top:.02rem solid #E8EBF0}
+.kv:first-of-type{border-top:0}.kv>span:first-child{color:#586274;flex:none}
+.dot{display:inline-block;width:.16rem;height:.16rem;border-radius:50%;margin-right:.08rem;background:#9aa0a8}.dot.ok{background:#0E7360}.dot.bad{background:#D2334A}
+.note{font-size:.235rem;color:#586274;line-height:1.5;margin:.14rem 0 0}
+.body{font-size:.3rem;color:#151924;line-height:1.55;margin:.18rem 0 0}
+.alert{border:.03rem solid #F2CE98;background:#FFF4E2;border-radius:.18rem;padding:.14rem .2rem;margin-top:.12rem;font-size:.27rem;font-weight:700;color:#855000;display:flex;align-items:center;gap:.14rem}
+.alert .btn{height:.68rem;font-size:.27rem;padding:0 .24rem}
+.scroll{flex:1;min-height:0;overflow-y:auto}
+.loglist{margin:.1rem 0 0;padding:0;list-style:none;font-size:.27rem}.loglist li{padding:.11rem 0;border-top:.02rem solid #E8EBF0;display:flex;gap:.14rem;align-items:baseline}.loglist li span{color:#586274;flex:none}.loglist li .tag{flex:none}
+.opt{display:flex;align-items:center;gap:.2rem;width:100%;font-size:.31rem;padding:.15rem .06rem;border-top:.02rem solid #E8EBF0}
+.opt:first-of-type{border-top:0}
+.opt i{width:.44rem;height:.44rem;border-radius:.1rem;border:.035rem solid #B1B8C3;flex:none;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:.28rem;color:#fff}
+.opt.on i{background:#0E7360;border-color:#0E7360}
+.cnt{display:flex;align-items:center;justify-content:space-between;font-size:.32rem;padding:.14rem 0;border-top:.02rem solid #E8EBF0}.cnt:first-of-type{border-top:0}
+.cnt div{display:flex;align-items:center;gap:.24rem}.cnt b{min-width:.6rem;text-align:center;font-size:.4rem}
+.cnt .btn{width:.86rem;height:.78rem;padding:0;font-size:.44rem}
+.prog{display:flex;gap:.08rem;margin:.02rem 0 .16rem}.prog i{flex:1;height:.08rem;border-radius:.04rem;background:#DCE1E8}.prog i.on{background:#FF8499}
+.qrbox{display:flex;gap:.36rem;align-items:flex-start}
+.qrbox .qr{width:5rem;height:5rem;flex:none;border:.03rem solid #D4D9E1;border-radius:.14rem;background:#fff;padding:.08rem;display:flex;align-items:center;justify-content:center;font-size:.26rem;color:#586274;text-align:center}
+.qrbox .qr svg{width:100%;height:100%;display:block}
+/* HARDENING (pillar 07): tap the QR to show it large. Larger modules survive blur and a slanted camera much better (measured, see report). */
+.qrbox{position:relative}
+.qrbox .qrhint{position:absolute;margin:0;font-size:.2rem;color:#586274;left:0;top:5.3rem;width:5rem;text-align:center;line-height:1.3}
+.qrbox.big{position:absolute;left:.3rem;right:.3rem;top:1.25rem;bottom:.3rem;margin:0 !important;z-index:5;background:#fff;border:.03rem solid #D9D4CB;border-radius:.24rem;flex-direction:column;align-items:center;justify-content:center;gap:.14rem}
+.qrbox.big .qr{width:9.4rem;height:9.4rem;border:0}
+.qrbox.big pre{display:none}
+.qrbox.big .qrhint{position:static;width:auto;font-size:.24rem}
+.qrbox{flex-wrap:wrap}.qrbox.big{flex-wrap:nowrap}
+.qrctl{flex-basis:100%;margin-top:.8rem;display:flex;align-items:center;gap:.2rem;flex-wrap:wrap;font-size:.24rem;color:#586274}
+.qrctl b{font-size:.32rem;color:#20242B}.qrbox.big .qrctl{flex-basis:auto;margin-top:0;justify-content:center}
+.qrbox pre{margin:0;font-family:inherit;font-size:.235rem;line-height:1.5;white-space:pre-wrap;color:#151924;flex:1;min-width:0}
+table.map{border-collapse:collapse;width:100%;font-size:.24rem;margin-top:.14rem}
+table.map td{border-top:.02rem solid #E8EBF0;padding:.09rem .06rem;vertical-align:top}table.map td:first-child{white-space:nowrap;font-weight:700;padding-right:.2rem}
+/* feature screens (protect mode, seats, insurance/tow, pre-drive check, lab connection) */
+.bigstate{font-size:.44rem;font-weight:800;margin:.1rem 0 .06rem}.bigstate.ok{color:#0E7360}.bigstate.warn{color:#C0620A}.bigstate.bad{color:#D2334A}.bigstate.idle{color:#586274}
+.badge{display:inline-block;min-width:1.3rem;text-align:center;font-size:.24rem;font-weight:700;border-radius:.1rem;padding:.04rem .14rem;background:#E8EBF0;color:#343A47}
+.badge.ok{background:#E0F4EC;color:#0b5b4c}.badge.bad{background:#FDE4E8;color:#A82439}.badge.un{background:#E8EBF0;color:#586274}.badge.run{background:#FFF4E2;color:#855000}
+.irow{display:flex;align-items:center;gap:.2rem;font-size:.29rem;padding:.12rem 0;border-top:.02rem solid #E8EBF0}.irow:first-of-type{border-top:0}
+.irow .nm{flex:1;min-width:0}.irow .val{color:#586274;min-width:1.7rem;text-align:right}
+.btn:disabled,.sbtn:disabled{opacity:.4}
+.sbtn{border-radius:.14rem;border:.03rem solid #D4D9E1;background:#fff;font-size:.25rem;font-weight:700;padding:0 .16rem;height:.62rem;white-space:nowrap}
+.sbtn.y{background:#E0F4EC;border-color:#0E7360;color:#0b5b4c}.sbtn.n{background:#EEF1F5;color:#343A47}.sbtn.help{background:#FDE4E8;border-color:#D2334A;color:#A82439}
+.seat3{display:flex;align-items:stretch;gap:.34rem;margin-top:.04rem}
+.scol{min-width:0}.scol.l{flex:none;width:3.3rem}.scol.mid{flex:none;width:3.3rem;display:flex;align-items:center}.scol.mid svg{width:100%;height:auto;display:block}
+.scol.r{flex:1;border-left:.02rem solid #D4D9E1;padding-left:.36rem}
+.snum{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:.78rem;font-weight:700;line-height:1;color:#151924}.snum.p{color:#742F40}
+.snum em{font-style:normal;font-weight:400;color:#151924;margin-left:.1rem}
+.sttl{font-size:.5rem;font-weight:800;margin:.14rem 0 .1rem;line-height:1.2}.sttl .tag{display:table;margin-top:.06rem}
+.sdesc{font-size:.24rem;color:#586274;line-height:1.45;margin:0 0 .2rem}
+.leg{display:flex;align-items:center;gap:.22rem;border-top:.02rem solid #D4D9E1;padding:.34rem 0;font-size:.28rem;font-weight:700;line-height:1.3;white-space:nowrap}.leg.last{border-bottom:.02rem solid #D4D9E1}
+.leg i{width:.58rem;height:.42rem;border-radius:.1rem;border:.035rem solid #151924;flex:none}.leg i.p{background:#FF8499}.leg i.w{background:#fff;border-color:#8b9199}.leg i.d{border-style:dashed;background:transparent}
+.srows{border-bottom:.02rem solid #D4D9E1}
+.srow{border-top:.02rem solid #D4D9E1;padding:.16rem .14rem;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.08rem .16rem;min-height:1.06rem}.srow.on{background:#FFE6EA}
+.srow .sl{min-width:0}.srow .sl b{display:block;font-size:.3rem;line-height:1.3;white-space:nowrap}.srow .sl span{display:block;font-size:.22rem;color:#742F40;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sck{display:flex;align-items:center;gap:.14rem;font-size:.28rem;font-weight:500;white-space:nowrap}
+.sck i{width:.54rem;height:.54rem;flex:none;border-radius:.13rem;border:.035rem solid #151924;background:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:.36rem;color:#151924}
+.srow.on .sck{font-weight:700}.srow.on .sck i{background:#FF8499;border-color:#FF8499}
+.sx{grid-column:1 / -1;display:flex;gap:.1rem;flex-wrap:wrap}
+.sfoot{font-size:.245rem;color:#586274;margin:.16rem 0 0}
+.beltbar{display:block;width:100%;height:1.08rem;border-radius:.18rem;background:#FF8499;color:#151924;font-size:.38rem;font-weight:500;text-align:center;margin-top:.14rem;box-shadow:0 .04rem 0 rgba(150,70,95,.4)}
+.beltbar small{font-size:.22rem;margin-left:.16rem;color:#742F40}.beltbar:active{filter:brightness(.94)}
+#q119{position:absolute;left:.29rem;bottom:.52rem;width:1.44rem;height:1.44rem;border-radius:50%;background:#D2334A;border:.045rem solid #F2A6B2;color:#fff;font-size:.5rem;font-weight:800;text-align:center;box-shadow:0 .05rem .16rem rgba(201,54,62,.45)}
+.field{display:flex;align-items:center;gap:.16rem;padding:.1rem 0;border-top:.02rem solid #E8EBF0;font-size:.28rem}.field:first-of-type{border-top:0}
+.field>span:first-child{color:#586274;flex:none;width:1.9rem}
+.field input{flex:1;min-width:0;height:.7rem;border:.03rem solid #C2C8D1;border-radius:.14rem;padding:0 .16rem;font-family:var(--font-ui);font-size:.29rem;color:#151924;background:#fff;outline:none;user-select:text}
+.field input:focus{border-color:#2E6BE0;box-shadow:0 0 0 .04rem rgba(47,111,214,.2)}
+.seg{display:flex;gap:.1rem;flex-wrap:wrap}.seg .sbtn.on{background:#151924;border-color:#151924;color:#fff}
+.stack>.panel{margin-top:.16rem}.stack>.panel:first-child{margin-top:0}
+.hist{margin:.06rem 0 0;padding:0;list-style:none;font-size:.24rem;color:#343A47}.hist li{padding:.06rem 0;border-top:.02rem solid #E8EBF0}.hist li:first-child{border-top:0}
+#evprompt{position:absolute;left:11.2rem;right:.84rem;top:1.7rem;z-index:15;border-radius:.26rem;background:#151924;color:#fff;padding:.3rem .36rem;box-shadow:0 .1rem .5rem rgba(0,0,0,.6);border:.03rem solid #ff8a98;display:none}
+#evprompt b{font-size:.4rem}#evprompt p{margin:.08rem 0 .2rem;font-size:.28rem;color:#e3e6eb;line-height:1.45}
+#evprompt .row .btn{flex:1}
+#toast{position:absolute;left:50%;bottom:.9rem;transform:translateX(-50%);background:rgba(20,22,26,.96);color:#fff;border-radius:.14rem;padding:.16rem .32rem;font-size:.27rem;display:none;z-index:20;max-width:14rem;text-align:center;border:.015rem solid rgba(255,255,255,.2)}
+/* ================= TECH THEME (colour only) =================
+   The right console takes the colours of the left Driving View, which is the reference: ink night base, glass surfaces, signal red / rose / amber /
+   police blue as light accents. No selector below changes a size, a position, a text or a behaviour. Everything is scoped to #app.
+   The QR box keeps its white ground (a QR code needs it to be read). */
+#app{background:linear-gradient(165deg,#151b28 0,#0f131c 46%,#0b0e15 100%);color:#EEF1F6;box-shadow:0 .12rem .6rem rgba(0,0,0,.6),0 0 0 .02rem rgba(150,200,255,.26),-.34rem 0 .9rem -.36rem rgba(88,190,255,.3)}
+body.acc #app{box-shadow:0 .12rem .6rem rgba(0,0,0,.6),0 0 0 .02rem rgba(255,130,150,.34),-.34rem 0 .9rem -.36rem rgba(255,55,80,.36)}
+#app #rail{background:rgba(7,9,14,.6);border-right-color:rgba(255,255,255,.1)}
+#app .it{color:#C9D0DB}#app .it.on{background:linear-gradient(rgba(255,132,153,.24),rgba(255,132,153,.12));color:#fff;box-shadow:inset 0 0 0 .02rem rgba(255,132,153,.55)}
+#app #q112{background:#2E6BE0;border-color:#8CB3F3;box-shadow:0 0 .22rem rgba(70,130,255,.55)}
+#app #q119{background:#D2334A;border-color:#FF9AA8;box-shadow:0 0 .22rem rgba(255,60,80,.5)}
+#app .mast .d{background:rgba(255,255,255,.45)}#app .mast .s{color:#9BA5B6}
+#app .lab{color:#9BA5B6}#app .lab button{color:#FFB648}
+#app .card{background:linear-gradient(rgba(255,255,255,.07),rgba(255,255,255,.035));border-color:rgba(255,255,255,.16);box-shadow:0 .04rem 0 rgba(0,0,0,.4),inset 0 .02rem 0 rgba(255,255,255,.07);color:#EEF1F6}
+#app .card .sub,#app .card.cont em{color:#9BA5B6}
+#app .tile{background:rgba(255,132,153,.18);color:#FFB3BF}
+#app .c119{background:linear-gradient(rgba(120,24,42,.62),rgba(64,13,25,.7));border-color:#FF5A6E;box-shadow:0 .04rem 0 rgba(0,0,0,.4),0 0 .2rem rgba(255,60,80,.22)}
+#app .c119 b,#app .c119 .chev{color:#FF8A98}#app .c119 .tile{background:#D2334A;color:#fff}#app .c119 .sub{color:#F0C4CA}
+#app .csos{background:linear-gradient(rgba(96,60,10,.5),rgba(52,33,8,.6));border-color:#E7A547}
+#app .csos b,#app .csos .chev{color:#FFB648}#app .csos .tile{background:#C97A12;color:#fff}#app .csos .sub{color:#EAD3AE}
+#app .cok{background:linear-gradient(rgba(14,90,76,.42),rgba(9,48,42,.55));border-color:#22A98B}
+#app .cok b{color:#5FE0BF}#app .cok .tile{background:#12907A;color:#fff}#app .cok .sub{color:#B8DDD3}
+#app .cpink{background:linear-gradient(rgba(120,40,62,.4),rgba(62,22,36,.52));border-color:#FF8499}
+#app .cpink .tile{background:#FF8499;color:#151924}#app .cpink .sub{color:#EBC5CD}
+#app .panel{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.14)}#app .panel.sos{border-color:rgba(231,165,71,.7)}
+#app .tag{background:rgba(255,132,153,.18);color:#FFB3BF}
+#app .tag.lab2,#app .tag.sim{background:rgba(255,182,72,.17);color:#FFCB7D}#app .tag.nat{background:rgba(90,150,255,.2);color:#B3CDFF}#app .tag.oem{background:rgba(255,255,255,.1);color:#C9D0DB}#app .tag.ok{background:rgba(55,211,168,.16);color:#86E8CC}
+#app .steps li{color:#6F7989}#app .steps li i{border-color:#4A5364}
+#app .steps li.done{color:#EEF1F6}#app .steps li.done i{background:#12907A;border-color:#12907A}
+#app .steps li.now{color:#FFB648}#app .steps li.now i{border-color:#FFB648;background:rgba(255,182,72,.16)}
+#app .steps li.bad{color:#FF7C8B}#app .steps li.bad i{background:#D2334A;border-color:#D2334A}#app .steps li em{color:#9BA5B6}
+#app .msg{color:#FFB648}#app .msg.bad{color:#FF7C8B}#app .msg.ok{color:#5FE0BF}
+#app .btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);color:#EEF1F6}
+#app .btn.sos{background:#C97A12;border-color:#E7A547;color:#fff}#app .btn.dark{background:#E9EDF4;border-color:#E9EDF4;color:#0B0D14}#app .btn.red{background:#D2334A;border-color:#FF6B7C;color:#fff}
+#app .kv,#app .loglist li,#app .opt,#app .cnt,#app .irow,#app .field,#app .hist li,#app table.map td{border-top-color:rgba(255,255,255,.09)}
+#app .kv>span:first-child,#app .loglist li span,#app .irow .val,#app .field>span:first-child,#app .note,#app .sdesc,#app .sfoot{color:#9BA5B6}
+#app .loglist li .tag{color:#FFB3BF}#app .loglist li .tag.lab2,#app .loglist li .tag.sim{color:#FFCB7D}#app .loglist li .tag.nat{color:#B3CDFF}#app .loglist li .tag.ok{color:#86E8CC}#app .loglist li .tag.oem{color:#C9D0DB}
+#app .dot{background:#6F7989}#app .dot.ok{background:#37D3A8}#app .dot.bad{background:#FF5A6E}
+#app .body{color:#E3E7EE}#app .hist{color:#C3CAD6}
+#app .alert{border-color:rgba(231,165,71,.6);background:rgba(255,182,72,.1);color:#FFCB7D}
+#app .opt i{border-color:#5A6476;color:#fff}#app .opt.on i{background:#12907A;border-color:#22A98B}
+#app .prog i{background:rgba(255,255,255,.12)}#app .prog i.on{background:#FF8499}
+#app .qrbox pre{color:#E3E7EE}
+#app .bigstate.ok{color:#5FE0BF}#app .bigstate.warn{color:#FFB648}#app .bigstate.bad{color:#FF7C8B}#app .bigstate.idle{color:#9BA5B6}
+#app .badge,#app .badge.un{background:rgba(255,255,255,.1);color:#C9D0DB}#app .badge.ok{background:rgba(55,211,168,.16);color:#86E8CC}#app .badge.bad{background:rgba(255,90,110,.18);color:#FF9AA6}#app .badge.run{background:rgba(255,182,72,.17);color:#FFCB7D}
+#app .sbtn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);color:#EEF1F6}
+#app .sbtn.y{background:rgba(55,211,168,.16);border-color:#22A98B;color:#86E8CC}#app .sbtn.n{background:rgba(255,255,255,.1);color:#C9D0DB}#app .sbtn.help{background:rgba(255,90,110,.18);border-color:#FF5A6E;color:#FF9AA6}
+#app .seg .sbtn.on{background:#E9EDF4;border-color:#E9EDF4;color:#0B0D14}
+#app .scol.r{border-left-color:rgba(255,255,255,.14)}
+#app .snum,#app .snum em{color:#EEF1F6}#app .snum.p{color:#FF9AAA}
+#app .leg,#app .leg.last,#app .srows,#app .srow{border-color:rgba(255,255,255,.14)}
+/* the seat plan is a light drawing: lightness is inverted and the hue kept, so it reads as a dark technical drawing with the same pink seats; the legend swatches follow it */
+#app .scol.mid svg,#app .leg i{filter:invert(1) hue-rotate(180deg) saturate(1.25)}
+#app .srow.on{background:rgba(255,132,153,.16)}#app .srow .sl span{color:#FF9AAA}
+#app .sck i{border-color:#C9D0DB;background:rgba(255,255,255,.05);color:#EEF1F6}#app .srow.on .sck i{background:#FF8499;border-color:#FF8499;color:#151924}
+#app .beltbar{background:linear-gradient(#FF8FA2,#F0738A);color:#151924;box-shadow:0 .04rem 0 rgba(0,0,0,.4),0 0 .2rem rgba(255,110,135,.3)}
+#app .field input{background:rgba(5,7,11,.55);border-color:#4A5364;color:#EEF1F6}#app .field input::placeholder{color:#6F7989}
+#app .field input:focus{border-color:#5A96FF;box-shadow:0 0 0 .04rem rgba(90,150,255,.28)}
+#app .scroll{scrollbar-color:rgba(255,255,255,.25) transparent}
+/* ---- SELECTED after the own-variant comparison (report/master/MOODBOARD_own_variants_A_B_C_D.jpg): variant B "meaning only" ----
+   Rules taken from the references: depth by tone, colour sparingly and only where it means something, text levels by white opacity,
+   no large bright surface (Android Automotive OS colour guidance, Material dark theme, CarPlay visual design, Pleos UI design guide).
+   The right console repeats the logic of the left call-to-action row: ONE red glass button for the emergency, the rest neutral glass. */
+#app{color:rgba(255,255,255,.92)}
+#app .card .sub,#app .card.cont em,#app .mast .s,#app .lab,#app .kv>span:first-child,#app .loglist li span,#app .irow .val,#app .field>span:first-child,#app .note,#app .sdesc,#app .sfoot,#app .steps li em{color:rgba(255,255,255,.64)}
+#app .steps li{color:rgba(255,255,255,.46)}
+#app .card{background:linear-gradient(rgba(34,39,52,.72),rgba(17,21,30,.8));border-color:rgba(255,255,255,.2);box-shadow:0 .05rem .16rem rgba(0,0,0,.35),inset 0 .02rem 0 rgba(255,255,255,.1)}
+#app .c119{background:linear-gradient(rgba(112,24,41,.82),rgba(60,13,24,.86));border-color:#ff7184;box-shadow:0 .05rem .16rem rgba(0,0,0,.35),0 0 .16rem rgba(255,60,80,.26),inset 0 .02rem 0 rgba(255,170,180,.24)}
+#app .c119 b,#app .c119 .chev{color:#FF97A3}#app .c119 .sub{color:rgba(255,228,232,.82)}
+#app .csos{background:linear-gradient(rgba(84,54,12,.6),rgba(44,29,9,.72));border-color:rgba(240,174,78,.85);box-shadow:0 .05rem .16rem rgba(0,0,0,.35),inset 0 .02rem 0 rgba(255,214,150,.16)}
+#app .csos .sub{color:rgba(255,240,214,.8)}
+#app .cok,#app .cpink{background:linear-gradient(rgba(34,39,52,.72),rgba(17,21,30,.8));border-color:rgba(255,255,255,.2)}
+#app .cok{box-shadow:inset .07rem 0 0 #22A98B,0 .05rem .16rem rgba(0,0,0,.35)}#app .cpink{box-shadow:inset .07rem 0 0 #FF8499,0 .05rem .16rem rgba(0,0,0,.35)}
+#app .cok b{color:rgba(255,255,255,.92)}#app .cok .sub,#app .cpink .sub{color:rgba(255,255,255,.64)}
+#app .card.plain .ic{color:rgba(255,255,255,.88)}
+#app .tile{background:rgba(255,255,255,.09);color:rgba(255,255,255,.88)}
+#app .c119 .tile{background:#D2334A;color:#fff}#app .csos .tile{background:#C97A12;color:#fff}#app .cok .tile{background:#12907A;color:#fff}#app .cpink .tile{background:#FF8499;color:#151924}
+#app .btn.dark,#app .seg .sbtn.on{background:linear-gradient(rgba(255,132,153,.26),rgba(255,132,153,.16));border-color:#FF8499;color:#FFE1E6}
+#app .beltbar{background:linear-gradient(rgba(255,132,153,.3),rgba(255,132,153,.17));box-shadow:inset 0 0 0 .03rem #FF8499;color:#FFE3E7}#app .beltbar small{color:#FFB3BF}
+#app .panel{background:linear-gradient(rgba(30,35,47,.6),rgba(16,20,28,.7));border-color:rgba(255,255,255,.15)}
+/* ---- BLUE MOTIF (colour only): the accent of the console is the blue measured in the left Driving View (hue 214 deg, see report/master/PALETTE_blue_from_left.json). Red stays for the emergency (119, accident), amber for SOS and simulation.
+   One accent value drives selection, primary buttons, progress, markers and the seat drawing; change --ac / --ac-solid / --ac-text to retheme. ---- */
+#app{--ac:10,111,245;--ac-solid:#0A6FF5;--ac-text:#CCE2FF;--ac-mid:#5B9FFB;background:linear-gradient(165deg,#142031 0,#0E1722 46%,#0a0d15 100%)}
+#app .mast .t::after{background:var(--ac-solid);box-shadow:0 0 .12rem rgba(var(--ac),.6)}
+#app .it.on{background:linear-gradient(rgba(var(--ac),.3),rgba(var(--ac),.14));box-shadow:inset 0 0 0 .02rem rgba(var(--ac),.7),0 0 .2rem rgba(var(--ac),.18)}
+#app .card,#app .cok,#app .cpink{background:linear-gradient(rgba(33,46,64,.8),rgba(17,25,36,.88));border-color:rgba(190,215,255,.2)}
+#app .panel{background:linear-gradient(rgba(28,40,57,.66),rgba(14,21,31,.76));border-color:rgba(190,215,255,.16)}
+#app .c119{background:linear-gradient(rgba(112,24,41,.82),rgba(60,13,24,.86));border-color:#ff7184}
+#app .csos{background:linear-gradient(rgba(84,54,12,.6),rgba(44,29,9,.72));border-color:rgba(240,174,78,.85)}
+#app .cpink{box-shadow:inset .07rem 0 0 var(--ac-solid),0 .05rem .16rem rgba(0,0,0,.35)}
+#app .cpink .tile{background:var(--ac-solid);color:#fff}
+#app .tile{background:rgba(var(--ac),.16);color:var(--ac-text)}
+#app .c119 .tile{background:#D2334A;color:#fff}#app .csos .tile{background:#C97A12;color:#fff}#app .cok .tile{background:#12907A;color:#fff}
+#app .btn.dark,#app .seg .sbtn.on{background:linear-gradient(rgba(var(--ac),.36),rgba(var(--ac),.2));border-color:var(--ac-mid);color:#fff}
+#app .beltbar{background:linear-gradient(rgba(var(--ac),.36),rgba(var(--ac),.2));box-shadow:inset 0 0 0 .03rem var(--ac-mid);color:#fff}#app .beltbar small{color:var(--ac-text)}
+#app .prog i.on{background:var(--ac-solid)}
+#app .tag{background:rgba(var(--ac),.2);color:var(--ac-text)}#app .loglist li .tag{color:var(--ac-text)}
+#app .tag.lab2,#app .tag.sim,#app .loglist li .tag.lab2,#app .loglist li .tag.sim{background:rgba(255,182,72,.17);color:#FFCB7D}
+#app .tag.nat,#app .loglist li .tag.nat{background:rgba(255,255,255,.1);color:#C9D0DB}#app .tag.oem,#app .loglist li .tag.oem{background:rgba(255,255,255,.1);color:#C9D0DB}#app .tag.ok,#app .loglist li .tag.ok{background:rgba(55,211,168,.16);color:#86E8CC}
+#app .snum.p{color:var(--ac-mid)}
+#app .srow.on{background:rgba(var(--ac),.18)}#app .srow .sl span{color:var(--ac-mid)}
+#app .srow.on .sck i{background:var(--ac-solid);border-color:var(--ac-solid);color:#fff}
+#app .scol.mid svg,#app .leg i{filter:invert(1) hue-rotate(46deg) saturate(1.35)}
+#app .opt.on i{background:var(--ac-solid);border-color:var(--ac-mid)}
+#app .steps li.done i{background:var(--ac-solid);border-color:var(--ac-solid)}
+#app .field input:focus{border-color:var(--ac-mid);box-shadow:0 0 0 .04rem rgba(var(--ac),.3)}
+#app .lab button{color:#FFB648}
+/* ---- READY STATE EMPHASIS (colour only). Before an accident the console is for PREPARATION: 119 and SOS stay in the same place, size and
+   one-tap reach, but calm (neutral glass, coloured icon and thin line); the preparation items carry the blue accent.
+   Everything here is under body:not(.acc): in the accident state nothing of it applies and 119 / SOS are filled exactly as before. ---- */
+body:not(.acc) #app .c119,body:not(.acc) #app .csos{background:linear-gradient(rgba(33,46,64,.8),rgba(17,25,36,.88));box-shadow:0 .05rem .16rem rgba(0,0,0,.35),inset 0 .02rem 0 rgba(255,255,255,.1)}
+body:not(.acc) #app .c119{border-color:rgba(255,113,132,.5)}body:not(.acc) #app .csos{border-color:rgba(240,174,78,.45)}
+body:not(.acc) #app .c119 .sub,body:not(.acc) #app .csos .sub{color:rgba(255,255,255,.64)}
+body:not(.acc) #app .cok,body:not(.acc) #app .cpink{box-shadow:0 .05rem .16rem rgba(0,0,0,.35),inset 0 .02rem 0 rgba(255,255,255,.1)}
+body:not(.acc) #app .cok .tile{background:rgba(18,144,122,.26);color:#86E8CC}body:not(.acc) #app .cpink .tile{background:rgba(var(--ac),.2);color:var(--ac-text)}
+body:not(.acc) #app .card[data-k="cseat"]{border-color:var(--ac-mid);box-shadow:inset .07rem 0 0 var(--ac-solid),0 .05rem .16rem rgba(0,0,0,.35),0 0 .18rem rgba(var(--ac),.2)}
+body:not(.acc) #app .card[data-k="cseat"] .tile{background:var(--ac-solid);color:#fff}
+body:not(.acc) #app .card[data-k="cpre"]{background:linear-gradient(rgba(var(--ac),.34),rgba(var(--ac),.16));border-color:var(--ac-mid);box-shadow:0 .05rem .16rem rgba(0,0,0,.35),0 0 .18rem rgba(var(--ac),.24)}
+body:not(.acc) #app .card[data-k="cpre"] .ic{color:#fff}
+</style>
+</head>
+<body>
+<div id="stage">
+  <header id="top" aria-label="상단 상태 표시 (콘셉트)">
+    <span class="logo"><svg viewBox="0 0 36 30" aria-hidden="true"><path d="M10 2h8L10 28H2Z" fill="#E0465A"/><path d="M24 2h8l-8 26h-8Z" fill="#FF8499"/></svg>RE:SAFETY</span>
+    <span class="vd" style="left:3.56rem"></span>
+    <span class="lanechip" id="lanechip"></span>
+    <span style="left:5.24rem">0<small>km</small></span>
+    <span style="left:8.74rem">0<small>km/h</small></span>
+    <span id="chips"></span>
+    <span id="tr"></span>
+  </header>
+  <section id="left" aria-label="주행 화면 (콘셉트)" data-driving-state="normal" data-bg="vector">
+    <div id="bg" aria-hidden="true"></div><div id="scene" aria-hidden="true"></div><div id="sceneFx" aria-hidden="true"></div>
+    <div class="gear"><b>P</b><span>R</span><span>N</span><span>D</span></div>
+    <div class="adas" id="adas"></div>
+    <div id="headline"></div>
+    <div id="lbtns"></div>
+    <div id="lrow"></div><div id="lline"></div><div id="dock"></div>
+    <div id="ldots"><i></i><i class="on"></i><i></i><i></i></div>
+    <div id="syscap">차량 시스템 영역 · 콘셉트 표시 (동작하지 않음)</div>
+  </section>
+  <section id="app" aria-label="RE:SAFETY"><nav id="rail"></nav><div id="main"></div></section>
+  <div id="evprompt" role="alertdialog" aria-label="충돌 의심 확인 (시뮬레이션)"></div>
+  <div id="toast" role="status"></div>
+</div>
+<script src="event_intake.js"></script>
+<script>
+'use strict';
+/* RE:SAFETY Full HMI Final concept. Stand-alone demonstration, NOT a Pleos system component.
+   Layout: top status strip + left driving view + right RE:SAFETY app + bottom-left system HMI icons (concept, not functional).
+   Left scene = own vector drawing (no third-party image in the APK). A rights-cleared image can replace it at run time through Native.scene().
+   Right pane = interactive re-creation of the latest R2D native design. Nearby SOS talks to the PC TEST relay through window.Native;
+   in a plain browser it runs a labelled simulation. Nothing here reads a real vehicle, a real location or sends a real report. */
+const I = {
+  home:'<path d="M6 23 24 7l18 16"/><path d="M11 20v21h26V20"/><path d="M20 41V29h8v12"/>',
+  seat:'<path d="M17 7c3 0 5 2 4.500 5l-3 16h12c2.500 0 4 1.500 3.500 4l-1 5"/><path d="M13 12l-1.500 17c-.3 3 1.500 5 4.500 5h16M17 34l-3 7M31 34l3 7"/>',   /* same drawing as the R2D native rail icon (res/drawable/ic_seat.xml) */
+  shield:'<path d="M24 5 8 10v13c0 10 7 17 16 20 9-3 16-10 16-20V10Z"/><path d="M15 22c5-3 13-3 18 0"/>',
+  doc:'<path d="M12 5h17l8 8v30H12Z"/><path d="M29 5v8h8M18 22h14M18 29h14M18 36h9"/>',
+  phone:'<path d="M12 6h7l4 10-5 3a24 24 0 0 0 11 11l3-5 10 4v7a4 4 0 0 1-4 4C21 40 8 27 8 10a4 4 0 0 1 4-4Z"/>',
+  warn:'<path d="M24 5 3 41h42Z"/><path d="M24 18v11M24 34v2"/>',
+  tow:'<path d="M5 31l4-10c1-2 3-3 5-3h18c2 0 4 1 5 3l4 10v6H5Z"/><circle cx="14" cy="37" r="4"/><circle cx="35" cy="37" r="4"/>',
+  list:'<rect x="9" y="7" width="30" height="35" rx="4"/><path d="M16 7v-2h16v2M16 20l3 3 6-6M16 33h16"/>',
+  grid:'<rect x="9" y="9" width="12" height="12" rx="2"/><rect x="27" y="9" width="12" height="12" rx="2"/><rect x="9" y="27" width="12" height="12" rx="2"/><rect x="27" y="27" width="12" height="12" rx="2"/>',
+  belt:'<rect x="4" y="27" width="20" height="13" rx="3" transform="rotate(-38 14 33)"/><rect x="25" y="10" width="17" height="12" rx="3" transform="rotate(-38 33 16)"/><path d="M21 27l6-5M4 44l4-4M40 9l5-5"/>',
+  amb:'<path d="M4 35V19h23v16M27 23h9l8 8v4H4"/><circle cx="13" cy="37" r="4"/><circle cx="35" cy="37" r="4"/><path d="M15 23v8M11 27h8M15 13V9M9 15l-2-3M21 15l2-3"/>',
+  chev:'<path d="M18 9l14 15-14 15"/>',
+  play:'<path d="M24 5 3 41h42Z"/><path d="M24 18v11M24 34v2"/>',
+  lane:'<path d="M17 42 21 6M31 42 27 6M24 9v5M24 20v6M24 32v8"/>',
+  bt:'<path d="M14 15l18 17-9 9V7l9 9-18 17"/>',
+  wifi:'<path d="M5 19a27 27 0 0 1 38 0M12 26a17 17 0 0 1 24 0M18.500 33a8 8 0 0 1 11 0"/><circle cx="24" cy="39" r="1.6" fill="currentColor"/>',
+  trunk:'<path d="M5 33h4m10 0h10m10 0h4v-6l-5-2-6-7H19l-7 7-7 2z"/><circle cx="14" cy="34" r="4.500"/><circle cx="34" cy="34" r="4.500"/><path d="M42 15a10 10 0 0 0-10-9m10 9-1-6m1 6-6-1"/>',
+  hood:'<path d="M5 33h4m10 0h10m10 0h4v-6l-5-2-6-7H19l-7 7-7 2z"/><circle cx="14" cy="34" r="4.500"/><circle cx="34" cy="34" r="4.500"/><path d="M6 15a10 10 0 0 1 10-9M6 15l1-6m-1 6 6-1"/>',
+  charge:'<path d="M6 11h28l-4 28H10z"/><path d="M23 16l-7 10h8l-3 9"/><path d="M41 16c3 5 3 12 0 17m0 0-3-3m3 3 3-3"/>',
+  window:'<path d="M5 37V24l9-11h18v24z"/><path d="M5 24h27"/><path d="M41 37V13m0 0-4 5m4-5 4 5"/>',
+  recirc:'<path d="M5 30l3-8c1-2 3-3 5-3h13c2 0 3 1 4 2"/><path d="M5 30h9m8 0h4"/><path d="M42 22H25m0 0 5-5m-5 5 5 5M30 35h13m0 0-4-4m4 4-4 4"/>',
+  dome:'<path d="M9 15h30"/><path d="M14 15a10 9 0 0 0 20 0"/><path d="M24 30v9M13 27l-5 7M35 27l5 7M18 30l-2 8M30 30l2 8"/>',
+  scroff:'<rect x="6" y="9" width="36" height="25" rx="3"/><path d="M17 41h14M19 16l10 11M29 16 19 27"/>',
+  box:'<path d="M6 15h36l-3 25H9z"/><path d="M6 15l2-6h32l2 6M18 25h12"/>',
+  check:'<path d="M9 25l10 10 20-22"/>'
+};
+const svg = (k, sw) => `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="${sw||3}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
+const $ = id => document.getElementById(id);
+const Q = new URLSearchParams(location.search);
+const NATIVE = !!window.Native;
+const SIM = !NATIVE;                                   // plain browser: labelled simulation
+const GUIDE = ['행동 확인', '부상 입력', '차량 상태', '공유할 내용', 'QR로 공유', '완료'];
+const CHECKS = ['비상등을 켰어요', '2차 사고 위험을 살폈어요', '탑승자 상태를 직접 확인했어요', '안전한 곳으로 이동할 수 있는지 살폈어요'];
+const SHARE = [['act', '행동 확인 결과'], ['inj', '부상 입력'], ['veh', '차량 상태 (시뮬레이션 값)'], ['loc', '위치 (시험용 가상 위치)']];
+/* Where each function really works. A = works in this Full HMI APK, B = works here against the PC TEST relay (lab), C = simulation/concept only,
+   D = works only in the Pleos R2D native app, E = needs OEM integration. */
+const INFO = {
+  prot:['보호 모드', 'nat', 'R2D 네이티브 전용', '정차 중 사용자가 누를 때만 조명·문 잠금 해제를 차량에 요청하는 기능입니다. 실제 요청과 결과 확인은 Pleos R2D 네이티브 앱(Vehicle SDK)에서 동작합니다. 이 독립 시연본은 차량에 연결되어 있지 않아 설명만 보여 줍니다.'],
+  seat:['좌석·안전벨트', 'nat', 'R2D 네이티브 전용', '차량이 보고한 좌석 상태와 사람이 직접 확인한 내용을 나란히 기록합니다. 차량 값 읽기는 R2D 네이티브 앱에서만 동작합니다. 이 시연본에는 차량 값이 없습니다.'],
+  tow:['보험·견인', 'nat', 'R2D 네이티브 전용', '보험사·견인 연락과 현장 공유(QR)를 돕습니다. R2D 네이티브 앱에서 동작합니다. 이 시연본에서는 사고 상황 정리의 QR만 만들 수 있습니다.'],
+  pre:['출발 전 확인', 'nat', 'R2D 네이티브 전용', '보험사 번호와 좌석별 동승 메모를 운행 전에 기록해 둡니다. R2D 네이티브 앱에서 동작합니다.'],
+  belt:['안전벨트 안내', 'oem', '콘셉트 · 제조사 검증 필요', '화재·연기·침수처럼 상황에 따라 판단이 달라지는 안전벨트 관련 안내를 이 자리에 보여 주는 구상입니다. 벨트를 풀라고 일괄 지시하는 기능이 아닙니다. 어떤 상황에 어떤 문구를 보여 줄지는 제조사와 전문기관의 안전 검증을 거쳐야 하며, 지금은 문구를 정하지 않았습니다. 급하면 119에 전화해 안내를 받으세요.'],
+  about:['이 시연본에 대하여', 'oem', 'FULL HMI CONCEPT · 독립 시연본', '']
+};
+/* Device-only storage. In the APK it goes through the native bridge, which writes synchronously: WebView localStorage is flushed to disk
+   a few seconds late, so an abrupt stop right after an input lost the last entries (seen in the restart test). Browser preview uses localStorage. */
+const DISK = NATIVE && window.Native.save && window.Native.load;
+const store = { get(k, d) { try { const v = DISK ? window.Native.load(k) : localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { const s = JSON.stringify(v); if (DISK) window.Native.save(k, s); else localStorage.setItem(k, s); } catch (e) {} } };
+/* HARDENING (pillars 02/03, "recover after an error"): every stored value is forced back into the SHAPE of its default before it is used.
+   A damaged or foreign value (wrong type, missing field, a list where an object belongs, far too long text) falls back to the default of
+   that field instead of breaking the screen. Found necessary by verification/storage_fuzz.html: the unprotected page stays blank for many
+   damaged values. */
+const isObj = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+const oneOf = (v, list, d) => list.indexOf(v) >= 0 ? v : d;
+const intIn = (v, lo, hi, d) => (typeof v === 'number' && isFinite(v)) ? Math.max(lo, Math.min(hi, Math.round(v))) : d;
+function shape(v, tpl) {
+  if (Array.isArray(tpl)) {
+    if (!Array.isArray(v)) return JSON.parse(JSON.stringify(tpl));
+    if (!tpl.length) return v.filter(x => isObj(x) || typeof x === 'string' || typeof x === 'number' || typeof x === 'boolean').slice(0, 60);
+    return tpl.map((d, i) => shape(v[i], d));
+  }
+  if (isObj(tpl)) {
+    if (!isObj(v)) return JSON.parse(JSON.stringify(tpl));
+    const keys = Object.keys(tpl), o = {};
+    if (!keys.length) { Object.keys(v).slice(0, 40).forEach(k => { const x = v[k]; if (typeof x === 'string') o[k] = x.slice(0, 80); else if ((typeof x === 'number' && isFinite(x)) || typeof x === 'boolean') o[k] = x; }); return o; }
+    keys.forEach(k => { o[k] = shape(Object.prototype.hasOwnProperty.call(v, k) ? v[k] : undefined, tpl[k]); });
+    return o;
+  }
+  if (typeof tpl === 'string') return typeof v === 'string' ? v.slice(0, 200) : tpl;
+  if (typeof tpl === 'number') return (typeof v === 'number' && isFinite(v)) ? v : tpl;
+  if (typeof tpl === 'boolean') return typeof v === 'boolean' ? v : tpl;
+  return (v === null || isObj(v)) ? v : tpl;
+}
+const cleanLog = v => shape(v, []).filter(e => isObj(e) && typeof e.text === 'string').map(e => ({ t: String(e.t == null ? '' : e.t).slice(0, 12), text: e.text.slice(0, 240), src: oneOf(e.src, ['user', 'demo', 'relay', 'app'], 'app') })).slice(0, 60);
+const cleanGuide = v => { const g = shape(v, newGuide()); g.step = intIn(g.step, 0, 5, 0); g.minor = intIn(g.minor, 0, 99, 0); g.major = intIn(g.major, 0, 99, 0); return g; };
+const newGuide = () => ({ active: false, step: 0, checks: [false, false, false, false], minor: 0, major: 0, share: { act: true, inj: true, veh: true, loc: false } });
+const S = { hmi: Q.get('state') === 'accident' ? 'ACC' : 'NORMAL', screen: Q.get('screen') || 'home', info: null, log: cleanLog(store.get('rec', [])), g: cleanGuide(store.get('guide', {})),
+  conn: 'unknown', sos: { phase: 'idle', matched: 0, counts: {}, err: '', kind: '' }, recv: { on: false, alerts: [], note: '' }, qr: 0, bg: 'vector' };
+let consent = store.get('sosConsent', false) === true;
+if (Q.get('consent') === '1') consent = true;
+if (Q.get('fresh') === '1') { S.log = []; S.g = newGuide(); }
+
+/* ---------------- transport: native bridge or labelled simulation ---------------- */
+let rq = 0; const pending = {};
+window.onRelay = (id, status, text) => { const p = pending[id]; if (!p) return; delete pending[id]; let j = null; try { j = JSON.parse(text); } catch (e) {} p({ status, json: j }); };
+function cfg() {
+  if (NATIVE) { try { return JSON.parse(window.Native.cfg()); } catch (e) { return { relay: false, pos: null }; } }
+  return { relay: Q.get('sim') !== 'noconfig', pos: Q.get('sim') === 'nopos' ? null : { lat: 0, lon: 0.0009 }, sim: true };
+}
+let simPolls = 0;
+function call(method, path, body) {
+  if (NATIVE) return new Promise(res => { const id = ++rq; pending[id] = res; window.Native.relay(id, method, path, body ? JSON.stringify(body) : ''); });
+  const mode = Q.get('sim') || 'matched';
+  return new Promise(res => setTimeout(() => {
+    if (mode === 'fail') return res({ status: -1, json: null });
+    if (path === '/v1/health') return res({ status: 200, json: { ok: true } });
+    if (path === '/v1/sos') { simPolls = 0; return res({ status: 200, json: mode === 'nobody' ? { request_id: 'sim', matched: 0 } : mode === 'cooldown' ? { matched: 0, cooldown: true } : { request_id: 'sim', matched: 2 } }); }
+    if (path.indexOf('/v1/status/') === 0) { simPolls++; return res({ status: 200, json: { expired: simPolls > 8, counts: { PENDING: simPolls < 2 ? 2 : 0, DELIVERED: simPolls < 2 ? 0 : simPolls < 4 ? 2 : 1, ACKED: simPolls < 4 ? 0 : 1, DECLINED: 0, WITHDRAWN: 0 } } }); }
+    if (path === '/v1/inbox') return res({ status: 200, json: { alerts: [] } });
+    res({ status: 200, json: { ok: true } });
+  }, 650));
+}
+const uuid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+
+/* ---------------- record (kept on the device only) ---------------- */
+const p2 = n => ('0' + n).slice(-2);
+const stamp = () => { const d = new Date(); return p2(d.getHours()) + ':' + p2(d.getMinutes()) + ':' + p2(d.getSeconds()); };
+const SRC = { user: ['사용자 입력', 'ok'], demo: ['시연 조작', 'sim'], relay: ['시험 서버', 'lab2'], app: ['앱 동작', 'nat'] };
+function log(text, src) { S.log.unshift({ t: stamp(), text, src: src || 'app' }); if (S.log.length > 60) S.log.pop(); store.set('rec', S.log); }
+function saveGuide() { store.set('guide', S.g); }
+function toast(t) { const el = $('toast'); el.textContent = t; el.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => el.style.display = 'none', 2600); }
+function go(screen) { S.screen = screen; S.qrBig = false; S.qrSplit = false; S.qrPart = 0; render(); }
+function dial(n) {
+  log(n + ' 전화 화면 열기 (발신은 직접)', 'app');
+  if (NATIVE) window.Native.dial(n); else toast('브라우저 시연: ' + n + ' 전화 화면은 APK에서 열립니다 (발신하지 않음)');
+  console.log('DIAL ' + n);
+  render();
+}
+function posText() { const c = cfg(); return c.pos ? `${c.pos.lat.toFixed(5)}, ${c.pos.lon.toFixed(5)}` : null; }
+function summaryText() {
+  const g = S.g, d = new Date(), L = ['[RE:SAFETY] 요약 (Full HMI 시연)'];
+  L.push(`시각: ${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())} (기기 시계)`);
+  if (g.share.act) L.push(`사용자 확인: 행동요령 ${g.checks.filter(Boolean).length}/4`);
+  if (g.share.inj) L.push(`부상 입력(사용자): 경미 ${g.minor}명 · 중상 ${g.major}명`);
+  if (g.share.veh) L.push('차량 상태: 시뮬레이션 값 (정차 · 기어 P), 차량 연동 없음');
+  if (g.share.loc) L.push('위치: ' + (posText() ? '시험용 가상 위치 ' + posText() : '미확인'));
+  L.push('※ 시연 데이터. 신고가 아님.');
+  return L.join('\n');
+}
+/* HARDENING round 6 (pillar 07): no QR symbol larger than what was read under all 11 fixed simulated camera conditions.
+   Measured off-device (qr_part_size_experiment.py, 8 different contents, 3 noise seeds, large view 941 px): symbols of up to 57 modules were read
+   in every condition; 61 modules in 6 of 8 contents, 65 in 3 of 8, 81 and more failed blur and tilt regularly.
+   - content whose single symbol would exceed QR_ONE_MAX_N modules is ALWAYS shown as several codes ("parts", each <= QR_PART_MAX_N modules)
+   - content between the two sizes is shown as one code; the large view offers "split" for hard conditions
+   Each part starts with "(i/k)" so the receiver can put the text together. Nothing is cut or left out. */
+const QR_ONE_MAX_N = 69, QR_PART_MAX_N = 53;         // 53, not 57: on the device one 57-module part missed the strongest blur (first device run), 53-module parts did not
+const qrCache = new Map();
+function qrMatrix(text) {                                 // one call of the native encoder per text (the page is redrawn often)
+  if (!NATIVE || !window.Native.qr) return null;
+  if (qrCache.has(text)) return qrCache.get(text);
+  let j; try { j = JSON.parse(window.Native.qr(text)); } catch (e) { j = { error: 'bridge' }; }
+  if (qrCache.size > 60) qrCache.clear();
+  qrCache.set(text, j || { error: 'failed' });
+  return qrCache.get(text);
+}
+const utf8len = s => unescape(encodeURIComponent(s)).length;
+function qrChunks(text, budget) {                         // lines are kept whole where possible; a longer line is cut between characters
+  const out = []; let cur = '';
+  const push = () => { if (cur) { out.push(cur); cur = ''; } };
+  for (const line of text.split('\n')) {
+    let rest = line, guard = 0;
+    while (rest.length && guard++ < 400) {
+      const cand = cur ? cur + '\n' + rest : rest;
+      if (utf8len(cand) <= budget) { cur = cand; rest = ''; break; }
+      if (cur && utf8len(rest) <= budget) { push(); continue; }
+      const room = budget - (cur ? utf8len(cur) + 1 : 0), chars = Array.from(rest); let i = 0, b = 0;
+      while (i < chars.length && b + utf8len(chars[i]) <= room) { b += utf8len(chars[i]); i++; }
+      if (i === 0) { if (!cur) break; push(); continue; }
+      cur = cur ? cur + '\n' + chars.slice(0, i).join('') : chars.slice(0, i).join(''); rest = chars.slice(i).join(''); push();
+    }
+  }
+  push(); return out;
+}
+function qrPlan(text) {                                   // { one: matrix or null, parts: [text] or null, auto: must be shown in parts }
+  const one = qrMatrix(text); if (!one) return { one: null, parts: null, auto: false };
+  const fits = !!one.n;
+  if (fits && one.n <= QR_PART_MAX_N) return { one, parts: null, auto: false };
+  for (let budget = 170; budget >= 90; budget -= 20) {
+    const raw = qrChunks(text, budget), k = raw.length;
+    if (k < 2 || k > 9 || raw.join('\n').replace(/\n/g, '') !== text.replace(/\n/g, '')) continue;     // every character must be in exactly one part
+    const parts = raw.map((p, i) => `(${i + 1}/${k})\n${p}`);
+    if (parts.every(p => { const m = qrMatrix(p); return m && m.n && m.n <= QR_PART_MAX_N; })) return { one: fits ? one : null, parts, auto: !fits || one.n > QR_ONE_MAX_N };
+  }
+  return { one: fits ? one : null, parts: null, auto: false };
+}
+function qrBox(text, key, preHtml, failHtml) {            // the QR area of "사고 상황 정리" and "보험·견인" (and of the lab check)
+  const plan = qrPlan(text), split = !!plan.parts && (plan.auto || S.qrSplit);
+  let svg = null, label = '';
+  if (split) { const k = plan.parts.length; S.qrPart = Math.min(S.qrPart || 0, k - 1); S.qrParts = k; svg = qrSvg(plan.parts[S.qrPart]); label = `QR ${S.qrPart + 1}/${k}`; }
+  else { S.qrPart = 0; svg = qrSvg(text); S.qrParts = svg ? 1 : 0; }
+  const big = S.qrBig && svg;
+  const hint = svg ? `<p class="qrhint">${big ? 'QR을 누르면 원래 크기로 돌아갑니다' : 'QR을 누르면 크게 보여 줍니다 (멀리서·비스듬히 찍을 때)'}</p>` : '';
+  const ctl = svg && (split || (big && plan.parts)) ? `<div class="qrctl">${split ? `<b data-k="qrpart">${label}</b><button class="sbtn" data-act="qrnext" data-k="qrnext">다음 QR  ›</button>` : ''}${plan.auto ? '<span data-k="qrauto">내용이 길어 QR을 나눴습니다. 차례로 모두 찍어 주세요.</span>'
+    : `<button class="sbtn" data-act="qrsplit" data-k="qrsplit">${S.qrSplit ? '한 개로 보기' : `그래도 안 읽히면: 나눠서 더 크게 (QR ${plan.parts.length}개)`}</button>`}</div>` : '';
+  return `<div class="qrbox${big ? ' big' : ''}" style="margin-top:.16rem"><div class="qr" data-k="${key}" ${svg ? 'data-act="qrbig"' : ''}>${svg || failHtml}</div><pre>${preHtml}</pre>${hint}${ctl}</div>`;
+}
+function qrSvg(text) {
+  const j = qrMatrix(text); if (!j) return null;
+  if (!j.n) { S.qrErr = j.error || 'failed'; return null; }
+  S.qrErr = '';
+  const n = j.n, q = 4, N = n + q * 2; let d = '';
+  for (let y = 0; y < n; y++) { const row = j.rows[y]; let x = 0; while (x < n) { if (row[x] === '1') { let x2 = x; while (x2 < n && row[x2] === '1') x2++; d += `M${x + q} ${y + q}h${x2 - x}v1h-${x2 - x}z`; x = x2; } else x++; } }
+  S.qr = n;
+  return `<svg viewBox="0 0 ${N} ${N}" shape-rendering="crispEdges" role="img" aria-label="QR 코드"><rect width="${N}" height="${N}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+}
+function checkConn() {
+  const c = cfg();
+  if (!c.relay) { S.conn = 'noconfig'; return render(); }
+  S.conn = 'checking'; render();
+  call('GET', '/v1/health').then(r => { S.conn = r.status === 200 ? 'ok' : 'down'; render(); });
+}
+/* HARDENING (pillar 03): the request number and the accepted request are saved on the device. A re-send after a crash of the app uses the
+   same number (the server answers with the original request), and a request that is still waiting for answers is shown again instead of sent again. */
+const SOS_KEEP_MS = 130000;
+const sosSaved = () => { const v = store.get('sosReq', null); if (!isObj(v) || typeof v.idem !== 'string' || v.idem.length < 8 || v.idem.length > 64 || typeof v.at !== 'number' || !isFinite(v.at)) return null;
+  if (v.rid !== undefined && typeof v.rid !== 'string') return null;
+  return Date.now() - v.at < SOS_KEEP_MS ? { idem: v.idem, at: v.at, rid: v.rid, matched: intIn(v.matched, 0, 9999, 0) } : null; };
+const sosForget = () => store.set('sosReq', null);
+const sosLive = () => !!S.sos.rid && (S.sos.phase === 'accepted' || S.sos.phase === 'delivered');
+function sosTap() {                                     // Home "SOS": one tap goes to the status screen and starts the request
+  S.screen = 'sos';
+  if (sosLive()) { console.log('SOS_NOT_RESENT live request ' + S.sos.rid.slice(0, 8)); return render(); }
+  if (!consent) { S.sos = { phase: 'consent', matched: 0, counts: {}, err: '', kind: '' }; render(); checkConn(); return; }
+  if (S.sos.phase === 'sending') return render();
+  startSos();
+}
+function fail(kind, err) { S.sos.phase = 'failed'; S.sos.kind = kind; S.sos.err = err; log('근처 SOS 실패: ' + err, 'relay'); render(); }
+let pollGen = 0;
+function startSos() {
+  const gen = ++pollGen;
+  S.sos = { phase: 'ready', matched: 0, counts: {}, err: '', kind: '' }; render();
+  const c = cfg();
+  if (!c.relay) { S.conn = 'noconfig'; return fail('no_config', '시험 서버 설정이 없어요. SOS를 보내지 않았습니다.'); }
+  if (!c.pos) return fail('no_location', '현재 위치를 확인할 수 없어 SOS를 보내지 못했어요.');
+  S.sos.phase = 'sending'; S.sos.tries = 0; render();
+  const kept = sosSaved(), reuse = kept && !kept.rid;      // an attempt that never got its answer (app stopped, no connection): same number again
+  const idem = reuse ? kept.idem : uuid();                // one request number for all attempts: a re-send can never create a second request
+  const sentAt = reuse ? kept.at : Date.now(); store.set('sosReq', { idem, at: sentAt });
+  if (reuse) console.log('SOS_IDEM_REUSED ' + idem.slice(0, 8));
+  const send = () => { S.sos.tries++; console.log('SOS_SEND attempt=' + S.sos.tries + ' idem=' + idem.slice(0, 8)); return call('POST', '/v1/sos', { lat: c.pos.lat, lon: c.pos.lon, accuracy: 10, idem_key: idem }); };
+  const attempt = () => send().then(r => (r.status < 0 && S.sos.tries < 3 && gen === pollGen) ? new Promise(res => { render(); setTimeout(res, 1200); }).then(attempt) : r);
+  attempt().then(r => {
+    if (gen !== pollGen) return;
+    if (r.status < 0) { S.conn = 'down'; return fail('no_relay', 'SOS 중계 서버에 연결할 수 없어요. (3회 시도)'); }
+    S.conn = 'ok';
+    if (r.status === 401) { sosForget(); return fail('auth', '요청이 거절됐어요 (인증 실패).'); }
+    if (r.status !== 200) { sosForget(); return fail('rejected', '요청이 거절됐어요 (' + ((r.json && r.json.error) || r.status) + ').'); }
+    if (r.json && r.json.cooldown) { sosForget(); return fail('cooldown', '최근에 SOS를 요청했어요. 잠시 뒤 다시 시도해 주세요.'); }
+    S.sos.matched = (r.json && r.json.matched) || 0; S.sos.rid = r.json && r.json.request_id;
+    if (!S.sos.matched) { sosForget(); S.sos.phase = 'nobody'; log('근처 SOS: 서버 접수, 받을 수 있는 사용자 없음', 'relay'); return render(); }
+    store.set('sosReq', { idem, at: sentAt, rid: S.sos.rid, matched: S.sos.matched });
+    S.sos.phase = 'accepted'; S.sos.at = Date.now(); log('근처 SOS: 서버 접수, 전달 대상 ' + S.sos.matched + '명' + (r.json.duplicate ? ' (같은 요청 재확인)' : ''), 'relay'); render();
+    poll(gen, 0);
+  });
+}
+/* HARDENING round 5 (pillar 04): the status is followed for as long as the request lives on the server, not for a fixed number of questions.
+   Before: polling stopped silently after 41 questions (about 61 s) while the server keeps a request for 120 s. A confirmation that came later
+   never reached the screen, "expired" was never shown, and a lost connection during the wait still read "connected". */
+const SOS_FOLLOW_MS = 150000, SOS_FOLLOW_CAP_MS = 900000;   // without a server hint: a little longer than the server's 120 s; never longer than 15 min
+function poll(gen, n, gone) {
+  if (gen !== pollGen || !S.sos.rid) return;
+  const t0 = S.sos.at || (S.sos.at = Date.now());
+  if (Date.now() > Math.min(t0 + SOS_FOLLOW_CAP_MS, S.sos.until || t0 + SOS_FOLLOW_MS)) {          // the request's time is over and the server never said so
+    sosForget(); console.log('SOS_FOLLOW_END ' + S.sos.phase);
+    if (S.sos.phase !== 'acked') { S.sos.phase = 'expired'; S.sos.endKind = 'unknown'; log('근처 SOS: 요청 시간이 끝남, 서버 상태를 끝까지 확인하지 못함', 'relay'); }
+    return render();
+  }
+  call('GET', '/v1/status/' + S.sos.rid).then(r => {
+    if (gen !== pollGen) return;
+    if (r.status === 200 && r.json && r.json.counts) {
+      gone = 0;
+      if (S.sos.lost) { S.sos.lost = 0; S.conn = 'ok'; console.log('SOS_FOLLOW_BACK'); }
+      if (typeof r.json.expires_in_s === 'number' && isFinite(r.json.expires_in_s)) S.sos.until = Date.now() + Math.max(0, r.json.expires_in_s) * 1000 + 20000;
+      const c = r.json.counts, before = S.sos.phase; S.sos.counts = c;
+      const got = (c.DELIVERED || 0) + (c.ACKED || 0) + (c.DECLINED || 0);
+      if ((c.ACKED || 0) > 0) S.sos.phase = 'acked'; else if (got > 0) S.sos.phase = 'delivered';
+      if (S.sos.phase !== before) log('근처 SOS: ' + (S.sos.phase === 'acked' ? '수신 확인 ' + c.ACKED + '명' : '단말 수신 ' + got + '명'), 'relay');
+      if (r.json.expired && S.sos.phase !== 'acked') { S.sos.phase = 'expired'; log('근처 SOS: 만료, 확인한 사용자 없음 (수신 ' + got + '명)', 'relay'); }
+      render();
+      if (r.json.expired) { sosForget(); return; }
+    } else if (r.status === 404) {                          // the server does not know the request (any more)
+      gone = (gone || 0) + 1;
+      if (S.sos.resumed || gone >= 2) { sosForget(); if (S.sos.phase !== 'acked') { S.sos.phase = 'expired'; S.sos.endKind = 'gone'; }
+        log('근처 SOS: ' + (S.sos.resumed ? '이전 요청' : '요청') + '을 서버에서 찾을 수 없음 (만료로 처리)', 'relay'); return render(); }
+    } else {                                                // no answer: keep asking, and say so on the screen from the second miss
+      S.sos.lost = (S.sos.lost || 0) + 1;
+      if (S.sos.lost === 2) { S.conn = 'down'; console.log('SOS_FOLLOW_LOST'); render(); }
+    }
+    setTimeout(() => poll(gen, n + 1, gone), Date.now() - t0 > 60000 ? 3000 : 1500);
+  });
+}
+function sosResume() {                                   // app restart while a request was waiting for answers
+  const k = sosSaved(); if (!k || !k.rid || !cfg().relay) return;
+  S.sos = { phase: 'accepted', matched: k.matched || 0, counts: {}, err: '', kind: '', rid: k.rid, resumed: true, at: Date.now() };
+  console.log('SOS_RESUMED ' + k.rid.slice(0, 8)); poll(++pollGen, 0);                    // nothing new happened: no line in the user's record
+}
+let recvGen = 0;
+function recvToggle() {
+  const c = cfg();
+  if (S.recv.on) { S.recv.on = false; recvGen++; S.recv.alerts = []; S.recv.note = '수신을 껐어요.'; call('POST', '/v1/consent', { receive: false }).then(() => call('POST', '/v1/leave', {})); return render(); }
+  if (!c.relay) { S.recv.note = '시험 서버 설정이 없어요.'; return render(); }
+  if (!c.pos) { S.recv.note = '현재 위치를 확인할 수 없어요.'; return render(); }
+  S.recv.on = true; S.recv.note = '수신 중'; const gen = ++recvGen; render();
+  call('POST', '/v1/presence', { lat: c.pos.lat, lon: c.pos.lon, accuracy: 10, receive: true }).then(() => call('POST', '/v1/consent', { receive: true })).then(r => {
+    if (r.status !== 200) { S.recv.on = false; S.recv.note = '수신 설정에 실패했어요.'; return render(); }
+    recvLoop(gen);
+  });
+}
+function recvLoop(gen) {
+  if (gen !== recvGen || !S.recv.on) return;
+  const c = cfg();
+  (c.pos ? call('POST', '/v1/presence', { lat: c.pos.lat, lon: c.pos.lon, accuracy: 10, receive: true }) : Promise.resolve()).then(() => call('GET', '/v1/inbox')).then(r => {
+    if (gen !== recvGen) return;
+    if (r.status === 200 && r.json && r.json.alerts) { const now = r.json.alerts.map(a => ({ id: a.request_id, band: a.distance_band, left: a.expires_in_s })); if (JSON.stringify(now.map(a => a.id)) !== JSON.stringify(S.recv.alerts.map(a => a.id))) { S.recv.alerts = now; render(); } }
+    setTimeout(() => recvLoop(gen), 2000);
+  });
+}
+function answer(id, action) { call('POST', '/v1/ack', { request_id: id, action }).then(r => { S.recv.note = r.status === 200 ? (action === 'ack' ? '확인했어요.' : '거절했어요.') : '응답에 실패했어요.'; S.recv.alerts = S.recv.alerts.filter(a => a.id !== id); log('받은 SOS ' + (action === 'ack' ? '확인' : '거절'), 'user'); render(); }); }
+
+/* ================= feature modules: real state, saved on the device =================
+   Nothing below talks to a vehicle, an insurer, a tow service or a public agency. Vehicle values are a SIMULATION kept inside this APK. */
+const nowText = () => { const d = new Date(); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())}`; };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const phoneDigits = s => String(s || '').replace(/[-\s]/g, '');
+const validPhone = s => /^[0-9]{3,15}$/.test(phoneDigits(s));
+
+/* ---- protect mode (SIMULATION of a virtual vehicle) ---- */
+const PITEMS = [['tail', '미등', '켜짐', '꺼짐'], ['fog', '후방 안개등', '켜짐', '꺼짐'], ['cabin', '실내등', '켜짐', '꺼짐'], ['unlock', '문 잠금', '풀림', '잠김']];
+const newProt = () => ({ state: 'off', veh: { tail: false, fog: false, cabin: false, unlock: false }, before: null, res: {}, hist: [], opt: { fogSupported: false, failNext: false } });
+S.p = shape(store.get('prot', {}), newProt());
+S.p.state = oneOf(S.p.state, ['off', 'requesting', 'reverting', 'on', 'partial', 'failed', 'interrupted'], 'off');
+S.p.before = isObj(S.p.before) ? shape(S.p.before, newProt().veh) : null;
+Object.keys(S.p.res).forEach(k => { if (['ok', 'failed', 'unsupported', 'sending'].indexOf(S.p.res[k]) < 0) delete S.p.res[k]; });
+S.p.hist = S.p.hist.filter(isObj).map(x => ({ t: String(x.t == null ? '' : x.t).slice(0, 20), mode: x.mode === 'off' ? 'off' : 'on', ok: intIn(x.ok, 0, 9, 0), bad: intIn(x.bad, 0, 9, 0), un: intIn(x.un, 0, 9, 0) })).slice(0, 20);
+if (S.p.state === 'requesting' || S.p.state === 'reverting') S.p.state = 'interrupted';       // the app was stopped in the middle of a request
+const saveProt = () => store.set('prot', S.p);
+let protGen = 0;
+function protRun(mode) {                                 // mode: 'on' = request, 'off' = put the values back
+  const p = S.p; if (p.state === 'requesting' || p.state === 'reverting') return;
+  const gen = ++protGen;
+  if (mode === 'on') p.before = Object.assign({}, p.veh);
+  p.state = mode === 'on' ? 'requesting' : 'reverting'; p.res = {}; saveProt(); render();
+  const target = k => mode === 'on' ? true : !!(p.before && p.before[k]);
+  const next = i => {
+    if (gen !== protGen) return;
+    if (i >= PITEMS.length) return protDone(mode);
+    const k = PITEMS[i][0]; p.res[k] = 'sending'; render();
+    setTimeout(() => {
+      if (gen !== protGen) return;
+      let r;
+      if (k === 'fog' && !p.opt.fogSupported) r = 'unsupported';                                // this virtual vehicle has no rear fog lamp
+      else if (p.opt.failNext && k === 'cabin') r = 'failed';                                   // rehearsal: the virtual vehicle does not apply this request
+      else { p.veh[k] = target(k); r = p.veh[k] === target(k) ? 'ok' : 'failed'; }              // request, then read the value back
+      p.res[k] = r; saveProt(); render(); setTimeout(() => next(i + 1), 220);
+    }, 420);
+  };
+  next(0);
+}
+function protDone(mode) {
+  const p = S.p, v = Object.values(p.res), ok = v.filter(x => x === 'ok').length, bad = v.filter(x => x === 'failed').length, un = v.filter(x => x === 'unsupported').length;
+  p.opt.failNext = false;
+  p.state = mode === 'off' ? (bad ? 'partial' : 'off') : (bad === 0 && un === 0) ? 'on' : ok > 0 ? 'partial' : 'failed';
+  if (mode === 'off' && !bad) p.before = null;
+  p.hist.unshift({ t: nowText(), mode, ok, bad, un }); if (p.hist.length > 20) p.hist.pop();
+  log(`보호 모드 ${mode === 'on' ? '요청' : '되돌리기'} (SIMULATION) · 확인 ${ok} · 실패 ${bad} · 미지원 ${un}`, 'demo'); saveProt(); render();
+}
+function protHtml() {
+  const p = S.p, busy = p.state === 'requesting' || p.state === 'reverting';
+  const st = { off: ['꺼짐', 'idle'], requesting: ['요청 중…', 'warn'], reverting: ['되돌리는 중…', 'warn'], on: ['켜짐 · 모든 항목 확인됨', 'ok'], partial: ['일부만 적용됨', 'warn'], failed: ['실패 · 적용된 항목 없음', 'bad'], interrupted: ['중단됨 · 요청 도중 앱이 종료됨', 'bad'] }[p.state];
+  const rb = { ok: ['확인됨', 'ok'], failed: ['실패', 'bad'], unsupported: ['미지원', 'un'], sending: ['요청 중', 'run'] };
+  const canOn = !busy && (p.state === 'off' || p.state === 'failed' || p.state === 'interrupted'), canOff = !busy && (p.state === 'on' || p.state === 'partial' || p.state === 'interrupted');
+  return mast('보호 모드') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="scroll stack"><div class="panel"><h3>보호 모드 <span class="tag sim">SIMULATION · 가상 차량</span></h3>
+    <div class="bigstate ${st[1]}" data-k="protstate">${st[0]}</div>
+    <div class="kv"><span>데이터 출처</span><b>가상 차량 상태 (이 APK 안의 시뮬레이션) · 실제 차량 값 아님</b></div>
+    <div class="kv"><span>정차 조건</span><b>기어 P · 0 km/h (시뮬레이션 값)</b></div>
+    <div style="margin-top:.1rem">${PITEMS.map(([k, n, y, x]) => { const r = rb[p.res[k]]; return `<div class="irow"><span class="nm">${n}</span><span class="val">${p.veh[k] ? y : x}</span><span class="badge ${r ? r[1] : ''}" data-k="pr_${k}">${r ? r[0] : '요청 전'}</span></div>`; }).join('')}</div>
+    <div class="row" style="margin-top:.18rem"><button class="btn dark" style="flex:1" data-f="prot:on" data-k="proton" ${canOn ? '' : 'disabled'}>보호 모드 요청 (SIMULATION)</button><button class="btn" style="flex:1" data-f="prot:off" data-k="protoff" ${canOff ? '' : 'disabled'}>되돌리기</button></div>
+    <p class="note">요청 뒤 가상 차량 값을 다시 읽어 항목별로 확인됨·실패·미지원을 표시합니다. 이 화면은 실제 차량을 제어하지 않습니다. 실제 요청과 재확인은 Pleos R2D 네이티브 앱에서 Vehicle SDK로 수행합니다.</p></div>
+  <div class="panel"><h3>시뮬레이션 설정 <span class="tag sim">시연용</span></h3>
+    <button class="opt${p.opt.fogSupported ? ' on' : ''}" data-f="prot:fog" data-k="protfog" ${busy ? 'disabled' : ''}><i>${p.opt.fogSupported ? '✓' : ''}</i>후방 안개등이 있는 차량으로 가정</button>
+    <button class="opt${p.opt.failNext ? ' on' : ''}" data-f="prot:fail" data-k="protfail" ${busy ? 'disabled' : ''}><i>${p.opt.failNext ? '✓' : ''}</i>다음 요청에서 실내등 응답 실패를 재현</button></div>
+  <div class="panel"><h3>요청 이력 <span class="tag">이 기기 안에만 보관</span></h3>
+    ${p.hist.length ? `<ul class="hist" data-k="prothist">${p.hist.slice(0, 6).map(h => `<li>${h.t} · ${h.mode === 'on' ? '요청' : '되돌리기'} · 확인 ${h.ok} · 실패 ${h.bad} · 미지원 ${h.un}</li>`).join('')}</ul>` : '<p class="note">아직 요청한 적이 없습니다.</p>'}</div></div>`;
+}
+
+/* ---- seats and seat belts: the agreed three-part layout of the R2D native screen (01 vehicle report / car plan / 02 direct confirmation,
+   "안전벨트 조회" bar). No seat or belt sensor is connected here: the vehicle-report side is a fixed SIMULATION and is labelled as such. ---- */
+const SEATS = [['D', '운전석'], ['P', '조수석'], ['RL', '운전석 뒷좌석'], ['RR', '조수석 뒷좌석']];
+const BELT = { u: '벨트 미확인', y: '벨트 착용', n: '벨트 미착용' }, COND = { u: '상태 미확인', ok: '괜찮음', help: '도움 필요' };
+const SIMSEAT = { D: ['y', 'y'], P: ['n', 'n'], RL: ['n', 'n'], RR: ['n', 'n'] };    // fixed virtual report: [seat possibly occupied, belt latched]
+const SEATCHK = ['모든 탑승자에게 말을 걸어 반응을 확인했어요', '스스로 움직이기 어려운 사람이 있는지 확인했어요', '어린이·노약자 좌석을 따로 확인했어요'];
+const newSeats = () => ({ s: {}, chk: [false, false, false], sim: false, beltAt: '', savedAt: '' });
+{ const raw = store.get('seats', {}), rs = isObj(raw) && isObj(raw.s) ? raw.s : {};
+  S.st = shape(raw, newSeats());
+  S.st.s = Object.fromEntries(SEATS.map(([k]) => { const x = shape(Object.prototype.hasOwnProperty.call(rs, k) ? rs[k] : undefined, { occ: 'u', belt: 'u', cond: 'u' });
+    return [k, { occ: oneOf(x.occ, ['u', 'y', 'n'], 'u'), belt: oneOf(x.belt, ['u', 'y', 'n'], 'u'), cond: oneOf(x.cond, ['u', 'ok', 'help'], 'u') }]; })); }   // only the seats of this layout
+const saveSeats = () => store.set('seats', S.st);
+const cyc = (v, order) => order[(order.indexOf(v) + 1) % order.length];
+function seatSum() { const a = Object.values(S.st.s); return { occ: a.filter(x => x.occ === 'y').length, belt: a.filter(x => x.occ === 'y' && x.belt === 'y').length, nobelt: a.filter(x => x.occ === 'y' && x.belt === 'n').length, help: a.filter(x => x.occ === 'y' && x.cond === 'help').length, unknown: a.filter(x => x.occ === 'u').length }; }
+function carPlan(t) {
+  const pos = { D: [70, 318], P: [208, 318], RL: [70, 510], RR: [208, 510] };
+  const seat = ([k, n]) => { const [x, y] = pos[k], s = t.s[k], rep = SIMSEAT[k][0] === 'y', conf = s.occ !== 'u', nm = n.split(' ');
+    const st = conf ? (s.occ === 'y' ? '탑승 확인' : '빈 좌석 확인') : rep ? '착석 가능성' : '빈 좌석';
+    return `<g><rect x="${x + 22}" y="${y + 132}" width="68" height="26" rx="9" fill="${rep ? '#FF8499' : '#fff'}" stroke="${rep ? '#E0607F' : '#9aa0a8'}" stroke-width="2"/>
+      <rect x="${x}" y="${y}" width="112" height="112" rx="30" fill="${rep ? 'url(#seatPink)' : '#fff'}" stroke="${rep ? '#E0607F' : '#9aa0a8'}" stroke-width="2.200"/>
+      <rect x="${x - 10}" y="${y + 92}" width="132" height="48" rx="22" fill="${rep ? '#FFD6E6' : '#fff'}" stroke="${rep ? '#E0607F' : '#9aa0a8'}" stroke-width="2.200"/>
+      <path d="M${x + 40} ${y + 12}v34M${x + 72} ${y + 12}v34" stroke="${rep ? '#F3A9BF' : '#D4D9E1'}" stroke-width="2"/>
+      ${nm.map((w, i) => `<text x="${x + 56}" y="${y + (nm.length > 1 ? 66 : 82) + i * 22}" text-anchor="middle" font-size="18" fill="#343A47">${w}</text>`).join('')}
+      <text x="${x + 56}" y="${y + 124}" text-anchor="middle" font-size="19.500" font-weight="700" fill="#151924">${st}</text>
+      ${conf ? `<circle cx="${x + 98}" cy="${y + 10}" r="15" fill="#FF8499" stroke="#fff" stroke-width="2.500"/><path d="M${x + 91} ${y + 10}l5 6 9-11" fill="none" stroke="#151924" stroke-width="3.200" stroke-linecap="round" stroke-linejoin="round"/>` : ''}</g>`; };
+  return `<svg viewBox="0 0 390 770" role="img" aria-label="좌석 배치" font-family="inherit"><defs><linearGradient id="seatPink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE6EA"/><stop offset="1" stop-color="#FF9DB8"/></linearGradient></defs>
+    <g fill="#151924"><rect x="22" y="150" width="16" height="78" rx="7"/><rect x="352" y="150" width="16" height="78" rx="7"/><rect x="22" y="560" width="16" height="92" rx="7"/><rect x="352" y="560" width="16" height="92" rx="7"/></g>
+    <path d="M78 34Q195 -8 312 34Q356 56 356 128V690Q356 748 300 754H90Q34 748 34 690V128Q34 56 78 34Z" fill="#fff" stroke="#151924" stroke-width="3.200"/>
+    <path d="M86 40Q116 24 150 21M304 40Q274 24 240 21" fill="none" stroke="#151924" stroke-width="5.500" stroke-linecap="round"/>
+    <path d="M132 30Q128 100 150 150M258 30Q262 100 240 150" fill="none" stroke="#D4D9E1" stroke-width="1.600"/>
+    <rect x="6" y="176" width="34" height="24" rx="11" fill="#fff" stroke="#151924" stroke-width="2.800"/><rect x="350" y="176" width="34" height="24" rx="11" fill="#fff" stroke="#151924" stroke-width="2.800"/>
+    <path d="M100 152H290L326 204H64Z" fill="#2A2630"/><path d="M232 154 196 204h24l36-50Z" fill="#fff" opacity=".14"/>
+    <rect x="62" y="204" width="266" height="478" rx="10" fill="#FBF3F5" stroke="#F3C6D3" stroke-width="1.600"/>
+    <path d="M62 222H328" stroke="#F8D8E2" stroke-width="10"/>
+    <rect x="176" y="210" width="88" height="15" rx="4" fill="#111"/>
+    <rect x="198" y="250" width="20" height="216" rx="9" fill="#E8EBF0" stroke="#D4D9E1" stroke-width="1.600"/><circle cx="208" cy="324" r="6" fill="none" stroke="#FF8499" stroke-width="2"/><circle cx="208" cy="360" r="6" fill="none" stroke="#FF8499" stroke-width="2"/>
+    ${SEATS.map(seat).join('')}
+    <circle cx="126" cy="252" r="35" fill="#fff" stroke="#151924" stroke-width="5"/><rect x="113" y="244" width="26" height="18" rx="6" fill="#fff" stroke="#151924" stroke-width="3.600"/><path d="M92 250h21M139 250h21M126 262v24" stroke="#151924" stroke-width="3.600"/>
+    <path d="M86 688H304L282 724H108Z" fill="#2A2630"/><path d="M96 742H294" stroke="#8b9199" stroke-width="3" stroke-linecap="round"/></svg>`;
+}
+function seatHtml() {
+  const t = S.st;
+  const row = ([k, n]) => { const s = t.s[k], conf = s.occ !== 'u', on = s.occ === 'y', sv = SIMSEAT[k];
+    const belt = !t.sim ? '미조회' : sv[0] === 'y' ? (sv[1] === 'y' ? '체결 보고 (가상)' : '미체결 보고 (가상)') : '빈 좌석 (가상)';
+    return `<div class="srow${conf ? ' on' : ''}"><div class="sl"><b>${n}</b><span data-k="sv_${k}">벨트 · ${belt}</span></div>
+      <button class="sck" data-f="seat:occ:${k}" data-k="so_${k}" aria-pressed="${conf}"><i>${conf ? '✓' : ''}</i><span>${conf ? '직접 확인함' : '확인 필요'}</span></button>
+      ${conf ? `<div class="sx"><button class="sbtn ${on ? 'y' : 'n'}" data-f="seat:emp:${k}" data-k="se_${k}">${on ? '탑승' : '빈 좌석'}</button>${on ? `<button class="sbtn ${s.belt === 'y' ? 'y' : s.belt === 'n' ? 'help' : ''}" data-f="seat:belt:${k}" data-k="sb_${k}">${BELT[s.belt]}</button><button class="sbtn ${s.cond === 'ok' ? 'y' : s.cond === 'help' ? 'help' : ''}" data-f="seat:cond:${k}" data-k="sc_${k}">${COND[s.cond]}</button>` : ''}</div>` : ''}</div>`; };
+  return mast('좌석·안전벨트') + `<div class="scroll">
+  <div class="seat3">
+    <div class="scol l"><div class="snum">01 <em>—</em></div><div class="sttl">차량 보고 <span class="tag sim">SIMULATION</span></div>
+      <p class="sdesc">차량이 기록한 좌석 정보예요. 사람이 확인한 내용이 아니에요. 이 시연본에서는 가상 차량 값이에요.</p>
+      <div class="leg"><i class="p"></i><span>착석 가능성 있음<br>상태는 불확실해요</span></div>
+      <div class="leg"><i class="w"></i><span>빈 좌석으로 보고</span></div>
+      <div class="leg last"><i class="d"></i><span>상태 확인 불가</span></div></div>
+    <div class="scol mid" data-k="carplan">${carPlan(t)}</div>
+    <div class="scol r"><div class="snum p">02 <em>—</em></div><div class="sttl">직접 확인</div>
+      <p class="sdesc">현장에서 좌석을 직접 확인하고 결과를 기록해요.</p>
+      <div class="srows">${SEATS.map(row).join('')}</div></div>
+  </div>
+  <p class="sfoot">직접 확인은 사고 기록의 '좌석 직접 확인'에서 남겨요. 벨트 신호로 탑승·부상·대피를 판단하지 않아요.</p>
+  <button class="beltbar" data-f="seat:sim" data-k="seatsim">안전벨트 조회${t.sim ? ` <small>SIMULATION · ${t.beltAt} 조회</small>` : ''}</button>
+  <div class="panel" style="margin-top:.2rem"><h3>탑승자 확인 체크 <span class="tag ok">사용자 입력</span></h3>${SEATCHK.map((x, i) => `<button class="opt${t.chk[i] ? ' on' : ''}" data-f="seat:chk:${i}" data-k="sk${i}"><i>${t.chk[i] ? '✓' : ''}</i>${x}</button>`).join('')}
+    <div class="row" style="margin-top:.16rem"><button class="btn dark" style="flex:2" data-f="seat:save" data-k="seatsave">좌석 직접 확인을 사고 기록에 남기기</button><button class="btn" style="flex:1" data-f="seat:reset" data-k="seatreset">처음부터</button></div>
+    <div class="kv" style="margin-top:.1rem"><span>마지막 기록</span><b data-k="seatsaved">${t.savedAt || '없음'}</b></div>
+    <p class="note">이 시연본에는 좌석·벨트 센서가 연결되어 있지 않습니다. "차량 보고"와 "안전벨트 조회" 결과는 고정된 가상 값(SIMULATION)이며, 실제 차량 값은 Pleos R2D 네이티브 앱에서만 읽습니다. 앱은 벨트를 풀라고 안내하지 않습니다. 도움이 필요한 사람이 있으면 119에 전화하세요.</p></div></div>`;
+}
+
+/* ---- insurance / tow: contacts typed by the user, dialer on request, summary + QR. No automatic claim or dispatch exists. ---- */
+const TARGETS = { ins: '보험사', tow: '견인 기사', self: '개인 보관' };
+const TITEMS = [['time', '사고 시각'], ['where', '위치 (직접 입력)'], ['inj', '부상 입력'], ['act', '행동 확인 결과'], ['contact', '등록한 보험사·견인 연락처']];
+const newTow = () => ({ ins: { name: '', phone: '' }, tow: { name: '', phone: '' }, when: '', where: '', target: 'ins', items: { time: true, where: true, inj: true, act: true, contact: false }, pii: false, qr: false, msg: '' });
+S.t = shape(store.get('tow', {}), newTow()); S.t.target = oneOf(S.t.target, Object.keys(TARGETS), 'ins'); S.t.qr = false; S.t.msg = '';
+{ const lg = store.get('lastGuide', null); S.last = isObj(lg) ? shape(lg, { t: '', checks: 0, minor: 0, major: 0 }) : null; }   // summary of the last finished guide
+const saveTow = () => store.set('tow', S.t);
+const guideSrc = () => S.g.active ? { src: '진행 중인 정리', checks: S.g.checks.filter(Boolean).length, minor: S.g.minor, major: S.g.major } : S.last ? Object.assign({ src: '마지막으로 끝낸 정리 (' + S.last.t + ')' }, S.last) : null;
+const towNeedsPii = () => { const i = S.t.items; return i.where || i.inj || i.contact; };
+function towText() {
+  const t = S.t, g = guideSrc(), L = [`[RE:SAFETY] ${TARGETS[t.target]}용 요약 (Full HMI 시연)`];
+  if (t.items.time) L.push('사고 시각(사용자 입력): ' + (t.when || '미입력'));
+  if (t.items.where) L.push('위치(사용자 입력): ' + (t.where || '미입력'));
+  if (t.items.inj) L.push('부상 입력(사용자): ' + (g ? `경미 ${g.minor}명 · 중상 ${g.major}명` : '정리 기록 없음'));
+  if (t.items.act) L.push('사용자 확인: ' + (g ? `행동요령 ${g.checks}/4` : '정리 기록 없음'));
+  if (t.items.contact) { if (validPhone(t.ins.phone)) L.push(`보험사: ${t.ins.name || '-'} ${phoneDigits(t.ins.phone)}`); if (validPhone(t.tow.phone)) L.push(`견인: ${t.tow.name || '-'} ${phoneDigits(t.tow.phone)}`); }
+  L.push('※ 자동 접수·자동 출동 아님. 신고가 아님.');
+  return L.join('\n');
+}
+function dialUser(num, label) {
+  if (!validPhone(num)) { toast('전화번호를 숫자로 입력해 주세요.'); return; }
+  log(label + ' 전화 화면 열기 (발신은 직접)', 'user');
+  if (NATIVE) window.Native.dial(phoneDigits(num)); else toast('브라우저 시연: 전화 화면은 APK에서 열립니다 (발신하지 않음)');
+  render();
+}
+function towHtml() {
+  const t = S.t, g = guideSrc(), need = towNeedsPii();
+  const contact = (k, label) => `<div class="field"><span>${label} 이름</span><input data-in="tow.${k}.name" data-k="in_${k}_name" value="${esc(t[k].name)}" maxlength="30" placeholder="직접 입력" autocomplete="off"></div>
+    <div class="field"><span>${label} 번호</span><input data-in="tow.${k}.phone" data-k="in_${k}_phone" value="${esc(t[k].phone)}" maxlength="18" inputmode="tel" placeholder="숫자만 입력" autocomplete="off">
+      <button class="sbtn" data-f="tow:dial:${k}" data-k="dial_${k}" ${validPhone(t[k].phone) ? '' : 'disabled'}>전화 화면 열기</button></div>`;
+  const text = towText(), q = t.qr ? qrSvg(text) : null;
+  return mast('보험·견인') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="scroll stack"><div class="panel"><h3>연락처 <span class="tag ok">사용자 입력</span><span class="tag">이 기기 안에만 보관</span></h3>${contact('ins', '보험사')}${contact('tow', '견인')}
+    <p class="note">번호는 직접 입력합니다. "전화 화면 열기"는 번호가 입력된 전화 화면만 열고, 통화는 직접 겁니다. <b>자동 보험 접수·자동 견인 출동은 지원하지 않습니다</b>(제휴·운영 API 없음).</p></div>
+  <div class="panel"><h3>사고 요약 <span class="tag ok">사용자 입력</span></h3>
+    <div class="field"><span>사고 시각</span><input data-in="tow.when" data-k="in_when" value="${esc(t.when)}" maxlength="30" placeholder="예: 2026-11-14 07:10" autocomplete="off"><button class="sbtn" data-f="tow:now" data-k="townow">지금 시각 넣기</button></div>
+    <div class="field"><span>위치</span><input data-in="tow.where" data-k="in_where" value="${esc(t.where)}" maxlength="60" placeholder="도로 이름·방향을 직접 입력" autocomplete="off"></div>
+    <div class="kv"><span>사고 상황 정리</span><b data-k="towguide">${g ? `${g.src} · 행동요령 ${g.checks}/4 · 경미 ${g.minor}명 · 중상 ${g.major}명` : '기록 없음'}</b><button class="sbtn" data-act="guide" data-k="towtoguide">${S.g.active ? '이어하기' : '정리 시작'}</button></div></div>
+  <div class="panel"><h3>공유할 내용 확인 → QR <span class="tag ok">이 APK에서 생성</span></h3>
+    <div class="kv"><span>공유 대상</span><span class="seg">${Object.entries(TARGETS).map(([k, n]) => `<button class="sbtn${t.target === k ? ' on' : ''}" data-f="tow:target:${k}" data-k="tg_${k}">${n}</button>`).join('')}</span></div>
+    ${TITEMS.map(([k, n]) => `<button class="opt${t.items[k] ? ' on' : ''}" data-f="tow:item:${k}" data-k="ti_${k}"><i>${t.items[k] ? '✓' : ''}</i>${n}</button>`).join('')}
+    ${need ? `<button class="opt${t.pii ? ' on' : ''}" data-f="tow:pii" data-k="towpii" style="color:#FFB648"><i>${t.pii ? '✓' : ''}</i>개인정보(위치·부상·연락처)가 QR에 들어가는 것을 확인했어요</button>` : ''}
+    <div class="row" style="margin-top:.14rem"><button class="btn dark" style="flex:1" data-f="tow:qr" data-k="towqr">QR 만들기</button></div>
+    ${t.msg ? `<p class="msg bad" data-k="towmsg">${t.msg}</p>` : ''}
+    ${t.qr ? qrBox(text, 'towqrbox', esc(text), qrFailText()) : ''}
+    <p class="note">고른 항목만 QR에 들어갑니다. 상대가 휴대폰 카메라로 읽을 때만 전달되며, 앱이 보험사나 견인 업체로 보내지 않습니다.</p></div></div>`;
+}
+
+/* ---- pre-drive check ---- */
+const PRECHK = ['비상 삼각대 위치를 확인했어요', '동승자에게 119·SOS 버튼 위치를 알려 줬어요', '휴대폰 충전 상태를 확인했어요'];
+const newPre = () => ({ chk: [false, false, false], memo: '', savedAt: '' });
+S.pre = shape(store.get('pre', {}), newPre());
+const savePre = () => store.set('pre', S.pre);
+function preHtml() {
+  const p = S.pre, ins = validPhone(S.t.ins.phone);
+  return mast('출발 전 확인') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="scroll stack"><div class="panel"><h3>출발 전 확인 <span class="tag ok">사용자 입력</span></h3>
+    <div class="kv"><span>보험사 번호</span><b data-k="preins">${ins ? '등록됨' : '미등록'}</b><button class="sbtn" data-act="tow" data-k="pretotow">${ins ? '확인·수정' : '입력하러 가기'}</button></div>
+    ${PRECHK.map((x, i) => `<button class="opt${p.chk[i] ? ' on' : ''}" data-f="pre:chk:${i}" data-k="pk${i}"><i>${p.chk[i] ? '✓' : ''}</i>${x}</button>`).join('')}
+    <div class="field"><span>동승 메모</span><input data-in="pre.memo" data-k="in_memo" value="${esc(p.memo)}" maxlength="60" placeholder="예: 뒷좌석 카시트 1" autocomplete="off"></div>
+    <div class="row" style="margin-top:.16rem"><button class="btn dark" style="flex:1" data-f="pre:save" data-k="presave">저장</button></div>
+    <div class="kv" style="margin-top:.1rem"><span>마지막 저장</span><b data-k="presaved">${p.savedAt || '없음'}</b></div>
+    <p class="note">운행 전에 직접 확인한 내용만 남깁니다. 차량 점검 결과가 아니며, 차량 값은 읽지 않습니다.</p></div></div>`;
+}
+
+/* ---- SOS lab connection ---- */
+function labHtml() {
+  const c = cfg(), connTxt = { unknown: '확인 전', checking: '확인 중', ok: '연결됨', down: '연결 안 됨', noconfig: '설정 없음' }[S.conn];
+  return mast('SOS 시험 연결') + `<button class="back" data-act="sosview" data-k="back">←  돌아가기</button>
+  <div class="scroll stack"><div class="panel"><h3>시험 서버 연결 <span class="tag lab2">LAB · 실험</span></h3>
+    <div class="kv"><span>시험 설정</span><b data-k="labcfg">${c.relay ? (c.persisted ? '있음 · 기기에 저장됨' : '있음 · 이번 실행에만') : '없음'}</b></div>
+    <div class="kv"><span>서버 주소</span><b>${c.relay && c.base ? esc(c.base) : '-'}</b></div>
+    <div class="kv"><span>보내는 위치</span><b>${c.pos ? '시험용 가상 위치 ' + posText() : '없음'}</b></div>
+    <div class="kv"><span>연결 상태</span><b data-k="labconn">${connTxt}</b><button class="sbtn" data-f="lab:check" data-k="labcheck">연결 확인</button></div>
+    <div class="row" style="margin-top:.14rem"><button class="btn" style="flex:1" data-f="lab:clear" data-k="labclear" ${c.relay ? '' : 'disabled'}>시험 설정 지우기</button></div>
+    <p class="note">설정이 없으면 SOS는 보내지지 않고 실패로 표시됩니다. 개발 PC에서 <b>run_sos_lab_session.py</b>를 실행하면 시험 서버와 시험 수신자가 켜지고 이 앱에 시험용 ID·토큰·가상 위치가 전달됩니다. 실제 계정이나 실제 위치가 아니며, 실제 구조 요청은 어디에도 가지 않습니다.</p></div></div>`;
+}
+
+/* ---- virtual vehicle events (pillars 1 and 2): event in -> decision level -> HMI state. Only the labelled virtual source exists in this build. ---- */
+S.ev = { n: 0, last: null, auto: false, prompt: null, ignored: 0, dup: 0, stale: 0, restored: '' };
+/* HARDENING (pillars 01/02): every decision about an incoming event is taken by event_intake.js (pure logic, tested off-device).
+   Its journal and the open incident are saved on the device, so a restart neither loses the accident state nor accepts an old event again. */
+const intake = window.EventIntake.create({ load: () => store.get('evs', null), save: st => store.set('evs', st) });
+let evTimer = 0;
+const sc = v => v == null ? '-' : v;
+function enterAcc(text, src) { const was = S.hmi; S.ev.prompt = null; clearTimeout(evTimer); S.hmi = 'ACC'; if (was !== 'ACC') S.screen = 'home'; log(text, src); render(); }   // an open screen is never replaced when the accident state already exists
+function armPrompt(p, ms) { clearTimeout(evTimer); evTimer = setTimeout(() => { if (S.ev.prompt && S.ev.prompt.id === p.id && intake.escalate(p.id)) { S.ev.auto = true; enterAcc(`가상 충돌 이벤트 → 사고 화면 자동 전환 (응답 없음) · 점수 ${sc(p.score)}`, 'demo'); } }, ms); }
+window.onVehicleEvent = raw => {
+  const d = intake.handle(raw);
+  console.log('VEVENT_DECISION ' + JSON.stringify({ id: d.id, outcome: d.outcome, action: d.action, reason: d.reason, incident: d.incident, flags: d.flags }));
+  if (d.outcome === 'DUPLICATE') { S.ev.dup++; console.log('VEVENT duplicate ' + d.id); return report(); }
+  if (d.outcome === 'REJECTED_FORMAT') { S.ev.ignored++; console.log('VEVENT rejected ' + d.reason); return report(); }
+  S.ev.n++; S.ev.last = { id: d.id, level: d.level, score: d.score, outcome: d.outcome, action: d.action };
+  console.log('VEVENT ' + d.id + ' level=' + d.level + ' outcome=' + d.outcome + ' action=' + d.action);
+  if (d.outcome === 'REJECTED_SOURCE') { S.ev.ignored++; log('차량 이벤트 무시: 허용되지 않은 출처', 'app'); return render(); }
+  if (d.outcome === 'STALE') { S.ev.stale++; S.ev.ignored++; log('가상 이벤트 무시: ' + (d.reason === 'before_incident_end' ? '이미 종료한 사고 이전의 이벤트' : '유효 시간이 지난 이벤트'), 'app'); return render(); }
+  const flag = d.flags.length ? ' · 표시: ' + d.flags.join(',') : '';
+  switch (d.action) {
+    case 'ENTER_ACC': S.ev.auto = true; return enterAcc(`가상 충돌 이벤트 → 사고 화면 자동 전환 · 점수 ${sc(d.score)}${flag}`, 'demo');
+    case 'ESCALATE': S.ev.auto = true; return enterAcc(`가상 충돌 이벤트(확정) → 확인 요청 중 사고 화면 전환 · 점수 ${sc(d.score)}${flag}`, 'demo');
+    case 'PROMPT': S.ev.prompt = { id: d.id, score: d.score, wait: d.wait }; S.screen = 'home'; log(`가상 충돌 의심 이벤트 수신 · 점수 ${sc(d.score)} → 운전자 확인 요청${flag}`, 'demo'); armPrompt(S.ev.prompt, d.wait * 1000); return render();
+    case 'ABSORBED': log(`가상 이벤트 수신 (진행 중인 사고에 포함 · 새 대응 상태 없음) · 점수 ${sc(d.score)}`, 'demo'); return render();
+    case 'CANCEL_PROMPT': S.ev.prompt = null; clearTimeout(evTimer); log('가상 이벤트: 출처가 의심 알림을 취소 · 화면 유지', 'demo'); return render();
+    case 'END_NOTED': case 'NOTED': log('가상 이벤트: 출처의 종료·취소 신호 기록 (사고 화면은 사용자가 직접 종료)', 'demo'); return render();
+    default: S.ev.ignored++; log(d.action === 'NO_TARGET' ? '가상 이벤트 수신, 적용 대상 없음' : `가상 이벤트 수신, 기준 미달로 화면 유지 · 점수 ${sc(d.score)}`, 'demo'); return render();
+  }
+};
+(() => {                                                  // app (re)start: bring back what was open
+  const r = intake.restore();
+  S.ev.restored = r.hmi === 'ACC' ? (r.escalated ? 'escalated' : 'active') : r.prompt ? 'prompt' : r.expired ? 'expired' : '';
+  if (r.hmi === 'ACC') { S.hmi = 'ACC'; S.ev.auto = r.escalated; if (r.escalated) log('앱 재실행: 응답 없이 대기 시간이 지나 사고 화면으로 전환', 'app'); }   // a plain restore changes nothing, so it adds no line to the user's record (console only)
+  else if (r.prompt) { S.ev.prompt = { id: r.prompt.id, score: r.prompt.score, wait: Math.ceil(r.prompt.remainingMs / 1000) }; armPrompt(S.ev.prompt, r.prompt.remainingMs); }
+  else if (r.expired) log('앱 재실행: 오래된 사고 대응 상태 정리 (유효 시간 경과)', 'app');
+  console.log('RESTORE ' + JSON.stringify({ hmi: r.hmi, incident: r.incident, prompt: !!r.prompt, escalated: r.escalated, expired: r.expired }));
+})();
+/* HARDENING (pillar 07): lab-only QR check. A test text arrives through the launch intent; the screen shows its QR at a chosen size. */
+S.labqr = null;
+window.onLabQr = raw => { let j; try { j = JSON.parse(raw); } catch (e) { return; } if (!j || typeof j.text !== 'string') return;
+  S.labqr = { text: j.text, size: Math.max(2, Math.min(9, +j.size || 5)), tag: String(j.tag || '').slice(0, 24), plan: j.plan === true };
+  S.qrBig = j.big === true; S.qrSplit = j.split === true; S.qrPart = Math.max(0, Math.min(8, +j.part || 0)); S.screen = 'labqr'; render(); };
+function labQrHtml() {
+  const l = S.labqr || { text: '', size: 5, tag: '' };
+  if (l.plan && l.text) {                                 // the app's own QR area, fed with a test text
+    const box = qrBox(l.text, 'labqrbox', `시험 ${esc(l.tag)} · 글자 ${l.text.length}`, qrFailText());
+    l.n = S.qrParts ? S.qr : 0; l.err = S.qrParts ? '' : (S.qrErr || 'none');
+    return mast('QR 시험') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="scroll stack"><div class="panel"><h3>QR 시험 <span class="tag lab2">LAB · 실험</span></h3>${box}</div></div>`;
+  }
+  const q = l.text ? qrSvg(l.text) : null;
+  l.n = q ? S.qr : 0; l.err = q ? '' : (S.qrErr || 'none');
+  return mast('QR 시험') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="scroll stack"><div class="panel"><h3>QR 시험 <span class="tag lab2">LAB · 실험</span></h3>
+    <div class="qrbox"><div class="qr" data-k="labqrbox" style="width:${l.size}rem;height:${l.size}rem">${q || qrFailText()}</div><pre data-k="labqrinfo">시험 ${esc(l.tag)} · 글자 ${l.text.length} · 모듈 ${l.n || '-'}</pre></div></div></div>`;
+}
+const qrFailText = () => S.qrErr === 'too_long' ? '내용이 너무 길어 QR을 만들 수 없습니다' : 'QR은 APK에서 만들어집니다';
+function renderPrompt() {
+  const el = $('evprompt'), p = S.ev.prompt;
+  el.style.display = p ? 'block' : 'none';
+  el.innerHTML = p ? `<b>충격이 감지된 것 같습니다</b> <span class="tag sim">SIMULATION · 가상 이벤트</span><p>괜찮으세요? 응답이 없으면 ${p.wait}초 뒤 사고 대응 화면으로 바뀝니다. 실제 차량 감지가 아닙니다.</p>
+    <div class="row"><button class="btn red" data-act="evOpen" data-k="evopen">사고 대응 화면 열기</button><button class="btn" data-act="evOk" data-k="evok" style="color:#151924">괜찮아요</button></div>` : '';
+}
+
+const F = {
+  prot: (a) => { const p = S.p; if (a === 'on') return protRun('on'); if (a === 'off') return protRun('off'); if (a === 'fog') p.opt.fogSupported = !p.opt.fogSupported; if (a === 'fail') p.opt.failNext = !p.opt.failNext; saveProt(); render(); },
+  seat: (a, k) => { const t = S.st, s = t.s[k];
+    if (a === 'occ') { s.occ = s.occ === 'u' ? 'y' : 'u'; if (s.occ !== 'y') { s.belt = 'u'; s.cond = 'u'; } }
+    else if (a === 'emp') { s.occ = s.occ === 'y' ? 'n' : 'y'; s.belt = 'u'; s.cond = 'u'; }
+    else if (a === 'belt') s.belt = cyc(s.belt, ['u', 'y', 'n']);
+    else if (a === 'cond') s.cond = cyc(s.cond, ['u', 'ok', 'help']);
+    else if (a === 'chk') t.chk[+k] = !t.chk[+k];
+    else if (a === 'sim') { t.sim = true; t.beltAt = nowText(); log('안전벨트 조회 (SIMULATION · 가상 차량 값, 실제 센서 아님)', 'demo'); }
+    else if (a === 'reset') { S.st = Object.assign(newSeats(), { sim: t.sim, beltAt: t.beltAt }); S.st.s = Object.fromEntries(SEATS.map(([q]) => [q, { occ: 'u', belt: 'u', cond: 'u' }])); }
+    else if (a === 'save') { const m = seatSum(); t.savedAt = nowText(); log(`좌석 직접 확인 · 탑승 ${m.occ}명 · 벨트 착용 확인 ${m.belt}명 · 미착용 ${m.nobelt}명 · 도움 필요 ${m.help}명 · 미확인 좌석 ${m.unknown} · 체크 ${t.chk.filter(Boolean).length}/3`, 'user'); }
+    saveSeats(); render(); },
+  tow: (a, k) => { const t = S.t; t.msg = '';
+    if (a === 'dial') return dialUser(t[k].phone, k === 'ins' ? '보험사' : '견인');
+    if (a === 'now') { t.when = nowText(); t.qr = false; }
+    else if (a === 'target') { t.target = k; t.qr = false; }
+    else if (a === 'item') { t.items[k] = !t.items[k]; t.qr = false; t.pii = false; }
+    else if (a === 'pii') t.pii = !t.pii;
+    else if (a === 'qr') {
+      if (!Object.values(t.items).some(Boolean)) t.msg = '공유할 항목을 하나 이상 골라 주세요.';
+      else if (towNeedsPii() && !t.pii) t.msg = '개인정보가 들어갑니다. 위의 확인 항목을 먼저 눌러 주세요.';
+      else { t.qr = true; log(`${TARGETS[t.target]}용 QR 만들기 · 항목 ${Object.values(t.items).filter(Boolean).length}개`, 'user'); }
+    }
+    saveTow(); render(); },
+  pre: (a, k) => { const p = S.pre; if (a === 'chk') p.chk[+k] = !p.chk[+k]; else if (a === 'save') { p.savedAt = nowText(); log(`출발 전 확인 저장 · ${p.chk.filter(Boolean).length}/3 · 보험사 번호 ${validPhone(S.t.ins.phone) ? '등록됨' : '미등록'}`, 'user'); } savePre(); render(); },
+  lab: (a) => { if (a === 'check') return checkConn(); if (a === 'clear') { if (NATIVE && window.Native.clearRelay) window.Native.clearRelay(); S.conn = 'noconfig'; log('SOS 시험 설정 지움', 'user'); render(); } }
+};
+function setPath(path, val) { const ks = path.split('.'), root = { tow: S.t, pre: S.pre }[ks[0]]; if (!root) return; let o = root; for (let i = 1; i < ks.length - 1; i++) o = o[ks[i]]; o[ks[ks.length - 1]] = val; if (ks[0] === 'tow') { S.t.qr = false; saveTow(); } else savePre(); }
+document.addEventListener('input', e => { const el = e.target; if (el.dataset && el.dataset.in) setPath(el.dataset.in, el.value.slice(0, 60)); });   // saved on every keystroke; no re-render, so the field keeps focus
+document.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.in) render(); });
+
+const ACT = {
+  prot: () => go('prot'), seat: () => go('seat'), tow: () => go('tow'), pre: () => go('pre'), lab: () => { go('lab'); checkConn(); },
+  evOk: () => { intake.userOk(); log('충돌 의심 알림: 운전자가 "괜찮아요" 선택 · 화면 유지', 'user'); S.ev.prompt = null; clearTimeout(evTimer); render(); },
+  evOpen: () => { intake.userOpen(); S.ev.prompt = null; clearTimeout(evTimer); S.hmi = 'ACC'; S.screen = 'home'; log('충돌 의심 알림: 운전자가 사고 대응 화면 열기 선택', 'user'); render(); },
+  home: () => go('home'), record: () => go('record'), loc: () => go('loc'), sosview: () => go('sos') /* never sends a request */, about: () => { S.info = 'about'; go('info'); },
+  guide: () => { if (!S.g.active) { S.g = newGuide(); S.g.active = true; log('사고 상황 정리 시작', 'user'); } saveGuide(); go('guide'); },
+  gprev: () => { if (S.g.step > 0) S.g.step--; else S.screen = 'home'; saveGuide(); render(); },
+  gnext: () => {
+    if (S.g.step < GUIDE.length - 1) S.g.step++;
+    else { log(`사고 상황 정리 완료 · 행동요령 ${S.g.checks.filter(Boolean).length}/4 · 경미 ${S.g.minor}명 · 중상 ${S.g.major}명`, 'user');
+      S.last = { t: nowText(), checks: S.g.checks.filter(Boolean).length, minor: S.g.minor, major: S.g.major }; store.set('lastGuide', S.last);   // reused by 보험·견인
+      S.g = newGuide(); S.screen = 'record'; }
+    saveGuide(); render();
+  },
+  gstop: () => { log('사고 상황 정리 종료 (완료하지 않음)', 'user'); S.g = newGuide(); saveGuide(); go('home'); },
+  d119: () => dial('119'), d112: () => dial('112'), sos: sosTap,
+  recvset: () => { S.screen = 'sos'; if (S.sos.phase === 'consent') S.sos.phase = 'idle'; console.log('RECEIVE_SETTINGS_OPEN (no request sent)'); render(); checkConn(); },
+  agree: () => { consent = true; store.set('sosConsent', true); log('근처 SOS 사전 동의', 'user'); startSos(); },
+  cancel: () => { S.sos.phase = 'idle'; go('home'); },
+  retry: startSos, recv: recvToggle,
+  clear: () => { S.log = []; store.set('rec', S.log); render(); },
+  qrbig: () => { S.qrBig = !S.qrBig; console.log('QR_BIG ' + S.qrBig); render(); },
+  qrnext: () => { S.qrPart = ((S.qrPart || 0) + 1) % Math.max(1, S.qrParts || 1); console.log('QR_PART ' + (S.qrPart + 1) + '/' + S.qrParts); render(); },
+  qrsplit: () => { S.qrSplit = !S.qrSplit; S.qrPart = 0; console.log('QR_SPLIT ' + S.qrSplit); render(); },
+  accOn: () => { intake.userStart(); S.hmi = 'ACC'; S.screen = 'home'; log('사고 상황 시뮬레이션 시작 (가상 이벤트)', 'demo'); render(); },
+  accOff: () => { intake.userEnd(); sosForget(); S.hmi = 'NORMAL'; pollGen++; S.sos = { phase: 'idle', matched: 0, counts: {}, err: '', kind: '' }; S.screen = 'home'; log('사고 상황 시뮬레이션 종료', 'demo'); render(); }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act],[data-f],[data-info],[data-ack],[data-dec],[data-chk],[data-cnt],[data-share],[data-sys]'); if (!el || el.disabled) return;
+  const ds = el.dataset;
+  if (ds.f) { const [m, a, k] = ds.f.split(':'); F[m](a, k); }
+  else if (ds.act) ACT[ds.act]();
+  else if (ds.info) { S.info = ds.info; go('info'); }
+  else if (ds.ack) answer(ds.ack, 'ack');
+  else if (ds.dec) answer(ds.dec, 'decline');
+  else if (ds.chk) { const i = +ds.chk; S.g.checks[i] = !S.g.checks[i]; saveGuide(); render(); }
+  else if (ds.cnt) { const [k, d] = ds.cnt.split(':'); S.g[k] = Math.max(0, Math.min(9, S.g[k] + (+d))); saveGuide(); render(); }
+  else if (ds.share) { S.g.share[ds.share] = !S.g.share[ds.share]; saveGuide(); render(); }
+  else if (ds.sys) toast('차량 시스템 영역(콘셉트)입니다. 이 시연본에서는 동작하지 않습니다.');
+});
+
+/* ---------------- left scene (own vector drawing, 1030x875) ---------------- */
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+/* LEFT DRIVING VIEW ONLY (design build): own vector drawing, second version. Same car, same camera and same road in both states;
+   the accident state adds damage, hazard lamps, an emergency vehicle far behind, a warning triangle, cones and debris.
+   No photo is used. Nothing here reads a vehicle. */
+function wheelSvg(cx, cy, r, sx) {
+  const f = n => n.toFixed(1);
+  const spokes = Array.from({ length: 5 }, (_, i) => `<g transform="rotate(${i * 72 + 10})"><path d="M${f(-r * .1)} ${f(-r * .2)}L${f(-r * .17)} ${f(-r * .68)}Q0 ${f(-r * .75)} ${f(r * .17)} ${f(-r * .68)}L${f(r * .1)} ${f(-r * .2)}Z" fill="url(#v2spoke)"/><path d="M0 ${f(-r * .24)}V${f(-r * .66)}" stroke="#262a31" stroke-width="${f(r * .055)}"/></g>`).join('');
+  return `<g transform="translate(${cx},${cy}) scale(${sx},1)">
+    <circle r="${f(r)}" fill="#08090b"/><circle r="${f(r * .965)}" fill="none" stroke="#24282e" stroke-width="${f(r * .035)}"/>
+    <path d="M${f(-r * .78)} ${f(-r * .52)}A${f(r * .94)} ${f(r * .94)} 0 0 1 ${f(r * .3)} ${f(-r * .89)}" fill="none" stroke="#5b626d" stroke-width="${f(r * .03)}" opacity=".55"/>
+    <circle r="${f(r * .77)}" fill="#111317"/><circle r="${f(r * .745)}" fill="none" stroke="url(#v2rim)" stroke-width="${f(r * .075)}"/>
+    <circle r="${f(r * .5)}" fill="#22262d"/><circle r="${f(r * .5)}" fill="none" stroke="#3b414b" stroke-width="1.500"/><circle r="${f(r * .36)}" fill="none" stroke="#2c3138" stroke-width="1"/>
+    ${spokes}<circle r="${f(r * .2)}" fill="url(#v2hub)"/><circle r="${f(r * .075)}" fill="#111317"/></g>`;
+}
+function carSvg(acc) {
+  return `<g id="v2car">
+  <!-- far-side dark, floor -->
+  <path d="M20 318 200 384 392 394 520 346 690 240 690 200 20 220Z" fill="#050608"/>
+  <!-- side body -->
+  <path d="M392 196C430 150 470 128 492 120L684 88C699 112 703 152 696 198L690 238C664 262 652 270 640 282L520 346 420 394 384 394 380 238Z" fill="url(#v2side)"/>
+  <path d="M398 250C470 232 600 196 694 168L690 236C600 262 470 298 396 322Z" fill="#3b424d" opacity=".34"/>
+  <path d="M400 214C470 172 580 138 686 112" fill="none" stroke="#fff" stroke-width="3.500" opacity=".75" filter="url(#v2b2)"/>
+  <path d="M398 262C470 244 600 208 692 182" fill="none" stroke="#fff" stroke-width="1.400" opacity=".4"/>
+  <path d="M420 394 520 346 640 282 690 238 690 252 642 296 522 362 424 408Z" fill="#191c21"/>
+  <!-- roof and side glass -->
+  <path d="M330-22Q430-50 544-34Q644-14 676 44L622 0 530 4 524-5Z" fill="url(#v2roof)"/>
+  <path d="M346-26Q440-44 540-30" fill="none" stroke="#aab3c0" stroke-width="1.800" opacity=".75"/>
+  <path d="M500 118 530 4Q598-2 614 0L628 104Z" fill="url(#v2glassSide)"/><path d="M636 102 622 2Q654 8 672 40L684 92Z" fill="url(#v2glassSide)"/>
+  <path d="M510 112 538 14 572 10 550 108Z" fill="#fff" opacity=".08"/><path d="M640 96 630 14 646 18 660 90Z" fill="#fff" opacity=".05"/>
+  <path d="M490 120 500 118 530 4 524-5Z" fill="#e3e6eb"/><path d="M628 104 636 102 622 2 614 0Z" fill="#d3d8de"/>
+  <!-- windshield with a hint of the cabin -->
+  <path d="M164 104Q330 96 490 120L524-5Q430-28 330-22Z" fill="url(#v2glass)"/>
+  <path d="M232 104Q330 100 444 114L458 78Q340 62 248 72Z" fill="#07090c" opacity=".6"/>
+  <rect x="262" y="26" width="48" height="40" rx="13" fill="#1d2430" opacity=".92"/><rect x="386" y="36" width="50" height="42" rx="13" fill="#1d2430" opacity=".92"/>
+  <ellipse cx="394" cy="94" rx="32" ry="10" fill="none" stroke="#2c3442" stroke-width="4.500"/><rect x="350" y="-6" width="34" height="11" rx="4" fill="#0c0e12"/>
+  <path d="M196 100 338-16 392-22 262 102Z" fill="#fff" opacity=".13"/><path d="M330 106 446-10 466-8 374 110Z" fill="#fff" opacity=".07"/>
+  <path d="M176 104Q330 98 482 119" fill="none" stroke="#06070a" stroke-width="5" opacity=".8"/>
+  <path d="M152 106 164 104 330-22 320-23Z" fill="#c2c8d1"/>
+  <!-- hood -->
+  <path d="M164 104Q330 96 490 120C470 128 430 150 392 196Q382 232 370 240Q290 246 213 236Q100 222 16 202Q60 140 164 104Z" fill="url(#v2hood)"/>
+  <ellipse cx="230" cy="156" rx="150" ry="30" fill="#fff" opacity=".5" filter="url(#v2b14)" transform="rotate(8 230 156)"/>
+  <path d="M190 112Q150 160 120 214M420 124Q370 176 330 240" fill="none" stroke="#fff" stroke-width="2" opacity=".55"/>
+  <path d="M190 114Q150 162 122 216M420 126Q372 178 332 242" fill="none" stroke="#7d8591" stroke-width="1" opacity=".5" transform="translate(3,1)"/>
+  <!-- front -->
+  <path d="M16 202Q100 222 213 236Q290 246 370 240L384 250 384 394Q300 398 191 382Q80 356 12 318Q-2 262 16 202Z" fill="url(#v2front)"/>
+  <path d="M28 236Q200 274 374 266L374 290Q200 296 34 260Z" fill="#0e1014"/><path d="M30 238Q200 276 374 268" fill="none" stroke="#5a626d" stroke-width="1.400" opacity=".8"/>
+  <path d="M68 304Q200 344 344 348L340 376Q200 370 82 334Z" fill="#090a0d"/>
+  <path d="M74 314Q200 352 342 357M78 324Q200 360 341 366" fill="none" stroke="#2a2e36" stroke-width="2"/>
+  <path d="M150 292 236 304 235 332 149 319Z" fill="#e4e7eb"/><path d="M160 304 224 313M160 313 208 320" stroke="#aab0b9" stroke-width="3" opacity=".8"/>
+  <path d="M12 318Q80 356 191 382Q300 398 384 394L384 404Q300 410 189 394Q76 368 10 328Z" fill="#15181d"/>
+  <!-- lamps -->
+  <path d="M20 212Q62 226 112 234L110 246Q62 238 22 224Z" fill="${acc ? '#6e4a18' : '#f4f9ff'}"/>
+  <path d="M226 250Q300 259 368 253L370 266Q300 272 228 263Z" fill="${acc ? '#3a2a12' : '#f4f9ff'}"/>
+  ${acc ? '' : `<circle cx="66" cy="230" r="90" fill="url(#v2gWhite)" opacity=".9"/><circle cx="298" cy="260" r="90" fill="url(#v2gWhite)" opacity=".9"/><ellipse cx="66" cy="230" rx="170" ry="7" fill="#eaf3ff" opacity=".5" filter="url(#v2b6)"/><ellipse cx="298" cy="260" rx="170" ry="7" fill="#eaf3ff" opacity=".5" filter="url(#v2b6)"/>`}
+  <!-- mirror, seams, handle -->
+  <path d="M520 110Q524 88 548 86L576 92Q580 110 560 118Z" fill="url(#v2front)"/><path d="M526 110Q548 112 574 100" fill="none" stroke="${acc ? '#8a5a14' : '#ffb53a'}" stroke-width="4" stroke-linecap="round"/>
+  <path d="M132 104 156 96 162 108 142 114Z" fill="#aab1bb"/>
+  <path d="M568 134 560 318M636 106 646 268" stroke="#555d69" stroke-width="1.600" opacity=".8"/><path d="M566 134 558 318M634 106 644 268" stroke="#fff" stroke-width=".8" opacity=".5"/>
+  <path d="M584 190 612 182" stroke="#6b7480" stroke-width="5.500" stroke-linecap="round"/>
+  <!-- wheel arches and wheels -->
+  <ellipse cx="452" cy="298" rx="68" ry="98" fill="#060709"/><ellipse cx="452" cy="298" rx="68" ry="98" fill="none" stroke="#22262c" stroke-width="9"/>
+  ${wheelSvg(456, 306, 88, .64)}
+  <ellipse cx="642" cy="256" rx="38" ry="66" fill="#060709"/><ellipse cx="642" cy="256" rx="38" ry="66" fill="none" stroke="#22262c" stroke-width="7"/>
+  ${wheelSvg(645, 262, 58, .5)}
+  ${acc ? `<!-- damage on the near front corner (accident simulation only) -->
+  <path d="M270 140Q330 150 392 196L384 250 370 240Q330 246 290 243L244 210Z" fill="url(#v2dent)"/>
+  <path d="M300 168Q322 196 330 222Q352 214 388 208" fill="none" stroke="#3c434d" stroke-width="2" stroke-linejoin="round" opacity=".7"/>
+  <path d="M302 167Q324 195 332 220" fill="none" stroke="#fff" stroke-width="1.200" opacity=".55"/>
+  <path d="M262 196Q300 170 352 178Q320 196 300 236Z" fill="#000" opacity=".2" filter="url(#v2b6)"/>
+  <path d="M330 222Q350 236 370 240" fill="none" stroke="#2c3139" stroke-width="1.600" opacity=".7"/>
+  <path d="M372 240 392 196 402 262 392 330 358 306Z" fill="#59616c"/><path d="M392 196 402 262" stroke="#c2c8d0" stroke-width="1.300"/><path d="M376 244 396 300" stroke="#2c3139" stroke-width="2"/>
+  <path d="M334 266 384 252 390 342 352 354 326 314Z" fill="#101216"/>
+  <path d="M342 278 374 270M346 298 380 292M350 320 374 328" stroke="#30353d" stroke-width="2.600"/><circle cx="356" cy="286" r="7" fill="#1c2026" stroke="#3a4049" stroke-width="2"/>
+  <path d="M226 250Q300 259 368 253L370 266Q300 272 228 263Z" fill="#14171c" opacity=".75"/>
+  <path d="M248 372 386 394 374 424 242 400Z" fill="url(#v2front)"/><path d="M248 372 386 394" stroke="#fff" stroke-width="1.200" opacity=".6"/>
+  <path d="M210 262 252 286M232 258 270 280M120 250 150 268" stroke="#565e69" stroke-width="1.400" opacity=".8"/>` : ''}
+  </g>`;
+}
+/* the few blinking parts of the accident state, drawn live on top of the rastered picture: no filters, gradients only */
+function carLive() {
+  return `<path d="M20 212Q62 226 112 234L110 246Q62 238 22 224Z" fill="#ffb53a" class="haz"/><circle cx="66" cy="230" r="46" fill="url(#lvAmber)" class="haz" opacity=".85"/>
+  <path d="M526 110Q548 112 574 100" fill="none" stroke="#ffb53a" stroke-width="4" stroke-linecap="round" class="haz"/><circle cx="550" cy="106" r="22" fill="url(#lvAmber)" class="haz" opacity=".6"/>
+  <g fill="none" stroke-linecap="round" stroke-width="2.600"><path d="M10 312Q-2 262 17 204Q61 141 164 105L328-21" stroke="#ff7a86" opacity=".34" class="fl1"/><path d="M10 312Q-2 262 17 204Q61 141 164 105L328-21" stroke="#8ab8ff" opacity=".32" class="fl2"/></g>`;
+}
+function sceneLive(acc) {
+  if (!acc) return '';                                    // the normal state has no moving part
+  return `<svg viewBox="0 0 1030 875" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs>
+    <radialGradient id="lvRed"><stop offset="0" stop-color="#ff8a94" stop-opacity="1"/><stop offset=".25" stop-color="#ff2d45" stop-opacity=".5"/><stop offset="1" stop-color="#ff2d45" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lvBlue"><stop offset="0" stop-color="#b9d6ff" stop-opacity="1"/><stop offset=".25" stop-color="#2f7bff" stop-opacity=".5"/><stop offset="1" stop-color="#2f7bff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lvAmber"><stop offset="0" stop-color="#ffd67a" stop-opacity=".95"/><stop offset=".35" stop-color="#ff9d1a" stop-opacity=".4"/><stop offset="1" stop-color="#ff9d1a" stop-opacity="0"/></radialGradient></defs>
+    <g class="fl1"><ellipse cx="212" cy="570" rx="46" ry="130" fill="url(#lvRed)" opacity=".45"/><rect x="198" y="441" width="26" height="7" rx="3" fill="#ff3b4e"/><circle cx="210" cy="444" r="52" fill="url(#lvRed)"/><ellipse cx="210" cy="444" rx="110" ry="2.500" fill="#ff5a68" opacity=".45"/></g>
+    <g class="fl2"><ellipse cx="246" cy="570" rx="46" ry="130" fill="url(#lvBlue)" opacity=".45"/><rect x="234" y="441" width="26" height="7" rx="3" fill="#3b8bff"/><circle cx="248" cy="444" r="52" fill="url(#lvBlue)"/><ellipse cx="248" cy="444" rx="110" ry="2.500" fill="#6aa4ff" opacity=".45"/></g>
+    <circle cx="130" cy="742" r="104" fill="url(#lvRed)" opacity=".34" class="pulse"/>
+    <g transform="translate(288,496) scale(.9)">${carLive()}</g></svg>`;
+}
+/* one rastered picture per state: the drawing (with its blurs) is painted once into a canvas and then only copied */
+const sceneCanvas = {};
+function paintScene(acc) {
+  const key = acc ? 'a' : 'n', box = $('scene');
+  box.innerHTML = '<canvas aria-hidden="true"></canvas>' + sceneLive(acc);
+  const cv = box.firstChild, w = Math.max(64, Math.round(box.getBoundingClientRect().width * Math.min(2, window.devicePixelRatio || 1))), h = Math.round(w * 875 / 1030);
+  cv.width = w; cv.height = h;
+  const ready = sceneCanvas[key];
+  if (ready && ready.width === w) { cv.getContext('2d').drawImage(ready, 0, 0); return; }
+  const t0 = performance.now(), im = new Image();
+  im.onload = () => {
+    const off = document.createElement('canvas'); off.width = w; off.height = h; off.getContext('2d').drawImage(im, 0, 0, w, h); sceneCanvas[key] = off;
+    const now = $('scene').firstChild;
+    if (now && now.tagName === 'CANVAS' && now.width === w && (S.hmi === 'ACC') === acc) now.getContext('2d').drawImage(off, 0, 0);
+    console.log('SCENE_RASTER ' + key + ' ' + w + 'x' + h + ' ' + Math.round(performance.now() - t0) + 'ms');
+    const other = acc ? 'n' : 'a';                           // prepare the other state in the background so the first switch is instant
+    if (!sceneCanvas[other]) setTimeout(() => { if (sceneCanvas[other]) return; const i2 = new Image(), t1 = performance.now(); i2.onload = () => { const o2 = document.createElement('canvas'); o2.width = w; o2.height = h; o2.getContext('2d').drawImage(i2, 0, 0, w, h); sceneCanvas[other] = o2; console.log('SCENE_RASTER ' + other + ' (prepared) ' + Math.round(performance.now() - t1) + 'ms'); }; i2.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sceneSvg(!acc)); }, 1500);
+  };
+  im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sceneSvg(acc));
+}
+function sceneSvg(acc) {
+  const r = rng(11), f = n => n.toFixed(1);
+  let city = '', win = '', bokeh = '', far = '', dash = '', posts = '', grass = '';
+  for (let i = 0; i < 34; i++) { const w = 14 + r() * 26, h = 14 + r() * (i % 7 === 3 ? 96 : 50), x = -14 + i * 19 + r() * 8; city += `<rect x="${x | 0}" y="${(442 - h) | 0}" width="${w | 0}" height="${(h + 2) | 0}"/>`;
+    for (let k = 0; k < h / 7; k++) if (r() > .42) win += `<rect x="${(x + 2 + r() * (w - 6)) | 0}" y="${(445 - h + k * 7) | 0}" width="3" height="2"/>`; }
+  const cols = ['#ffd9a0', '#fff1d6', '#9fd0ff', '#ffb070', '#ff9a8a', '#b8f0ff'];
+  for (let i = 0; i < 90; i++) bokeh += `<circle cx="${(r() * 660) | 0}" cy="${(398 + r() * 46) | 0}" r="${f(2 + r() * 6)}" fill="${cols[i % 6]}" opacity="${f(.25 + r() * .5)}"/>`;
+  for (let i = 0; i < 14; i++) { const u = i / 14, x = 20 + u * 250; far += `<circle cx="${f(x)}" cy="${f(452 + (1 - u) * 26)}" r="${f(1.4 + (1 - u) * 2.6)}" fill="${i % 3 ? '#fff6dc' : '#ff5a62'}"/>`; }
+  for (let t = .07; t < 1; t += .16) { const a = t, b = t + .08, X = u => 300 - 780 * u * u, Y = u => 440 + 435 * u, w = u => 2 + 17 * u; dash += `<path d="M${X(a) | 0} ${Y(a) | 0}L${(X(a) + w(a)) | 0} ${Y(a) | 0}L${(X(b) + w(b)) | 0} ${Y(b) | 0}L${X(b) | 0} ${Y(b) | 0}Z"/>`; }
+  for (let i = 0; i < 6; i++) { const u = i / 5, x = 742 + u * 280, top = 470 + u * 92, h = 22 + u * 86; posts += `<rect x="${f(x)}" y="${f(top + 16 + u * 20)}" width="${f(5 + u * 12)}" height="${f(h)}" fill="#3d434d"/><rect x="${f(x)}" y="${f(top + 8 + u * 12)}" width="${f(4 + u * 8)}" height="${f(4 + u * 8)}" fill="#ffb53a" opacity=".85"/>`; }
+  for (let i = 0; i < 60; i++) { const x = 860 + r() * 170, y = 690 + r() * 180; grass += `<path d="M${x | 0} ${y | 0}q${f(-4 + r() * 8)} ${f(-10 - r() * 10)} ${f(-8 + r() * 16)} ${f(-22 - r() * 16)}"/>`; }
+  const sky = acc ? ['#07080f', '#12142a', '#2a2238', '#4a2f3c'] : ['#050a18', '#0c1a36', '#17335c', '#2c5484'];
+  const glow = acc ? '#ff7a52' : '#5aa2ff';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1030" height="875" viewBox="0 0 1030 875">
+  <defs>
+    <linearGradient id="v2sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset=".45" stop-color="${sky[1]}"/><stop offset=".84" stop-color="${sky[2]}"/><stop offset="1" stop-color="${sky[3]}"/></linearGradient>
+    <linearGradient id="v2road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#30343e"/><stop offset=".18" stop-color="#1d2028"/><stop offset=".6" stop-color="#121419"/><stop offset="1" stop-color="#0a0b0f"/></linearGradient>
+    <linearGradient id="v2sheen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity=".07"/><stop offset=".55" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="v2verge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121a15"/><stop offset="1" stop-color="#070a08"/></linearGradient>
+    <linearGradient id="v2rail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aab1bb"/><stop offset=".3" stop-color="#5f6772"/><stop offset=".5" stop-color="#8b939e"/><stop offset=".72" stop-color="#4a515b"/><stop offset="1" stop-color="#262a31"/></linearGradient>
+    <linearGradient id="v2side" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8f9fb"/><stop offset=".3" stop-color="#d5d9df"/><stop offset=".62" stop-color="#9aa2ad"/><stop offset="1" stop-color="#565e6a"/></linearGradient>
+    <linearGradient id="v2hood" x1=".1" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6e9ee"/><stop offset="1" stop-color="#aeb5bf"/></linearGradient>
+    <linearGradient id="v2front" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".4" stop-color="#c6ccd4"/><stop offset=".78" stop-color="#8a929e"/><stop offset="1" stop-color="#565e6a"/></linearGradient>
+    <linearGradient id="v2dent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2e5ea"/><stop offset=".5" stop-color="#a2a9b4"/><stop offset="1" stop-color="#6b7480"/></linearGradient>
+    <linearGradient id="v2roof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a5261"/><stop offset=".5" stop-color="#1a1e26"/><stop offset="1" stop-color="#0b0d11"/></linearGradient>
+    <linearGradient id="v2glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a8cab"/><stop offset=".28" stop-color="#38455c"/><stop offset=".6" stop-color="#141a24"/><stop offset="1" stop-color="#06080c"/></linearGradient>
+    <linearGradient id="v2glassSide" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3344"/><stop offset=".5" stop-color="#0c0f16"/><stop offset="1" stop-color="#040508"/></linearGradient>
+    <linearGradient id="v2spoke" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef0f3"/><stop offset=".5" stop-color="#9aa2ad"/><stop offset="1" stop-color="#4c535d"/></linearGradient>
+    <linearGradient id="v2rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f5f7"/><stop offset=".5" stop-color="#6d7580"/><stop offset="1" stop-color="#c9ced5"/></linearGradient>
+    <radialGradient id="v2hub" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#e3e6ea"/><stop offset="1" stop-color="#4a515b"/></radialGradient>
+    <radialGradient id="v2gWarm"><stop offset="0" stop-color="#ffe6b4" stop-opacity=".95"/><stop offset=".25" stop-color="#ffc56a" stop-opacity=".45"/><stop offset="1" stop-color="#ffc56a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="v2gWhite"><stop offset="0" stop-color="#ffffff" stop-opacity="1"/><stop offset=".22" stop-color="#dcebff" stop-opacity=".5"/><stop offset="1" stop-color="#dcebff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="v2gAmber"><stop offset="0" stop-color="#ffd67a" stop-opacity=".95"/><stop offset=".35" stop-color="#ff9d1a" stop-opacity=".4"/><stop offset="1" stop-color="#ff9d1a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="v2gRed"><stop offset="0" stop-color="#ff8a94" stop-opacity="1"/><stop offset=".25" stop-color="#ff2d45" stop-opacity=".5"/><stop offset="1" stop-color="#ff2d45" stop-opacity="0"/></radialGradient>
+    <radialGradient id="v2gBlue"><stop offset="0" stop-color="#b9d6ff" stop-opacity="1"/><stop offset=".25" stop-color="#2f7bff" stop-opacity=".5"/><stop offset="1" stop-color="#2f7bff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="v2vig" cx=".52" cy=".64" r=".78"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></radialGradient>
+    <linearGradient id="v2refFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <mask id="v2refMask" maskUnits="userSpaceOnUse" x="0" y="380" width="720" height="140"><rect x="0" y="380" width="720" height="140" fill="url(#v2refFade)"/></mask>
+    <filter id="v2b2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.800"/></filter>
+    <filter id="v2b6" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="v2b14" x="-40%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="13"/></filter>
+    <filter id="v2b26" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <rect width="1030" height="446" fill="url(#v2sky)"/>
+  <g fill="#fff" opacity=".045" filter="url(#v2b14)"><ellipse cx="250" cy="230" rx="320" ry="30"/><ellipse cx="720" cy="150" rx="340" ry="38"/><ellipse cx="430" cy="320" rx="280" ry="20"/></g>
+  <ellipse cx="320" cy="452" rx="470" ry="80" fill="${glow}" opacity=".2" filter="url(#v2b26)"/>
+  <!-- far hill with a tower, skyline (soft: depth of field), road signs -->
+  <path d="M130 444C230 432 330 384 396 370Q432 356 470 372C544 392 626 430 706 444Z" fill="${acc ? '#14121f' : '#0b162c'}"/>
+  <path d="M429 360 432 306 435 360ZM426 334h12v7h-12z" fill="${acc ? '#2a2740' : '#1d2c4b'}"/><circle cx="432" cy="305" r="2.600" fill="#8fc0ff"/><circle cx="432" cy="305" r="12" fill="url(#v2gBlue)" opacity=".7"/>
+  <g fill="${acc ? '#17162a' : '#0d1830'}" filter="url(#v2b2)">${city}</g>
+  <g fill="#ffd591" opacity=".65">${win}</g>
+  <g filter="url(#v2b2)">${bokeh}</g>
+  <path d="M30 444V360H150V444" fill="none" stroke="#2b3246" stroke-width="3"/>
+  <rect x="42" y="364" width="43" height="26" rx="2" fill="#1c6648"/><rect x="95" y="364" width="43" height="26" rx="2" fill="#1c6648"/>
+  <path d="M48 372h31M48 381h20M101 372h31M101 381h22" stroke="#d7f0e2" stroke-width="2.200" opacity=".8"/>
+  <!-- roadside: trees, lamps -->
+  <g fill="#05080a"><path d="M748 446C728 392 772 348 760 294 792 240 780 172 842 142 874 82 956 92 1030 52V446Z"/><path d="M676 446C688 410 720 400 732 370 760 374 782 400 792 446Z"/></g>
+  <g fill="#5a561f" opacity=".45" filter="url(#v2b6)"><ellipse cx="846" cy="322" rx="62" ry="40"/><ellipse cx="930" cy="240" rx="72" ry="44"/><ellipse cx="792" cy="392" rx="46" ry="30"/></g>
+  <g fill="#9a8a30" opacity=".28" filter="url(#v2b2)">${Array.from({ length: 50 }, () => `<circle cx="${(782 + r() * 240) | 0}" cy="${(200 + r() * 230) | 0}" r="${f(2 + r() * 5)}"/>`).join('')}</g>
+  <path d="M806 446V288q0-12-12-12h-20" fill="none" stroke="#3a3f49" stroke-width="5"/>
+  <circle cx="772" cy="278" r="78" fill="url(#v2gWarm)" opacity=".9"/><ellipse cx="772" cy="278" rx="12" ry="5" fill="#fff3cf"/><ellipse cx="772" cy="278" rx="120" ry="4" fill="#ffe2a8" opacity=".35" filter="url(#v2b6)"/>
+  <path d="M700 446V396q0-6-6-6h-9" fill="none" stroke="#333842" stroke-width="2.500"/><circle cx="684" cy="391" r="22" fill="url(#v2gWarm)" opacity=".8"/>
+  <!-- road -->
+  <rect y="440" width="1030" height="435" fill="url(#v2road)"/>
+  <path d="M300 440H1030V676Z" fill="url(#v2verge)"/>
+  <rect y="440" width="1030" height="435" fill="url(#v2sheen)"/>
+  <ellipse cx="330" cy="444" rx="520" ry="16" fill="#fff" opacity=".1" filter="url(#v2b14)"/>
+  <g fill="#eef0f4" opacity=".55">${dash}</g>
+  <path d="M298 440h4L96 875H14Z" fill="#f2f4f7" opacity=".82"/><path d="M301 440h2L812 875H748Z" fill="#f2f4f7" opacity=".42"/>
+  <g filter="url(#v2b2)">${far}</g>
+  <g opacity=".3" filter="url(#v2b6)"><rect x="18" y="482" width="30" height="84" fill="#fff3d0"/><rect x="92" y="468" width="20" height="52" fill="#fff3d0"/><rect x="170" y="460" width="12" height="34" fill="#ff7a80"/></g>
+  <ellipse cx="760" cy="640" rx="170" ry="34" fill="#ffd391" opacity=".1" filter="url(#v2b14)"/>
+  <!-- guardrail -->
+  <path d="M452 440 1030 548V606L452 445Z" fill="url(#v2rail)"/><path d="M452 441 1030 553" stroke="#fff" stroke-opacity=".4" stroke-width="1.800"/><path d="M452 443 1030 578" stroke="#15171b" stroke-opacity=".55" stroke-width="3"/>
+  ${posts}
+  <path d="M852 690C896 650 960 640 1030 630V875H892Z" fill="#06090a"/><g stroke="#2c3a20" stroke-width="2" fill="none" opacity=".85">${grass}</g>
+  ${acc ? `
+  <!-- accident simulation only: emergency vehicle far behind, cones, warning triangle, marks, debris -->
+  <g>
+    <ellipse cx="228" cy="518" rx="52" ry="6" fill="#000" opacity=".6" filter="url(#v2b6)"/>
+    <rect x="190" y="448" width="78" height="68" rx="8" fill="#e8e3ce"/><rect x="190" y="448" width="78" height="12" rx="6" fill="#f6f2e2"/>
+    <rect x="197" y="461" width="64" height="23" rx="4" fill="#121824"/><path d="M190 488h78v15h-78z" fill="#d8312f"/><path d="M198 488l8 15h10l-8-15zM220 488l8 15h10l-8-15zM242 488l8 15h10l-8-15z" fill="#ffd23c"/>
+    <circle cx="199" cy="508" r="4" fill="#fff8e0"/><circle cx="259" cy="508" r="4" fill="#fff8e0"/><circle cx="199" cy="508" r="17" fill="url(#v2gWhite)" opacity=".8"/><circle cx="259" cy="508" r="17" fill="url(#v2gWhite)" opacity=".8"/>
+    <rect x="196" y="440" width="66" height="9" rx="3" fill="#20242c"/>
+    <rect x="198" y="441" width="26" height="7" rx="3" fill="#5a1820"/><rect x="234" y="441" width="26" height="7" rx="3" fill="#1a2f5a"/>
+    <ellipse cx="229" cy="600" rx="60" ry="120" fill="#7a2a50" opacity=".18" filter="url(#v2b14)"/>
+  </g>
+  <g>
+    <ellipse cx="206" cy="566" rx="13" ry="3.500" fill="#000" opacity=".6"/><path d="M201 540h7l7 25h-21Z" fill="#f4682c"/><path d="M198 551h13l2 6h-17Z" fill="#fff"/><rect x="191" y="563" width="28" height="4.500" rx="2" fill="#c4491b"/>
+    <ellipse cx="170" cy="636" rx="23" ry="6" fill="#000" opacity=".6"/><path d="M163 588h12l12 46h-36Z" fill="#f4682c"/><path d="M158 606h21l3 11h-27Z" fill="#fff"/><rect x="146" y="631" width="48" height="8" rx="3" fill="#c4491b"/>
+    <path d="M152 640h36l8 64h-52Z" fill="#f4682c" opacity=".14" filter="url(#v2b6)"/>
+  </g>
+  <g>
+    <path d="M60 800h140l16 70H44Z" fill="#ff2d45" opacity=".3" filter="url(#v2b14)"/>
+    <circle cx="130" cy="742" r="104" fill="url(#v2gRed)" opacity=".3"/>
+    <path d="M130 660 206 792H54Z" fill="#b81f2b" stroke="#ff6b78" stroke-width="5.500" stroke-linejoin="round"/>
+    <path d="M130 660 206 792H54Z" fill="none" stroke="#ffc0c6" stroke-width="1.600" stroke-linejoin="round" opacity=".85"/>
+    <path d="M130 700 172 773H88Z" fill="#14151a"/><path d="M130 672 196 786H64Z" fill="none" stroke="#ff8a94" stroke-width="1" opacity=".5" stroke-dasharray="3 5"/>
+    <path d="M74 792h112v7H74zM96 799l-9 13M164 799l9 13" stroke="#2a2d34" stroke-width="5" fill="#2a2d34"/>
+    <path d="M130 874 196 802H64Z" fill="#ff2d45" opacity=".2" filter="url(#v2b6)"/>
+  </g>
+  <g stroke="#050608" stroke-width="10" opacity=".5" fill="none" stroke-linecap="round"><path d="M300 452C350 540 430 640 560 760"/><path d="M322 450C380 530 480 620 640 720"/></g>
+  <ellipse cx="640" cy="846" rx="120" ry="16" fill="#020203" opacity=".75"/><ellipse cx="620" cy="842" rx="60" ry="5" fill="#5a6470" opacity=".35"/>
+  <g fill="#8d949f"><path d="M452 848l24-8 16 10-12 9-26-2zM524 858l14-4 8 8-16 5zM402 830l10-6 9 6-8 6z"/><path d="M704 850l36-10 30 6 12 12-46 8-30-6z" fill="#b0b6c0"/></g>
+  <g fill="#fff" opacity=".7">${Array.from({ length: 22 }, () => `<circle cx="${(420 + r() * 330) | 0}" cy="${(826 + r() * 40) | 0}" r="${f(.8 + r() * 1.4)}"/>`).join('')}</g>` : `
+  <!-- normal state: head-lamp light on the road -->
+  <path d="M300 690 20 875H560L600 730Z" fill="#dcebff" opacity=".42" filter="url(#v2b26)"/>
+  <path d="M330 706 120 875H430L470 744Z" fill="#ffffff" opacity=".22" filter="url(#v2b14)"/>`}
+  <!-- wet-road reflection, contact shadow, car -->
+  <g transform="translate(288,496) scale(.9)">
+    <g mask="url(#v2refMask)" opacity=".45"><g transform="translate(0,806) scale(1,-1)" filter="url(#v2b6)"><use href="#v2car"/></g></g>
+    <ellipse cx="350" cy="398" rx="372" ry="26" fill="#000" opacity=".8" filter="url(#v2b14)"/>
+    <path d="M10 326Q80 366 191 392Q300 408 386 404L524 360 692 250 696 262 528 378 388 424Q300 428 187 410Q72 384 6 340Z" fill="#000" opacity=".85" filter="url(#v2b6)"/>
+    ${carSvg(acc)}
+  </g>
+  <rect width="1030" height="875" fill="${acc ? '#ff2038' : '#1f6bff'}" opacity="${acc ? '.045' : '.03'}"/>
+  <rect width="1030" height="875" fill="url(#v2vig)"/>
+  </svg>`;
+}
+function headSvg(acc) {
+  if (!acc) return `<svg viewBox="0 0 620 150" fill="none" aria-hidden="true"><defs><filter id="hb" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+    <path d="M12 142C150 14 470 14 608 142" stroke="#58c8ff" stroke-width="7" opacity=".5" filter="url(#hb)"/><path d="M12 142C150 14 470 14 608 142" stroke="#8fdcff" stroke-width="2.500"/>
+    <path d="M310 46 280 56v20c0 20 13 32 30 38 17-6 30-18 30-38V56Z" stroke="#8fdcff" stroke-width="5" stroke-linejoin="round"/><path d="M297 80l10 10 18-20" stroke="#8fdcff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  return `<svg viewBox="0 0 620 150" fill="none" aria-hidden="true"><defs><filter id="hb" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="6"/></filter></defs>
+    <g class="pulse" opacity=".72"><path d="M12 142C150 14 470 14 608 142" stroke="#ff2d45" stroke-width="7" filter="url(#hb)"/><path d="M310 40l48 84H262Z" stroke="#ff2d45" stroke-width="9" stroke-linejoin="round" filter="url(#hb)"/></g>
+    <path d="M12 142C150 14 470 14 608 142" stroke="#ff7482" stroke-width="2.800"/>
+    <path d="M310 40l48 84H262Z" fill="rgba(255,45,69,.12)" stroke="#ff5a6e" stroke-width="6.500" stroke-linejoin="round"/>
+    <path d="M310 72v24M310 108v3" stroke="#ff6b78" stroke-width="8" stroke-linecap="round"/></svg>`;
+}
+/* Driving-view background source.
+   'photo'   = both runtime pictures of hmi-assets/ASSET_CONTRACT.json are bundled (assets/hmi/HMI_BG_01_NORMAL.png, HMI_BG_02_ACCIDENT.png)
+   'partial' = only one of the two is bundled: not used (the two states must show the same vehicle), the vector drawing stays
+   'vector'  = none bundled: own vector drawing. No placeholder picture is ever generated. */
+const BG_FILES = { normal: 'assets/hmi/HMI_BG_01_NORMAL.png', accident: 'assets/hmi/HMI_BG_02_ACCIDENT.png' };
+function setBg(n, a) { S.bg = n && a ? 'photo' : (n || a) ? 'partial' : 'vector'; $('left').dataset.bg = S.bg === 'photo' ? 'photo' : 'vector'; console.log('BG_SOURCE ' + S.bg + ' normal=' + n + ' accident=' + a);
+  if (S.bg === 'photo') setBg.keep = Object.values(BG_FILES).map(u => { const im = new Image(); im.src = u; return im; }); }   // both pictures decoded up front: no blank moment at the first state change
+function detectBg() {
+  if (NATIVE) { let j = {}; try { j = JSON.parse(window.Native.bg ? window.Native.bg() : '{}'); } catch (e) {} return setBg(!!j.normal, !!j.accident); }
+  setBg(false, false);                                              // browser preview: probe the two files, switch only if both load
+  const probe = u => new Promise(res => { const im = new Image(); im.onload = () => res(im.naturalWidth > 0); im.onerror = () => res(false); im.src = u; });
+  Promise.all([probe(BG_FILES.normal), probe(BG_FILES.accident)]).then(r => { if (r[0] || r[1]) { setBg(r[0], r[1]); leftKey = ''; render(); } });
+}
+let leftKey = '';
+function renderLeft() {
+  const acc = S.hmi === 'ACC';
+  if (leftKey === S.hmi + S.bg) return; leftKey = S.hmi + S.bg;    // rebuilt only when the state changes (keeps animations smooth)
+  document.body.classList.toggle('acc', acc);
+  $('left').dataset.drivingState = acc ? 'accident' : 'normal';     // photo mode: this attribute alone swaps the background URL
+  paintScene(acc);                                                  // left scene: rastered once per state, see paintScene. Photo mode: it stays underneath, covered by the photo layer
+  $('headline').innerHTML = headSvg(acc) + (acc
+    ? `<h1>사고가 감지되었습니다</h1><p>차량이 정지 상태입니다.<br>탑승자의 안전을 확인하고, 필요한 조치를 진행하세요.</p><span class="simchip">사고 상황 시뮬레이션<i> · </i>실제 차량 사고 감지 아님</span>`
+    : `<h1>주행 준비 상태</h1><p>사고 대응은 오른쪽 RE:SAFETY에서 언제든 열 수 있습니다.<br>왼쪽 화면은 차량과 연결되지 않은 콘셉트 표시입니다.</p><span class="simchip">콘셉트 화면<i> · </i>Pleos 시스템 화면 아님</span>`);
+  $('lbtns').innerHTML = acc
+    ? `<button class="cbtn red" data-info="belt" data-k="belt">${svg('belt', 2.6)}<span class="tx"><b>안전벨트 안내</b><span>화재·연기 등 상황별 판단</span></span><span class="cv">${svg('chev', 4)}</span></button>
+       <button class="cbtn" data-act="d119" data-k="l119">${svg('amb', 2.6)}<span class="tx"><b>구조 요청</b><span>119 전화 화면 · 통화는 직접</span></span><span class="cv">${svg('chev', 4)}</span></button>`
+    : `<button class="cbtn go" data-act="accOn" data-k="accOn">${svg('play', 2.6)}<span class="tx"><b>사고 상황 시뮬레이션 시작</b><span>가상 이벤트 · 실제 사고 감지가 아닙니다</span></span><span class="cv">${svg('chev', 4)}</span></button>`;
+}
+function renderChrome() {
+  const acc = S.hmi === 'ACC';
+  $('chips').innerHTML = `<button class="chip concept" data-act="about" data-k="about">FULL HMI CONCEPT · 독립 시연본</button>`
+    + (acc ? `<span class="chip sim">사고 상황 시뮬레이션</span><button class="chip ctl" data-act="accOff" data-k="accOff">시뮬레이션 종료 ✕</button>` : '');
+  $('tr').innerHTML = `<span class="avatar">운</span>${svg('bt', 3.2)}${svg('wifi', 3.4)}<span class="vd" style="position:static;transform:none"></span><span id="clk"></span>`;
+  tick();
+}
+
+/* ---------------- right app ---------------- */
+const mast = s => `<div class="mast"><span class="t">RE:SAFETY</span><span class="d"></span><span class="s">${s}</span></div>`;
+const card = (cls, icon, title, sub, attr, k) => `<button class="card ${cls}" ${attr} data-k="${k}"><span class="tile">${svg(icon)}</span><span class="tx"><b>${title}</b><span class="sub">${sub}</span></span></button>`;
+const plain = (icon, title, attr, k) => `<button class="card plain" ${attr} data-k="${k}" style="height:1.18rem"><span class="ic">${svg(icon, 2.8)}</span><span class="tx">${title}</span></button>`;
+function homeHtml() {
+  const g = S.g;
+  return mast('사고 대응') + `<div class="lab"><span>긴급</span><button data-act="recvset" data-k="recvset" aria-label="SOS 받기 설정 열기">SOS 받기 설정  ›</button></div>
+  <div class="row" style="flex:1.1;min-height:0">
+    <button class="card c119" data-act="d119" data-k="b119" style="height:100%"><span class="tile">${svg('phone')}</span><span class="tx"><b>119 전화 연결</b><span class="sub">구급·화재 · 통화는 직접</span></span><span class="chev">${svg('chev', 4)}</span></button>
+    <button class="card csos" data-act="sos" data-k="bsos" style="height:100%"><span class="tile">${svg('warn')}</span><span class="tx"><b>SOS</b><span class="sub">주변 요청 · 위치 · 상태</span></span><span class="chev">${svg('chev', 4)}</span></button>
+  </div>
+  <div class="lab"><span>사고 후</span></div>
+  <div class="row grow">${card('cok', 'shield', '보호 모드', '조명·문 잠금을 한 번에 요청', 'data-act="prot"', 'cprot')}${card('cpink', 'list', '사고 상황 정리', '행동 확인부터 QR까지 6단계', 'data-act="guide"', 'cguide')}</div>
+  <div style="height:.2rem;flex:none"></div>
+  <div class="row grow">${card('', 'grid', '좌석·안전벨트', '차량 보고와 직접 확인', 'data-act="seat"', 'cseat')}${card('', 'tow', '보험·견인', '연락과 현장 공유', 'data-act="tow"', 'ctow')}</div>
+  <div class="lab"><span>기록·준비</span></div>
+  <div class="row" style="flex:none">${plain('list', '출발 전 확인', 'data-act="pre"', 'cpre')}${plain('doc', '사고 기록', 'data-act="record"', 'crec')}</div>
+  ${g.active ? `<div style="height:.24rem;flex:none"></div><button class="card cont" data-act="guide" data-k="ccont">진행 중인 상황 정리 이어하기<em>${g.step + 1} / ${GUIDE.length} 단계</em></button>` : ''}`;
+}
+const FAIL_STEP = { no_config: 0, no_location: 0, no_relay: 1, auth: 1, rejected: 1, cooldown: 1 };
+function sosFailStep(s, got) { return s.phase === 'expired' ? (got > 0 ? 4 : 3) : s.phase === 'failed' ? (s.kind in FAIL_STEP ? FAIL_STEP[s.kind] : 1) : -1; }   // which of the 5 steps is marked as failed
+function sosHtml() {
+  const s = S.sos, c = s.counts || {}, ph = s.phase;
+  const got = (c.DELIVERED || 0) + (c.ACKED || 0) + (c.DECLINED || 0);
+  const order = ['ready', 'sending', 'accepted', 'delivered', 'acked'];
+  const idx = ph === 'nobody' ? 2 : order.indexOf(ph);
+  const failAt = sosFailStep(s, got);
+  const li = (i, label, extra) => { let cls = '', mark = ''; if (failAt === i) { cls = 'bad'; mark = '✕'; } else if (failAt >= 0) { cls = i < failAt ? 'done' : ''; mark = i < failAt ? '✓' : ''; } else if (i < idx || (i === idx && (ph === 'acked' || (ph === 'accepted' && i === 2) || (ph === 'delivered' && i === 3) || (ph === 'nobody' && i === 2)))) { cls = 'done'; mark = '✓'; } else if (i === idx || (i === idx + 1 && ph !== 'nobody' && ph !== 'acked' && idx >= 2)) { cls = 'now'; mark = ''; } return `<li class="${cls}"><i>${mark}</i>${label}${extra ? `<em>${extra}</em>` : ''}</li>`; };
+  const connTxt = { unknown: '확인 전', checking: '확인 중', ok: '연결됨', down: '연결 안 됨', noconfig: '설정 없음' }[S.conn];
+  const connCls = S.conn === 'ok' ? 'ok' : (S.conn === 'down' || S.conn === 'noconfig') ? 'bad' : '';
+  let body;
+  if (ph === 'consent') {
+    body = `<p class="body" style="font-size:.28rem">이 실험 기능은 <b>가상 위치</b>를 PC 시험 서버로 보내 근처 시험 사용자에게 알립니다. 실제 신고나 구조 요청이 아니며, 동의한 뒤에는 홈의 SOS를 한 번 누르면 바로 요청합니다.</p>
+      <div class="row" style="margin-top:.18rem"><button class="btn sos" style="flex:1" data-act="agree" data-k="agree">동의하고 요청</button><button class="btn" style="flex:1" data-act="cancel" data-k="cancel">취소</button></div>`;
+  } else {
+    const msg = ph === 'failed' ? `<p class="msg bad" data-k="msg">${s.err}</p>` : ph === 'expired' ? `<p class="msg bad" data-k="msg">${s.endKind === 'unknown' ? '요청 시간이 끝났어요. 서버 상태를 끝까지 확인하지 못했습니다.' : s.endKind === 'gone' ? '서버에서 요청을 찾을 수 없어요. 만료로 처리했습니다.' : '요청이 만료됐어요. 확인한 사용자가 없습니다.'} 급하면 홈의 119에 전화하세요.</p>` : ph === 'nobody' ? `<p class="msg bad" data-k="msg">지금 주변에 SOS를 받을 수 있는 사용자가 없어요.</p>`
+      : ph === 'acked' ? `<p class="msg ok" data-k="msg">주변 사용자가 요청을 확인했어요.</p>` : ph === 'delivered' ? `<p class="msg" data-k="msg">주변 사용자 단말에 전달됐어요. 확인을 기다립니다.</p>`
+      : ph === 'accepted' ? `<p class="msg" data-k="msg">서버가 접수했어요. 주변 사용자 ${s.matched}명에게 전달하는 중입니다.</p>` : ph === 'sending' ? `<p class="msg" data-k="msg">SOS를 보내는 중이에요…</p>` : ph === 'ready' ? `<p class="msg" data-k="msg">요청을 준비하고 있어요.</p>` : `<p class="msg" data-k="msg" style="color:#9BA5B6">홈의 SOS를 누르면 요청합니다. 지금은 아무것도 보내지 않았습니다.</p>`;
+    body = `<ul class="steps">${li(0, '요청 준비')}${li(1, '요청 전송')}${li(2, '서버 접수')}${li(3, '주변 수신자 전달', (idx >= 2 && failAt < 0) || ph === 'expired' ? `대상 ${s.matched}명 · 수신 ${got}명` : '')}${li(4, '수신 확인', (idx >= 3 && failAt < 0) || ph === 'expired' ? `확인 ${c.ACKED || 0}명 · 거절 ${c.DECLINED || 0}명` : '')}</ul>${msg}
+      ${s.lost >= 2 && (ph === 'accepted' || ph === 'delivered') ? `<p class="note" data-k="soslost">상태 확인 연결이 끊겼어요. 다시 연결되면 이어서 확인합니다. 급하면 홈의 119에 전화하세요.</p>` : ''}
+      ${s.tries > 1 ? `<p class="note" data-k="tries">전송 시도 ${s.tries}회 (같은 요청 번호로 다시 보냄)</p>` : ''}
+      <div class="row" style="margin-top:.14rem">${(ph === 'failed' || ph === 'nobody' || ph === 'expired') ? `<button class="btn sos" data-act="retry" data-k="retry">다시 시도</button>` : ''}${(ph === 'failed' && (s.kind === 'no_config' || s.kind === 'no_relay')) ? `<button class="btn" data-act="lab" data-k="labhelp">연결 안내 보기</button>` : ''}</div>`;
+  }
+  const alerts = S.recv.alerts.map(a => `<div class="alert"><span style="flex:1">TEST / 실제 사고 아님 · 근처 SOS 요청 (거리 ${a.band || '-'}, ${a.left}초 남음)</span><button class="btn sos" data-ack="${a.id}" data-k="ack">확인</button><button class="btn" data-dec="${a.id}">거절</button></div>`).join('');
+  const pos = posText();
+  return mast('근처 SOS') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="scroll"><div class="panel sos"><h3>근처 SOS <span class="tag lab2">LAB · 실험</span>${SIM ? '<span class="tag sim">브라우저 시뮬레이션</span>' : ''}</h3>${body}</div>
+  <div class="panel" style="margin-top:.18rem">
+    <div class="kv"><span>서버 연결</span><span style="display:flex;align-items:center;gap:.16rem"><b data-k="conn"><i class="dot ${connCls}"></i>${connTxt}</b><button class="btn" style="height:.64rem;font-size:.26rem" data-act="lab" data-k="lab">시험 연결 설정</button></span></div>
+    <div class="kv"><span>보내는 위치</span><span style="display:flex;align-items:center;gap:.16rem"><b>${pos ? '시험용 가상 위치' : '확인할 수 없음'}</b><button class="btn" style="height:.64rem;font-size:.26rem" data-act="loc" data-k="loc">현재 위치 확인</button></span></div>
+    <div class="kv"><span>SOS 알림 받기</span><span style="display:flex;align-items:center;gap:.16rem"><b>${S.recv.on ? '켜짐' : '꺼짐'}${S.recv.note ? ' · ' + S.recv.note : ''}</b><button class="btn" style="height:.64rem;font-size:.26rem" data-act="recv" data-k="recv">${S.recv.on ? '끄기' : '켜기'}</button></span></div>
+    ${alerts}
+  </div>
+  <p class="note">실제 신고가 아닙니다. 시험 서버와 가상 위치만 사용합니다. "서버 접수"는 서버가 요청을 받았다는 뜻이고, "수신 확인"은 받은 사람이 직접 확인을 눌렀다는 뜻입니다. 알림을 받은 사용자가 구조·응급 활동을 한다는 뜻이 아닙니다. 공식 신고는 홈의 119·112에서 하세요.</p></div>`;
+}
+function locHtml() {
+  const pos = posText();
+  return mast('현재 위치 확인') + `<button class="back" data-act="sosview" data-k="back">←  돌아가기</button>
+  <div class="panel"><h3>현재 위치 확인 <span class="tag sim">시험값</span></h3>
+    <div class="kv" style="margin-top:.14rem"><span>출처</span><b>${pos ? '시험용 가상 위치 (실행 설정으로 받은 값)' : '사용할 수 없어요'}</b></div>
+    <div class="kv"><span>좌표</span><b data-k="coord">${pos || '없음'}</b></div>
+    <div class="kv"><span>실제 위치</span><b>읽지 않음 · 이 APK에는 위치 권한이 없습니다</b></div>
+    <p class="note">이 시연본은 위치를 자동으로 전송하지 않습니다. Pleos R2D 네이티브 앱에서는 차량 좌표와 내비 주소를 읽어 이 화면에 보여 주고, 사용자가 전화로 직접 말합니다.</p></div>
+  <div class="row" style="margin-top:.2rem;flex:none"><button class="btn red" style="flex:1" data-act="d119" data-k="loc119">119 전화 화면 열기</button><button class="btn" style="flex:1" data-act="record" data-k="locrec">사고 기록 열기</button></div>`;
+}
+function guideHtml() {
+  const g = S.g, st = g.step; let body;
+  if (st === 0) body = `<h3>행동 확인 <span class="tag ok">사용자 입력</span></h3><div style="margin-top:.1rem">${CHECKS.map((t, i) => `<button class="opt${g.checks[i] ? ' on' : ''}" data-chk="${i}" data-k="chk${i}"><i>${g.checks[i] ? '✓' : ''}</i>${t}</button>`).join('')}</div><p class="note">직접 확인한 것만 눌러 주세요. 급하면 정리를 멈추고 119에 전화하세요.</p>`;
+  else if (st === 1) body = `<h3>부상 입력 <span class="tag ok">사용자 입력</span></h3><div style="margin-top:.1rem">
+      ${[['minor', '경미한 부상'], ['major', '중상']].map(([k, t]) => `<div class="cnt"><span>${t}</span><div><button class="btn" data-cnt="${k}:-1" data-k="${k}m">−</button><b>${g[k]}</b><button class="btn" data-cnt="${k}:1" data-k="${k}p">+</button><span>명</span></div></div>`).join('')}</div><p class="note">앱이 부상을 판단하지 않습니다. 본 대로만 입력합니다.</p>`;
+  else if (st === 2) body = `<h3>차량 상태 <span class="tag sim">시뮬레이션 값</span></h3>
+      <div class="kv" style="margin-top:.14rem"><span>이동 상태</span><b>정차 · 기어 P</b></div><div class="kv"><span>문·트렁크</span><b>모두 닫힘</b></div><div class="kv"><span>비상등</span><b>${S.hmi === 'ACC' ? '켜짐' : '꺼짐'}</b></div>
+      <p class="note">이 시연본은 차량과 연결되어 있지 않아 고정된 시뮬레이션 값을 보여 줍니다. 실제 차량 값은 Pleos R2D 네이티브 앱에서 읽습니다.</p>`;
+  else if (st === 3) body = `<h3>공유할 내용 <span class="tag ok">사용자 선택</span></h3><div style="margin-top:.1rem">${SHARE.map(([k, t]) => `<button class="opt${g.share[k] ? ' on' : ''}" data-share="${k}" data-k="sh${k}"><i>${g.share[k] ? '✓' : ''}</i>${t}</button>`).join('')}</div><p class="note">고른 항목만 QR에 들어갑니다. 자동으로 전송되지 않습니다.</p>`;
+  else if (st === 4) { const txt = summaryText(), q = qrSvg(txt); body = `<h3>QR로 공유 <span class="tag ok">이 APK에서 생성</span></h3>
+      ${qrBox(txt, 'qr', txt, S.qrErr === 'too_long' ? qrFailText() : 'QR은 APK에서 만들어집니다<br>(브라우저 시연에는 없음)')}
+      <p class="note">휴대폰 카메라로 읽는 오프라인 QR입니다. 신고나 메시지는 전송되지 않아요.</p>`; }
+  else body = `<h3>완료</h3><p class="body">정리한 내용을 사고 기록에 남깁니다. 기록은 이 기기 안에만 보관됩니다.</p>
+      <div class="kv" style="margin-top:.14rem"><span>행동 확인</span><b>${g.checks.filter(Boolean).length} / 4</b></div><div class="kv"><span>부상 입력</span><b>경미 ${g.minor}명 · 중상 ${g.major}명</b></div>`;
+  return mast('사고 상황 정리') + `<div class="lab"><span>${st + 1} / ${GUIDE.length} 단계 · ${GUIDE[st]}</span><button data-act="gstop" data-k="gstop" style="color:#9BA5B6">정리 종료</button></div>
+  <div class="prog">${GUIDE.map((_, i) => `<i class="${i <= st ? 'on' : ''}"></i>`).join('')}</div>
+  <div class="panel scroll">${body}</div>
+  <div class="row" style="margin-top:.2rem;flex:none"><button class="btn" style="flex:1" data-act="gprev" data-k="gprev">${st ? '이전' : '홈으로'}</button><button class="btn dark" style="flex:1" data-act="gnext" data-k="gnext">${st < GUIDE.length - 1 ? '다음' : '기록에 남기고 완료'}</button></div>`;
+}
+function recordHtml() {
+  return mast('사고 기록') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="panel scroll"><h3>사고 기록 <span class="tag">이 기기 안에만 보관</span><button class="btn" style="margin-left:auto;height:.6rem;font-size:.24rem" data-act="clear" data-k="clear">기록 비우기</button></h3>
+  ${S.log.length ? `<ul class="loglist" data-k="loglist">${S.log.map(l => { const s = SRC[l.src] || SRC.app; return `<li><span>${l.t}</span><span class="tag ${s[1]}">${s[0]}</span><b style="font-weight:500">${l.text}</b></li>`; }).join('')}</ul>` : '<p class="body" style="color:#9BA5B6">아직 기록이 없습니다.</p>'}
+  <p class="note">앱을 다시 열어도 남습니다. 서버로 보내지 않습니다. 차량 값은 이 시연본에 없으므로 기록되지 않습니다.</p></div>`;
+}
+function infoHtml() {
+  const i = INFO[S.info] || ['', 'oem', '', ''];
+  if (S.info === 'about') return mast('시연본 안내') + `<button class="back" data-act="home" data-k="back">←  홈</button>
+  <div class="panel scroll"><h3>이 시연본에서 실제로 되는 것 <span class="tag oem">FULL HMI CONCEPT</span></h3>
+  <table class="map">
+    <tr><td><span class="tag ok">이 APK에서 동작</span></td><td>119·112·직접 입력한 번호의 전화 화면 열기(통화는 직접), 사고 상황 정리 6단계, 좌석별 직접 확인 기록, 보험·견인 연락처와 요약, 출발 전 확인, QR 생성, 사고 기록 저장·복원</td></tr>
+    <tr><td><span class="tag lab2">시험 서버로 동작</span></td><td>SOS 한 번 탭 → 서버 접수 → 주변 수신자 전달 → 수신 확인·만료, SOS 받기 설정 (PC 시험 서버·가상 위치·시험 사용자만)</td></tr>
+    <tr><td><span class="tag sim">시뮬레이션</span></td><td>보호 모드(가상 차량), 좌석의 "차량 보고" 값, 가상 충돌 이벤트에 따른 화면 자동 전환, 왼쪽 사고 장면, 속도·기어 표시</td></tr>
+    <tr><td><span class="tag nat">R2D 네이티브 전용</span></td><td>실제 차량 조명·문 잠금 요청과 재확인, 실제 좌석·벨트 센서 값, 차량 좌표·내비 주소</td></tr>
+    <tr><td><span class="tag oem">제조사 연동 필요</span></td><td>실제 충돌 신호 수신, 사고 시 시스템 화면 자동 활성화, 주행 중 긴급 화면 표시, 왼쪽 주행 화면·시스템 영역, 안전벨트 안내 문구</td></tr>
+    <tr><td><span class="tag">지원하지 않음</span></td><td>자동 사고 신고, 위치 자동 전송, 자동 보험 접수, 자동 견인 출동</td></tr>
+  </table>
+  <p class="note">이 앱은 일반 Android에서 전체 화면으로 실행되는 독립 시연본입니다. Pleos 시스템 화면을 바꾸거나 덮지 않으며, 실제 차량·실제 위치·실제 신고와 연결되어 있지 않습니다.</p></div>`;
+  return mast(i[0]) + `<button class="back" data-act="home" data-k="back">←  홈</button><div class="panel"><h3>${i[0]} <span class="tag ${i[1]}">${i[2]}</span></h3><p class="body">${i[3]}</p></div>
+  ${S.info === 'belt' ? `<div class="row" style="margin-top:.2rem;flex:none"><button class="btn red" style="flex:1" data-act="d119" data-k="belt119">119 전화 화면 열기</button></div>` : ''}`;
+}
+function renderInner() {
+  renderLeft(); renderChrome();
+  const sc = S.screen;
+  const railOn = sc === 'home' ? 'home' : sc === 'record' ? 'rec' : sc === 'seat' ? 'seat' : sc === 'prot' ? 'prot' : '';
+  const it = (k, y, icon, label, attr) => `<button class="it${railOn === k ? ' on' : ''}" style="top:${y}rem" ${attr} data-k="r${k}">${svg(icon)}<span>${label}</span></button>`;
+  // The 112 quick button lives on Home only; the SOS screen keeps no duplicate emergency buttons.
+  $('rail').innerHTML = it('home', .54, 'home', '홈', 'data-act="home"') + it('seat', 2.53, 'seat', '좌석', 'data-act="seat"') + it('prot', 4.52, 'shield', '보호 모드', 'data-act="prot"') + it('rec', 6.51, 'doc', '사고 기록', 'data-act="record"')
+    + (sc === 'home' ? `<button id="q112" data-act="d112" data-k="q112" aria-label="112 경찰 전화 화면 열기">112</button>`
+      : ['prot', 'seat', 'tow', 'pre', 'guide', 'record'].includes(sc) ? `<button id="q119" data-act="d119" data-k="q119" aria-label="119 전화 화면 열기">119</button>` : '');
+  const main = $('main'), old = main.querySelector('.scroll'), keep = old && main.dataset.screen === sc ? old.scrollTop : 0;      // keep the scroll position when the same screen is redrawn
+  const SCREENS = { sos: sosHtml, loc: locHtml, guide: guideHtml, record: recordHtml, info: infoHtml, prot: protHtml, seat: seatHtml, tow: towHtml, pre: preHtml, lab: labHtml, labqr: labQrHtml };
+  main.innerHTML = (SCREENS[sc] || homeHtml)(); main.dataset.screen = sc;
+  if (keep) { const now = main.querySelector('.scroll'); if (now) now.scrollTop = keep; }
+  renderPrompt();
+  report();
+}
+window.PAGE_ERRORS = 0;
+window.addEventListener('error', e => { window.PAGE_ERRORS++; console.log('PAGE_ERROR ' + String(e && e.message).slice(0, 120)); });
+function render() {
+  try { renderInner(); } catch (e) {
+    window.PAGE_ERRORS++; console.log('PAGE_ERROR render ' + String(e && e.message).slice(0, 120));
+    if (render.recovering) return;
+    render.recovering = true;
+    try { S.g = newGuide(); S.p = newProt(); S.t = newTow(); S.pre = newPre(); S.last = null; S.labqr = null;
+      S.st = newSeats(); S.st.s = Object.fromEntries(SEATS.map(([k]) => [k, { occ: 'u', belt: 'u', cond: 'u' }]));
+      S.sos = { phase: 'idle', matched: 0, counts: {}, err: '', kind: '' }; S.info = null; S.screen = 'home';
+      saveGuide(); saveProt(); saveSeats(); saveTow(); savePre(); store.set('lastGuide', null);
+      log('화면 오류에서 복구: 입력 중이던 값은 기본값으로 되돌림 (사고 기록은 유지)', 'app'); renderInner();
+    } catch (e2) { console.log('PAGE_ERROR recovery ' + String(e2 && e2.message).slice(0, 120)); }
+    render.recovering = false;
+  }
+}
+function tick() { const d = new Date(), h = d.getHours(), el = $('clk'); if (el) el.textContent = p2(h % 12 || 12) + ':' + p2(d.getMinutes()) + (h < 12 ? ' 오전' : ' 오후'); }
+setInterval(tick, 20000);
+/* Test hooks: state and tappable rectangles (device pixels) go to the console; the APK forwards the console to logcat. */
+function typo() {                                                   // distinct computed type styles of the function-card titles / subtitles / banner titles on Home
+  if (S.screen !== 'home') return null;
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const sig = el => { const c = getComputedStyle(el), fs = parseFloat(c.fontSize); return [c.fontFamily, c.fontWeight, (fs / rem).toFixed(3) + 'rem', 'lh ' + (parseFloat(c.lineHeight) / fs).toFixed(3), 'ls ' + (parseFloat(c.letterSpacing) || 0)].join('|'); };
+  const uniq = sel => Array.from(new Set(Array.from(document.querySelectorAll(sel)).map(sig)));
+  const t = uniq('#main .card:not(.c119):not(.csos) .tx, #main .card.cont'), s = uniq('#main .card .sub, #main .card.cont em'), b = uniq('#main .c119 b, #main .csos b');
+  const cards = document.querySelectorAll('#main .card:not(.c119):not(.csos)').length, f = x => x.split('|').slice(1).join('|');
+  return { cards, titleStyles: t.length, subStyles: s.length, bannerStyles: b.length, title: f(t[0] || ''), sub: f(s[0] || ''), banner: f(b[0] || ''),
+    sameFamilyWeightLh: t.length === 1 && b.length === 1 && t[0].split('|').filter((_, i) => i !== 2).join() === b[0].split('|').filter((_, i) => i !== 2).join() };
+}
+function report() {
+  const dpr = window.devicePixelRatio || 1;
+  console.log('STATE ' + JSON.stringify({ hmi: S.hmi, screen: S.screen, sos: S.sos.phase, kind: S.sos.kind, matched: S.sos.matched, counts: S.sos.counts, conn: S.conn, recv: S.recv.on, alerts: S.recv.alerts.length,
+    guide: S.g.step, gactive: S.g.active, checks: S.g.checks.filter(Boolean).length, minor: S.g.minor, major: S.g.major, rec: S.log.length, qr: S.screen === 'guide' && S.g.step === 4 ? S.qr : 0, qrBig: !!S.qrBig, qrSplit: !!S.qrSplit, qrPart: S.qrPart || 0, qrParts: ((S.screen === 'guide' && S.g.step === 4) || (S.screen === 'tow' && S.t.qr) || (S.screen === 'labqr' && S.labqr && S.labqr.plan)) ? (S.qrParts || 0) : 0, bg: S.bg, dstate: $('left').dataset.drivingState, typo: typo(), consent, sim: SIM, tries: S.sos.tries || 0, failStep: sosFailStep(S.sos, ((S.sos.counts || {}).DELIVERED || 0) + ((S.sos.counts || {}).ACKED || 0) + ((S.sos.counts || {}).DECLINED || 0)),
+    prot: { state: S.p.state, on: Object.values(S.p.veh).filter(Boolean).length, res: S.p.res, hist: S.p.hist.length, fog: S.p.opt.fogSupported, failNext: S.p.opt.failNext },
+    seats: Object.assign(seatSum(), { chk: S.st.chk.filter(Boolean).length, saved: !!S.st.savedAt, sim: S.st.sim }),
+    tow: { ins: validPhone(S.t.ins.phone), insDigits: phoneDigits(S.t.ins.phone).length, towp: validPhone(S.t.tow.phone), when: !!S.t.when, where: S.t.where.length, target: S.t.target, items: Object.values(S.t.items).filter(Boolean).length, pii: S.t.pii, qr: S.screen === 'tow' && S.t.qr ? S.qr : 0, msg: !!S.t.msg, guide: !!guideSrc() },
+    pre: { chk: S.pre.chk.filter(Boolean).length, memo: S.pre.memo.length, saved: !!S.pre.savedAt },
+    ev: { n: S.ev.n, level: S.ev.last ? S.ev.last.level : '', auto: S.ev.auto, prompt: !!S.ev.prompt, ignored: S.ev.ignored, dup: S.ev.dup, stale: S.ev.stale, restored: S.ev.restored },
+    inc: (() => { const s = intake.snapshot(); return { id: s.incident, state: s.state, events: s.events, journal: s.journal, last: s.last, accepted: s.counters.accepted, absorbed: s.counters.absorbed }; })(),
+    sosRid: (S.sos.rid || '').slice(0, 8), sosResumed: !!S.sos.resumed, sosLost: S.sos.lost || 0, sosEnd: S.sos.endKind || '', pageErrors: window.PAGE_ERRORS,
+    labqr: S.labqr ? { n: S.labqr.n || 0, chars: S.labqr.text.length, size: S.labqr.size, err: S.labqr.err || '', tag: S.labqr.tag } : null,
+    lab: (() => { const c = cfg(); return { relay: !!c.relay, persisted: !!c.persisted, pos: !!c.pos }; })(),
+    dup119: S.screen === 'sos' ? document.querySelectorAll('#main [data-act=d119],#main [data-act=d112],#rail [data-act=d112],#rail [data-act=d119]').length : -1 }));
+  document.querySelectorAll('[data-k]').forEach(el => { const r = el.getBoundingClientRect(); if (r.width > 0) console.log('RECT ' + el.dataset.k + ' ' + Math.round(r.left * dpr) + ' ' + Math.round(r.top * dpr) + ' ' + Math.round(r.width * dpr) + ' ' + Math.round(r.height * dpr)); });
+}
+/* static concept chrome */
+$('lanechip').innerHTML = svg('lane', 3.4);
+$('adas').innerHTML = `<svg viewBox="0 0 56 86" fill="none" stroke="#fff" stroke-width="3.600" stroke-linecap="round" aria-hidden="true"><circle cx="28" cy="24" r="19"/><path d="M10 22c10-6 26-6 36 0M28 30v12M20 28l-6 10M36 28l6 10"/><circle cx="28" cy="26" r="4.500"/><path d="M19 58 12 82M37 58l7 24M28 60v6M28 72v8" stroke-width="3"/></svg>`;
+$('lrow').innerHTML = [['trunk', 0], ['hood', 1], ['charge', 0], ['window', 0]].map(([k, dim]) => `<button data-sys="${k}" data-k="sys_${k}" class="${dim ? 'dim' : ''}" aria-label="차량 시스템 영역 (콘셉트)">${svg(k, 2.6)}</button>`).join('');
+$('dock').innerHTML = ['recirc', 'dome', 'scroff', 'box'].map((k, i) => `<button data-sys="${k}" data-k="sys_${k}" class="${i === 2 ? 'cur' : ''}" aria-label="차량 시스템 영역 (콘셉트)">${svg(k, 2.6)}</button>`).join('');
+detectBg();
+let scrollT = 0; document.addEventListener('scroll', () => { clearTimeout(scrollT); scrollT = setTimeout(report, 150); }, true);   // rectangles move when a panel is scrolled
+window.addEventListener('resize', () => { const a = document.activeElement; if (a && a.tagName === 'INPUT') return report(); render(); });   // never redraw under a field that is being typed in
+if (S.screen === 'sos') { if (Q.get('auto') === '1') sosTap(); else checkConn(); }
+sosResume();
+render();
+if (NATIVE && window.Native.takeLabQr) { try { const lq = window.Native.takeLabQr(); if (lq) window.onLabQr(lq); } catch (e) {} }
+if (NATIVE && window.Native.takeEvent) { try { const pend = window.Native.takeEvent(); if (pend) window.onVehicleEvent(pend); } catch (e) {} }   // a virtual event that started the app
+</script>
+</body>
+</html>

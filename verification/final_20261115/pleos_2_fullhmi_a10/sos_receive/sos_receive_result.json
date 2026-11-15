@@ -1,0 +1,18 @@
+{
+ "alert_shown": true,
+ "ack_tapped": true,
+ "sender_result": "matched",
+ "sender_counts_after_ack": {
+  "PENDING": 0,
+  "DELIVERED": 0,
+  "ACKED": 1,
+  "DECLINED": 0,
+  "WITHDRAWN": 0
+ },
+ "relay": "loopback test relay on this PC (127.0.0.1:8774), virtual positions",
+ "server_events": {
+  "sos_created": 1,
+  "delivered": 0,
+  "acked": 0
+ }
+}

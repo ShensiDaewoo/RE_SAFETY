@@ -1,0 +1,60 @@
+{
+ "source": {
+  "what": "Concept picture of the seat-control screen handed over by the project owner in the work session of 2026-11-14; the owner said it was made with ChatGPT.",
+  "pixels": [
+   827,
+   745
+  ],
+  "sha256": "64EDB81C1952C0E7300A34CC358E705E244A0EF695D9EDB5B438A2C1B10154B8",
+  "provenance": "Under which terms the picture may be published was NOT stated; to be confirmed by the project owner before submission."
+ },
+ "car": {
+  "file": "assets/hmi/SEATCTL_CAR_TOP.png",
+  "pixels": [
+   532,
+   1068
+  ],
+  "sha256": "119D13A5C3B16CFB6786A204D1B5CD58B09A6897DE2515C7F9145898C90F3DA2",
+  "edit": "crop; printed seat names filled in; driver seat replaced by the mirror image of the passenger seat (the printed \"selected\" glow is gone); background made transparent; enlarged 2x"
+ },
+ "seat": {
+  "file": "assets/hmi/SEATCTL_SEAT_3D.png",
+  "pixels": [
+   548,
+   360
+  ],
+  "sha256": "1CCD836678645758F993A1DA148F0A7C9DB411FB84C8006C0C4CB211750E2E2C",
+  "edit": "crop; transparent soft edge left, right and top; enlarged 2x"
+ },
+ "side": {
+  "file": "assets/hmi/SEATCTL_SEAT_SIDE.png",
+  "pixels": [
+   332,
+   288
+  ],
+  "sha256": "BADEBF12CC8D04D8DA0CA3472165CA9BA213439498892CB44CDB6E4C09377E47",
+  "edit": "crop; the card colour behind the drawing made transparent; enlarged 2x"
+ },
+ "seat_boxes_per_cent_of_car_picture": {
+  "D": [
+   18.7,
+   28.7
+  ],
+  "P": [
+   53.2,
+   28.7
+  ],
+  "RL": [
+   18.7,
+   54.2
+  ],
+  "RR": [
+   53.2,
+   54.2
+  ],
+  "size": [
+   27.6,
+   20.6
+  ]
+ }
+}

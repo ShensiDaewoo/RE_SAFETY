@@ -1,0 +1,8 @@
+11-15 07:22:10.137 I/FullHMI ( 5191): SCENE READY -> DRIVING motion=moving src=sim why=render
+11-15 07:22:12.934 I/FullHMI ( 5191): SCENE DRIVING -> READY motion=parked src=sim why=render
+11-15 07:22:16.256 I/FullHMI ( 5191): SCENE READY -> DRIVING motion=moving src=sim why=render
+11-15 07:22:18.578 I/FullHMI ( 5191): SCENE DRIVING -> ACCIDENT_PENDING motion=moving src=sim why=render
+11-15 07:22:21.358 I/FullHMI ( 5191): SCENE ACCIDENT_PENDING -> ACCIDENT_RESPONSE motion=parked src=sim why=render
+11-15 07:22:24.703 I/FullHMI ( 5191): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=sim why=render
+11-15 07:22:28.821 I/FullHMI ( 5191): SCENE READY -> ACCIDENT_RESPONSE motion=parked src=sim why=render
+11-15 07:22:32.965 I/FullHMI ( 5191): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=sim why=render

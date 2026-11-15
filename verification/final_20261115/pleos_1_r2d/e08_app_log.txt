@@ -1,0 +1,14 @@
+--------- beginning of main
+
+11-15 16:31:30.016 I/Accident10( 7433): CLICK 'SOS'
+
+11-15 16:31:30.016 I/Accident10( 7433): SOS_OPEN home
+
+11-15 16:31:30.016 I/Accident10( 7433): SCREEN=SOS
+
+11-15 16:31:37.889 I/Accident10( 7433): CLICK '현재 위치 확인'
+
+11-15 16:31:37.889 I/Accident10( 7433): LOCATION_OPEN sos
+
+11-15 16:31:37.889 I/Accident10( 7433): SCREEN=SOS_LOC
+

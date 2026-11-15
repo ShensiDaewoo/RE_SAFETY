@@ -1,0 +1,230 @@
+{
+ "apk": "RE-SAFETY_AdaptiveHMI_0.5.0-adaptive4.apk",
+ "apk_sha256": "5DE8E8D08CA130E2711C75B7CFB96CD40633E51AA2E1E310EDB1178F1BF51C63",
+ "installed_sha256": "5DE8E8D08CA130E2711C75B7CFB96CD40633E51AA2E1E310EDB1178F1BF51C63",
+ "A_READY": {
+  "scene": "READY",
+  "motion": "parked",
+  "layout": "pleos-panel",
+  "hmi": "NORMAL",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Park",
+   "speed": 0
+  }
+ },
+ "A_frames": {
+  "app": [
+   853,
+   90,
+   2535,
+   1300
+  ]
+ },
+ "B_DRIVING": {
+  "scene": "DRIVING",
+  "motion": "moving",
+  "layout": "pleos-panel",
+  "hmi": "NORMAL",
+  "screen": "home",
+  "focus": "ai.umos.maps.android.navigation.app/ai.umos.maps.android.navigation.app.MainActivity",
+  "car": {
+   "gear": "Drive",
+   "speed": 30
+  }
+ },
+ "B_then_parked": {
+  "scene": "READY",
+  "motion": "parked",
+  "layout": "pleos-panel",
+  "hmi": "NORMAL",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Park",
+   "speed": 0
+  }
+ },
+ "A_READY_again": {
+  "scene": "READY",
+  "motion": "parked",
+  "layout": "pleos-panel",
+  "hmi": "NORMAL",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Park",
+   "speed": 0
+  }
+ },
+ "B_DRIVING_2": {
+  "scene": "DRIVING",
+  "motion": "moving",
+  "layout": "pleos-panel",
+  "hmi": "NORMAL",
+  "screen": "home",
+  "focus": "ai.umos.maps.android.navigation.app/ai.umos.maps.android.navigation.app.MainActivity",
+  "car": {
+   "gear": "Drive",
+   "speed": 30
+  }
+ },
+ "P_ACCIDENT_PENDING": {
+  "scene": "ACCIDENT_PENDING",
+  "motion": "moving",
+  "layout": "pleos-panel",
+  "hmi": "ACC",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Drive",
+   "speed": 30
+  }
+ },
+ "C_after_parking": {
+  "scene": "ACCIDENT_RESPONSE",
+  "motion": "parked",
+  "layout": "pleos-panel",
+  "hmi": "ACC",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Park",
+   "speed": 0
+  }
+ },
+ "C_ACCIDENT_RESPONSE": {
+  "scene": "ACCIDENT_RESPONSE",
+  "motion": "parked",
+  "layout": "pleos-panel",
+  "hmi": "ACC",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Park",
+   "speed": 0
+  }
+ },
+ "protect": {
+  "before": {
+   "gear": "Park",
+   "speed": 0,
+   "locks": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "cabin": false,
+   "headlamp_mode": "Off"
+  },
+  "after": {
+   "gear": "Park",
+   "speed": 0,
+   "locks": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "cabin": true,
+   "headlamp_mode": "Position"
+  },
+  "undo": {
+   "gear": "Park",
+   "speed": 0,
+   "locks": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "cabin": false,
+   "headlamp_mode": "Off"
+  },
+  "changed": true,
+  "restored": true
+ },
+ "A_READY_end": {
+  "scene": "READY",
+  "motion": "parked",
+  "layout": "pleos-panel",
+  "hmi": "NORMAL",
+  "screen": "home",
+  "focus": "com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity",
+  "car": {
+   "gear": "Park",
+   "speed": 0
+  }
+ },
+ "scene_transitions": [
+  "SCENE READY -> DRIVING",
+  "SCENE DRIVING -> READY",
+  "SCENE READY -> DRIVING",
+  "SCENE DRIVING -> ACCIDENT_PENDING",
+  "SCENE ACCIDENT_PENDING -> ACCIDENT_RESPONSE",
+  "SCENE ACCIDENT_RESPONSE -> READY"
+ ],
+ "page_errors": 0,
+ "notes": [
+  "apk 5DE8E8D08CA130E2711C75B7CFB96CD40633E51AA2E1E310EDB1178F1BF51C63",
+  "install: Success",
+  "A_READY: {\"scene\": \"READY\", \"motion\": \"parked\", \"layout\": \"pleos-panel\", \"hmi\": \"NORMAL\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Park\", \"speed\": 0}}",
+  "B_DRIVING: {\"scene\": \"DRIVING\", \"motion\": \"moving\", \"layout\": \"pleos-panel\", \"hmi\": \"NORMAL\", \"screen\": \"home\", \"focus\": \"ai.umos.maps.android.navigation.app/ai.umos.maps.android.navigation.app.MainActivity\", \"car\": {\"gear\": \"Drive\", \"speed\": 30}}",
+  "B_then_parked: {\"scene\": \"READY\", \"motion\": \"parked\", \"layout\": \"pleos-panel\", \"hmi\": \"NORMAL\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Park\", \"speed\": 0}}",
+  "A_READY_again: {\"scene\": \"READY\", \"motion\": \"parked\", \"layout\": \"pleos-panel\", \"hmi\": \"NORMAL\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Park\", \"speed\": 0}}",
+  "B_DRIVING_2: {\"scene\": \"DRIVING\", \"motion\": \"moving\", \"layout\": \"pleos-panel\", \"hmi\": \"NORMAL\", \"screen\": \"home\", \"focus\": \"ai.umos.maps.android.navigation.app/ai.umos.maps.android.navigation.app.MainActivity\", \"car\": {\"gear\": \"Drive\", \"speed\": 30}}",
+  "P_ACCIDENT_PENDING: {\"scene\": \"ACCIDENT_PENDING\", \"motion\": \"moving\", \"layout\": \"pleos-panel\", \"hmi\": \"ACC\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Drive\", \"speed\": 30}}",
+  "C_after_parking: {\"scene\": \"ACCIDENT_RESPONSE\", \"motion\": \"parked\", \"layout\": \"pleos-panel\", \"hmi\": \"ACC\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Park\", \"speed\": 0}}",
+  "C_ACCIDENT_RESPONSE: {\"scene\": \"ACCIDENT_RESPONSE\", \"motion\": \"parked\", \"layout\": \"pleos-panel\", \"hmi\": \"ACC\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Park\", \"speed\": 0}}",
+  "tapped cprot",
+  "tapped proton",
+  "tapped protoff",
+  "tapped back",
+  "protect {\"changed\": true, \"restored\": true}",
+  "tapped accOff",
+  "A_READY_end: {\"scene\": \"READY\", \"motion\": \"parked\", \"layout\": \"pleos-panel\", \"hmi\": \"NORMAL\", \"screen\": \"home\", \"focus\": \"com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity\", \"car\": {\"gear\": \"Park\", \"speed\": 0}}",
+  "app: 11-15 12:21:33.201 I/FullHMI (19872): TTS_INIT pleos on-device ready",
+  "app: 11-15 12:21:33.378 I/FullHMIVeh(19872): NAVI initialized",
+  "app: 11-15 12:21:33.393 I/FullHMIVeh(19872): OBS NAVI_ADDRESS received chars=7",
+  "app: 11-15 12:21:33.515 I/FullHMI (19872): SCENE_RASTER n 64x54 167ms",
+  "app: 11-15 12:21:35.034 I/FullHMI (19872): SCENE_RASTER a (prepared) 17ms",
+  "app: 11-15 12:21:45.440 I/FullHMI (19872): SCENE READY -> DRIVING motion=moving src=vehicle why=vehicle signal",
+  "app: 11-15 12:21:45.440 I/FullHMI (19872): SCENE_NATIVE READY -> DRIVING vehicle=true",
+  "app: 11-15 12:21:45.445 I/FullHMIVeh(19872): NAVI requestNavigationScreen(Foreground) sent",
+  "app: 11-15 12:21:45.445 I/FullHMI (19872): SCENE_HANDOVER to Pleos navigation: ok",
+  "app: 11-15 12:21:55.491 I/FullHMI (19872): SCENE_RETURN requested by the vehicle watch (parked 2 s, page scene DRIVING)",
+  "app: 11-15 12:21:55.725 I/FullHMI (19872): SCENE_NATIVE DRIVING -> READY vehicle=true",
+  "app: 11-15 12:21:55.726 I/FullHMI (19872): SCENE DRIVING -> READY motion=parked src=vehicle why=parked for 2 s",
+  "app: 11-15 12:21:55.737 I/FullHMI (19872): SCENE_RETURN requested for READY",
+  "app: 11-15 12:21:57.992 I/FullHMI (19872): SCENE_RETURN watch result: in front",
+  "app: 11-15 12:21:58.239 I/FullHMI (19872): SCENE_RETURN result for READY: in front",
+  "app: 11-15 12:22:08.545 I/FullHMI (19872): SCENE_NATIVE READY -> DRIVING vehicle=true",
+  "app: 11-15 12:22:08.545 I/FullHMI (19872): SCENE READY -> DRIVING motion=moving src=vehicle why=vehicle signal",
+  "app: 11-15 12:22:08.545 I/FullHMIVeh(19872): NAVI requestNavigationScreen(Foreground) sent",
+  "app: 11-15 12:22:08.545 I/FullHMI (19872): SCENE_HANDOVER to Pleos navigation: ok",
+  "app: 11-15 12:22:15.569 I/FullHMI (19872): SCENE_NATIVE DRIVING -> ACCIDENT_PENDING vehicle=true",
+  "app: 11-15 12:22:15.695 I/FullHMI (19872): SCENE DRIVING -> ACCIDENT_PENDING motion=moving src=vehicle why=render",
+  "app: 11-15 12:22:15.747 I/FullHMI (19872): TTS_SPEAK chars=56",
+  "app: 11-15 12:22:15.762 I/FullHMI (19872): TTS_EVENT start",
+  "app: 11-15 12:22:22.643 I/FullHMI (19872): TTS_EVENT done",
+  "app: 11-15 12:22:24.670 I/FullHMI (19872): SCENE ACCIDENT_PENDING -> ACCIDENT_RESPONSE motion=parked src=vehicle why=parked for 2 s",
+  "app: 11-15 12:22:24.673 I/FullHMI (19872): SCENE_NATIVE ACCIDENT_PENDING -> ACCIDENT_RESPONSE vehicle=true",
+  "app: 11-15 12:22:24.678 I/FullHMI (19872): SCENE_RETURN requested for ACCIDENT_RESPONSE",
+  "app: 11-15 12:22:24.678 I/FullHMI (19872): TTS_SPEAK chars=30",
+  "app: 11-15 12:22:24.689 I/FullHMI (19872): TTS_EVENT start",
+  "app: 11-15 12:22:27.180 I/FullHMI (19872): SCENE_RETURN result for ACCIDENT_RESPONSE: in front",
+  "app: 11-15 12:22:28.440 I/FullHMI (19872): TTS_EVENT done",
+  "app: 11-15 12:22:40.820 I/FullHMI (19872): PROTECT_RESULT restoring=false 미등 켜짐 확인 / 후방 안개등 미지원 건너뜀 / 실내등 켜짐 확인 / 앞뒤 문 4개 잠금 해제 확인",
+  "app: 11-15 12:22:40.820 I/FullHMI (19872): TTS_SPEAK chars=39",
+  "app: 11-15 12:22:40.828 I/FullHMI (19872): TTS_EVENT start",
+  "app: 11-15 12:22:46.211 I/FullHMI (19872): TTS_EVENT done",
+  "app: 11-15 12:22:50.632 I/FullHMI (19872): PROTECT_RESULT restoring=true 미등 원래대로 확인 / 실내등 원래대로 확인 / 앞뒤 문 4개 잠금 원래대로 확인",
+  "app: 11-15 12:22:50.632 I/FullHMI (19872): TTS_SPEAK chars=44",
+  "app: 11-15 12:22:50.651 I/FullHMI (19872): TTS_EVENT start",
+  "app: 11-15 12:22:56.707 I/FullHMI (19872): TTS_EVENT done",
+  "app: 11-15 12:23:01.872 I/FullHMI (19872): SCENE ACCIDENT_RESPONSE -> READY motion=parked src=vehicle why=render",
+  "app: 11-15 12:23:01.872 I/FullHMI (19872): SCENE_NATIVE ACCIDENT_RESPONSE -> READY vehicle=true"
+ ]
+}

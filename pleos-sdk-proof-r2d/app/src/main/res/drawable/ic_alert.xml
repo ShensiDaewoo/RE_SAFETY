@@ -1,0 +1,5 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp" android:viewportWidth="48" android:viewportHeight="48">
+    <!-- R2D: warning triangle for SOS / accident notices, drawn for this project (PATH D+ HTML 'sos' geometry). Tinted in code. -->
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="3" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M24 5 3 41h42Z"/>
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF" android:strokeWidth="3" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M24 18v11M24 34v2"/>
+</vector>

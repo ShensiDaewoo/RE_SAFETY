@@ -1,0 +1,74 @@
+{
+ "vehicle": true,
+ "before": {
+  "chk": 0,
+  "memo": 12,
+  "saved": false,
+  "car": false
+ },
+ "after_tap": {
+  "chk": 0,
+  "memo": 12,
+  "saved": false,
+  "car": true
+ },
+ "rec_after": 60,
+ "rec_before": 60,
+ "veh_after": {
+  "sdk": "ready",
+  "gear": "P",
+  "kmh": 0,
+  "loc": true,
+  "addr": true,
+  "locStatus": "차량 위치 수신",
+  "seats": {
+   "D": {
+    "occ": "y",
+    "belt": "-"
+   },
+   "P": {
+    "occ": "n",
+    "belt": "-"
+   },
+   "RL": {
+    "occ": "y",
+    "belt": "-"
+   },
+   "RR": {
+    "occ": "n",
+    "belt": "-"
+   }
+  },
+  "doors": {
+   "FL": "closed",
+   "FR": "closed",
+   "RL": "closed",
+   "RR": "closed",
+   "TG": "closed"
+  },
+  "tts": "ready",
+  "stt": "ready",
+  "extra": {
+   "WIPER": "OFF",
+   "LOWBEAM": "OFF",
+   "EV_SOC": "100",
+   "FUEL_PCT": null
+  },
+  "ho": 1
+ },
+ "after_restart": {
+  "chk": 0,
+  "memo": 12,
+  "saved": false,
+  "car": true
+ },
+ "native_lines": [],
+ "notes": [
+  "tapped cpre",
+  "tapped precar",
+  "tapped cpre",
+  "tapped back",
+  "tapped crec"
+ ],
+ "ok": false
+}

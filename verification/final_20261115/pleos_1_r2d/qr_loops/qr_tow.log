@@ -1,0 +1,22 @@
+16:38:21  tow 01 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:38:48  tow 02 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:39:16  tow 03 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:39:43  tow 04 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:40:11  tow 05 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:40:39  tow 06 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:41:07  tow 07 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:41:35  tow 08 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:42:03  tow 09 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:42:31  tow 10 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:42:34  tow chunk 1-10: 10/10 read
+16:43:04  tow 11 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:43:32  tow 12 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:44:00  tow 13 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:44:28  tow 14 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:44:56  tow 15 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:45:24  tow 16 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:45:52  tow 17 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:46:20  tow 18 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:46:48  tow 19 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:47:16  tow 20 READ  chars=182 first="[RE:SAFETY] 요약 v2" pid=8670
+16:47:19  tow chunk 11-20: 10/10 read

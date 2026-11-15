@@ -1,0 +1,16 @@
+17:47:44 tap accOff
+17:47:47 ready to record: ('READY', 'NORMAL', 'home')
+17:47:53 tap cseat
+17:47:56 tap seatsim
+17:48:01 tap back
+17:48:03 drive: gear D, 30 km/h
+17:48:13 virtual accident event while driving
+17:48:20 brake to 0, then P
+17:48:27 WARNING screen shown and closed (6.4 s)
+17:48:28 scene after parking: ('ACCIDENT_RESPONSE', 'ACC', 'home')
+17:48:29 tap cprot
+17:48:32 tap proton
+17:48:41 tap protoff
+17:48:50 tap back
+17:48:53 tap b119
+17:49:02 recorded 73 s

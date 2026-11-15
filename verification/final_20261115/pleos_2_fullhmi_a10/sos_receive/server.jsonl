@@ -1,0 +1,14 @@
+{"ts": "2026-11-15T18:38:25", "event": "server_start", "banner": "TEST / 실제 사고 아님", "radius": 1000, "presence_ttl": 10, "request_ttl": 90, "clients": 2}
+{"ts": "2026-11-15T18:38:43", "event": "presence", "who": "29e81c11", "receive": true}
+{"ts": "2026-11-15T18:38:43", "event": "consent_given", "who": "29e81c11"}
+{"ts": "2026-11-15T18:38:43", "event": "presence", "who": "29e81c11", "receive": true}
+{"ts": "2026-11-15T18:38:46", "event": "presence", "who": "29e81c11", "receive": true}
+{"ts": "2026-11-15T18:38:48", "event": "presence", "who": "7a3c905f", "receive": false}
+{"ts": "2026-11-15T18:38:48", "event": "sos_created", "who": "7a3c905f", "matched": 1, "request": "e7e8539e"}
+{"ts": "2026-11-15T18:38:49", "event": "presence", "who": "29e81c11", "receive": true}
+{"ts": "2026-11-15T18:38:49", "event": "alert_delivered", "who": "29e81c11", "request": "e7e8539e", "after_ms": 736}
+{"ts": "2026-11-15T18:38:52", "event": "presence", "who": "29e81c11", "receive": true}
+{"ts": "2026-11-15T18:38:52", "event": "alert_ack", "who": "29e81c11", "request": "e7e8539e", "after_ms": 3666}
+{"ts": "2026-11-15T18:38:54", "event": "presence", "who": "29e81c11", "receive": true}
+{"ts": "2026-11-15T18:38:56", "event": "consent_withdrawn", "who": "29e81c11", "purged": 0}
+{"ts": "2026-11-15T18:38:56", "event": "leave", "who": "29e81c11", "purged": 0}

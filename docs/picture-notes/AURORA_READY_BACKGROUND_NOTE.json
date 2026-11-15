@@ -1,0 +1,12 @@
+{
+ "file": "assets/hmi/HMI_BG_01_NORMAL.png",
+ "role": "left view background, READY state (aurora design)",
+ "pixels": [
+  1122,
+  1402
+ ],
+ "sha256": "4488572A2ED941C80C25F59DBFBB8DD0F620CE45B4A6683D86B02D0FED973C62",
+ "source_file_sha256": "C73D3987D13B7229C84E60E84B087C45C9799B19B0C81F125C0E28DD3A1AA44B",
+ "provenance": "Picture handed over by the project owner in the work session of 2026-11-14 (webp, 1122x1402), converted to PNG without any other change. How it was made and under which licence it may be published was NOT stated; to be confirmed by the project owner before submission.",
+ "previous_file_kept_at": "hmi-assets/previous/HMI_BG_01_NORMAL_city_night_before_aurora.png (not bundled in the APK)"
+}

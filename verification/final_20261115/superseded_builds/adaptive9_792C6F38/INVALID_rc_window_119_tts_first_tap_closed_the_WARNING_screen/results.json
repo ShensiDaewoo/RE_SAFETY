@@ -1,0 +1,74 @@
+{
+ "installed_sha256": "792C6F383670962B9936003D1180D277A57731F6C9C59DD4C2AEEEC1DDE56F44",
+ "version": [
+  "versionName=0.6.3-adaptive9"
+ ],
+ "D_frames": {
+  "app": [
+   853,
+   90,
+   2535,
+   1300
+  ],
+  "driving_view": [
+   0,
+   0,
+   853,
+   1300
+  ],
+  "top_bar": [
+   0,
+   0,
+   2560,
+   90
+  ],
+  "bottom_bar": [
+   0,
+   1300,
+   2560,
+   1440
+  ]
+ },
+ "D_app_overlaps": {
+  "driving_view": false,
+  "top_bar": false,
+  "bottom_bar": false
+ },
+ "D_display": "Physical size: 2560x1440",
+ "B_dial_handler": [
+  "name=ai.umos.mainscreen.MainScreenActivity",
+  "packageName=ai.umos.callandmessage",
+  "name=ai.umos.callandmessage.App"
+ ],
+ "B_log": [],
+ "B_focus_before": "mCurrentFocus=Window{bed18b8 u10 com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity}",
+ "B_focus_after": "mCurrentFocus=Window{bed18b8 u10 com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity}",
+ "B_calls_before_after": [
+  0,
+  0
+ ],
+ "B_calls_after_return": 0,
+ "C_tts_log": [
+  "11-15 17:39:43.258 I/FullHMI ( 1839): TTS_INIT pleos on-device ready",
+  "11-15 17:40:09.174 I/FullHMI ( 1839): PROTECT_RESULT restoring=false 미등 켜짐 확인 / 후방 안개등 미지원 건너뜀 / 실내등 켜짐 확인 / 앞뒤 문 4개 잠금 해제 확인",
+  "11-15 17:40:09.175 I/FullHMI ( 1839): TTS_SPEAK chars=39",
+  "11-15 17:40:09.184 I/FullHMI ( 1839): TTS_EVENT start",
+  "11-15 17:40:14.491 I/FullHMI ( 1839): TTS_EVENT done",
+  "11-15 17:40:20.378 I/FullHMI ( 1839): PROTECT_RESULT restoring=true 미등 원래대로 확인 / 실내등 원래대로 확인 / 앞뒤 문 4개 잠금 원래대로 확인",
+  "11-15 17:40:20.378 I/FullHMI ( 1839): TTS_SPEAK chars=44",
+  "11-15 17:40:20.384 I/FullHMI ( 1839): TTS_EVENT start",
+  "11-15 17:40:26.406 I/FullHMI ( 1839): TTS_EVENT done"
+ ],
+ "notes": [
+  "installed 792C6F383670962B9936003D1180D277A57731F6C9C59DD4C2AEEEC1DDE56F44",
+  "D frames {\"app\": [853, 90, 2535, 1300], \"driving_view\": [0, 0, 853, 1300], \"top_bar\": [0, 0, 2560, 90], \"bottom_bar\": [0, 1300, 2560, 1440]} overlaps {\"driving_view\": false, \"top_bar\": false, \"bottom_bar\": false}",
+  "tapped accOn",
+  "tapped b119",
+  "B {\"B_dial_handler\": [\"name=ai.umos.mainscreen.MainScreenActivity\", \"packageName=ai.umos.callandmessage\", \"name=ai.umos.callandmessage.App\"], \"B_log\": [], \"B_focus_after\": \"mCurrentFocus=Window{bed18b8 u10 com.contest.resafety.fullhmi.aurora/com.contest.resafety.fullhmi.MainActivity}\", \"B_calls_before_after\": [0, 0]}",
+  "tapped cprot",
+  "tapped proton",
+  "tapped protoff",
+  "C [\"11-15 17:39:43.258 I/FullHMI ( 1839): TTS_INIT pleos on-device ready\", \"11-15 17:40:09.174 I/FullHMI ( 1839): PROTECT_RESULT restoring=false 미등 켜짐 확인 / 후방 안개등 미지원 건너뜀 / 실내등 켜짐 확인 / 앞뒤 문 4개 잠금 해제 확인\", \"11-15 17:40:09.175 I/FullHMI ( 1839): TTS_SPEAK chars=39\", \"11-15 17:40:09.184 I/FullHMI ( 1839): TTS_EVENT start\", \"11-15 17:40:14.491 I/FullHMI ( 1839): TTS_EVENT done\", \"11-15 17:40:20.378 I/FullHMI ( 1839): PROTECT_RESULT restoring=true 미등 원래대로 확인 / 실내등 원래대로 확인 / 앞뒤 문 4개 잠금 원래대로 확인\", \"11-15 17:40:20.378 I/FullHMI ( 1839): TTS_SPEAK chars=44\", \"11-15 17:40:20.384 I/FullHMI ( 1839): TTS_EVENT start\", \"11-15 17:40:26.406 I/FullHMI ( 1839): TTS_EVENT done\"]",
+  "tapped back"
+ ]
+}
