@@ -32,4 +32,4 @@ Pleos Connect 에뮬레이터 (둘 다 설치)
 - 주행 중(P가 아닐 때)에는 Pleos가 앱 화면을 가리므로 정차 후 사용합니다.
 
 [더 보기]
-README.md · 시연 영상 docs/demo/RE-SAFETY_demo_20261115.mp4 · 시험 근거 verification/final_20261115/EVIDENCE.md
+README.md · 시연 영상 "RE_SAFETY 시연 영상.mp4"(맨 위) · 시험 근거 verification/final_20261115/EVIDENCE.md
